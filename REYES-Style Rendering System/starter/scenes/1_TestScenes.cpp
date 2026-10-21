@@ -65,8 +65,8 @@ void FirstPrimitive(const char *primitive)
         RiFrameBegin(0);
             RiProjection(RI_PERSPECTIVE, "fov", &fov);
             RiWorldBegin();
-                RiSurface(CONSTANT, NULL, 0); /* flat, no shading at all */
-                RiTranslate(0, 0, 5); /* 5 units in front of the eye */
+                RiSurface(CONSTANT, NULL, 0);
+                RiTranslate(0, 0, 5);
                 if (strcmp(primitive, "sphere") == 0) {
                     RtColor red = {0.9f, 0.2f, 0.2f};
                     RiColor(red);

@@ -36,6 +36,7 @@ set(SCENE_SOURCES
   scenes/3_CinematicScenes/RadiatorSprings.cpp
   scenes/3_CinematicScenes/AndysRoom.cpp
   scenes/3_CinematicScenes/WallEMovie.cpp
+  scenes/4_OriginalScene/GipsyDanger.cpp
 )
 
 add_executable(reyes ${RENDERER_SOURCES} ${SCENE_SOURCES})
