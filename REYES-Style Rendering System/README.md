@@ -8,11 +8,11 @@ Tested on: macOS (Apple Silicon), AppleClang, CMake 4.4.4
 
 ## Build
 
-From the starter/ folder (the one containing `scenes/`, `textures/` and `renders/`):
+Enter the starter/ folder (the one containing `scenes/`, `textures/` and `renders/`) and run:
 
     cd starter
-    cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-    cmake --build build -j4
+    cmake -S . -B build-mac -DCMAKE_BUILD_TYPE=Release
+    cmake --build build-mac -j4
 
 `CMakeLists.txt` selects a Release build by default.
 
@@ -21,16 +21,16 @@ From the starter/ folder (the one containing `scenes/`, `textures/` and `renders
 Run the executable from this folder so it finds `textures/` and `models/`
 and writes into `renders/`:
 
-    ./build/reyes <scene>        one scene by name (no argument lists them)
-    ./build/reyes test           all Tier 1 scenes, including SimpleAnimationMovie
-    ./build/reyes intermediate   all Tier 2 scenes
-    ./build/reyes cinematic      all Tier 3 scenes, including WallEMovie
-    ./build/reyes stills         every still image, skipping the two movies
-    ./build/reyes all            everything, including the original scene
+    ./build-mac/reyes <scene>        one scene by name (no argument lists them)
+    ./build-mac/reyes test           all Tier 1 scenes, including SimpleAnimationMovie
+    ./build-mac/reyes intermediate   all Tier 2 scenes
+    ./build-mac/reyes cinematic      all Tier 3 scenes, including WallEMovie
+    ./build-mac/reyes stills         every still image, skipping the two movies
+    ./build-mac/reyes all            everything, including the original scene
 
 Original scene:
 
-    ./build/reyes GipsyDanger
+    ./build-mac/reyes GipsyDanger
 
 Output: `renders/4_OriginalScene/GipsyDanger.png` (960 × 600, 4 × 4 samples).
 
