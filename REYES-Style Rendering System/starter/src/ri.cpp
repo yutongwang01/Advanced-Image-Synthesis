@@ -131,7 +131,7 @@ struct MicroGrid {
 void transformPoint(const Matrix4 &matrix,
                     const RtPoint input, RtPoint output)
 {
-    /**/ Temporary storage also allows input and output to be the same array. */
+    /* Temporary storage also allows input and output to be the same array. */
     RtPoint result;
     for (int row = 0; row < 3; ++row) {
         result[row] =
