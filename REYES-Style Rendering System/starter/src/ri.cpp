@@ -53,9 +53,9 @@ struct Options {
     int xres = 640, yres = 480;
     int xsamples = 2, ysamples = 2;
     std::string display = "out.png";
-    bool depthDisplay = false; /* RiDisplay(name, "zfile", "z") */
-    bool perspective = false; // Default orthogonal projection
-    float fov = 90.0f;        // Perspective view
+    bool depthDisplay = false; /* RiDisplay(name, "zfile", "z")  */
+    bool perspective = false; /* Default orthogonal projection */
+    float fov = 90.0f;        /* Perspective view */
 };
 
 Options options;
@@ -68,7 +68,7 @@ struct TextureImage {
 
 TextureImage textures[8];
 
-// Save the current color and opacity
+/* Save the current color and opacity */
 RtColor currentColor = {1.0f, 1.0f, 1.0f};
 RtColor currentOpacity = {1.0f, 1.0f, 1.0f};
 
@@ -99,8 +99,8 @@ Matrix4 multiplyMatrix(const Matrix4 &a, const Matrix4 &b)
 }
 
 struct GridVertex {
-    RtPoint Po = {};  // Object-space position
-    RtPoint P = {};   // Camera-space position
+    RtPoint Po = {};  /* Object-space position */
+    RtPoint P = {};   /* Camera-space position */
     RtNormal Ng = {};
     RtNormal N = {};
     float u = 0.0f;
@@ -127,11 +127,11 @@ struct MicroGrid {
     }
 };
 
-// For affine transforms: input point has homogeneous coordinate w = 1.
+/* For affine transforms: input point has homogeneous coordinate w = 1. */
 void transformPoint(const Matrix4 &matrix,
                     const RtPoint input, RtPoint output)
 {
-    // Temporary storage also allows input and output to be the same array.
+    /**/ Temporary storage also allows input and output to be the same array. */
     RtPoint result;
     for (int row = 0; row < 3; ++row) {
         result[row] =
@@ -147,7 +147,7 @@ void transformPoint(const Matrix4 &matrix,
 
 bool makeNormalMatrix(const Matrix4 &matrix, Matrix4 &result)
 {
-    // Upper-left 3x3: translation does not affect normals.
+    /* Upper-left 3x3: translation does not affect normals. */
     const double a = matrix.m[0][0];
     const double b = matrix.m[0][1];
     const double c = matrix.m[0][2];
@@ -167,7 +167,7 @@ bool makeNormalMatrix(const Matrix4 &matrix, Matrix4 &result)
         return false;
     }
 
-    // Inverse transpose = cofactor matrix / determinant.
+    /* Inverse transpose = cofactor matrix / determinant. */
     result = identityMatrix();
 
     result.m[0][0] = (e * i - f * h) / determinant;
@@ -215,7 +215,7 @@ std::vector<Matrix4> transformStack;
 struct ShaderBinding {
     RtShaderFn function = STANDARD;
 
-    // Storage aligned for ordinary shader parameter structs.
+    /* Storage aligned for ordinary shader parameter structs. */
     std::vector<std::max_align_t> parameters;
 
     const void *data() const
@@ -268,7 +268,7 @@ bool fullyOpaque(const SurfaceHit &hit)
 
 void insertHit(size_t sample, const SurfaceHit &hit)
 {
-    // Completely transparent surfaces contribute nothing.
+    /* Completely transparent surfaces contribute nothing. */
     if (hit.Oi[0] <= 0.0f &&
         hit.Oi[1] <= 0.0f &&
         hit.Oi[2] <= 0.0f) {
@@ -284,7 +284,7 @@ void insertHit(size_t sample, const SurfaceHit &hit)
         }
     );
 
-    // Hits are truncated after their first fully opaque surface.
+    /* Hits are truncated after their first fully opaque surface. */
     if (position != hits.end() &&
         fullyOpaque(*position) &&
         position->z == hit.z) {
@@ -307,8 +307,8 @@ void insertHit(size_t sample, const SurfaceHit &hit)
     }
 }
 
-// Input is already in camera space.
-// Output retains camera-space z.
+/* Input is already in camera space.
+   Output retains camera-space z. */
 bool projectPoint(const RtPoint cameraPoint, RtPoint rasterPoint)
 {
     if (cameraPoint[2] <= 0.01f) {
@@ -352,7 +352,7 @@ int chooseGridResolution(const RtPoint boundMin,
     double maxX = -INFINITY;
     double maxY = -INFINITY;
 
-    // Enumerate all eight corners of the object-space bounding box.
+    /* Enumerate all eight corners of the object-space bounding box. */
     for (int corner = 0; corner < 8; ++corner) {
         RtPoint objectPoint = {
             (corner & 1) ? boundMax[0] : boundMin[0],
@@ -363,7 +363,7 @@ int chooseGridResolution(const RtPoint boundMin,
         RtPoint cameraPoint;
         transformPoint(currentTransform, objectPoint, cameraPoint);
 
-        // A bound crossing the eye plane cannot be projected reliably.
+        /* A bound crossing the eye plane cannot be projected reliably. */
         if (cameraPoint[2] <= 0.01f) {
             return maxResolution;
         }
@@ -384,12 +384,12 @@ int chooseGridResolution(const RtPoint boundMin,
         maxY = std::max(maxY, static_cast<double>(rasterPoint[1]));
     }
 
-    // Do not clamp the projected bounds to the image.
+    /* Do not clamp the projected bounds to the image. */
     const double width = maxX - minX;
     const double height = maxY - minY;
     const double diagonal = std::hypot(width, height);
 
-    // Clamp before converting to int.
+    /* Clamp before converting to int. */
     const double resolution = std::clamp(
         std::ceil(2.0 * diagonal),
         2.0,
@@ -429,8 +429,8 @@ double edgeFunction(const RasterVertex &a,
          - (b.y - a.y) * (x - a.x);
 }
 
-// Raster y increases downward.
-// Opposite directions of a shared edge have opposite ownership.
+/* Raster y increases downward.
+   Opposite directions of a shared edge have opposite ownership. */
 bool isTopLeft(const RasterVertex &a, const RasterVertex &b)
 {
     const double dy = b.y - a.y;
@@ -454,13 +454,13 @@ void rasterizeTriangle(RasterVertex a,
         return;
     }
 
-    // Normalize winding; this does not cull backfaces.
+    /* Normalize winding; this does not cull backfaces. */
     if (area < 0.0) {
         std::swap(b, c);
         area = -area;
     }
 
-    // Clamp floating-point bounds before converting to integers.
+    /* Clamp floating-point bounds before converting to integers. */
     const double minX = std::max(
         0.0, std::min({a.x, b.x, c.x}));
     const double maxX = std::min(
@@ -528,7 +528,6 @@ void rasterizeTriangle(RasterVertex a,
                         + b2 * (c.Ci[channel] - a.Ci[channel])
                     );
 
-                    // Difference form preserves exactly constant opacity, including 1.
                     hit.Oi[channel] = static_cast<float>(
                         a.Oi[channel]
                         + b1 * (b.Oi[channel] - a.Oi[channel])
@@ -547,7 +546,7 @@ void rasterizeQuad(const GridVertex &a,
                    const GridVertex &c,
                    const GridVertex &d)
 {
-    // Reject before perspective division.
+    /* Reject before perspective division. */
     if (a.P[2] <= 0.01f || b.P[2] <= 0.01f ||
         c.P[2] <= 0.01f || d.P[2] <= 0.01f) {
         return;
@@ -576,7 +575,7 @@ void renderMicroGrid(MicroGrid &grid,
                      bool upperPole = false,
                     bool polygonFacing = false)
 {
-    // Build shader inputs from one grid vertex.
+    /* Build shader inputs from one grid vertex. */
     auto makeContext = [&](const GridVertex &vertex) {
         RtShaderContext context{};
 
@@ -595,7 +594,7 @@ void renderMicroGrid(MicroGrid &grid,
     };
 
     if (currentDisplacement.function) {
-        // Displace every vertex before recomputing any normal.
+        /* Displace every vertex before recomputing any normal. */
         for (GridVertex &vertex : grid.vertices) {
             RtShaderContext context = makeContext(vertex);
             context.params = currentDisplacement.data();
@@ -607,7 +606,7 @@ void renderMicroGrid(MicroGrid &grid,
             }
         }
 
-        // Recompute normals from displaced camera-space positions.
+        /* Recompute normals from displaced camera-space positions. */
         for (int j = 0; j <= grid.nv; ++j) {
             for (int i = 0; i <= grid.nu; ++i) {
                 GridVertex &vertex = grid.at(i, j);
@@ -657,7 +656,7 @@ void renderMicroGrid(MicroGrid &grid,
                     normal[2] * normal[2]
                 );
 
-                // N was initialized to Ng, which is the fallback.
+                /* N was initialized to Ng, which is the fallback. */
                 if (length > 0.0 && std::isfinite(length)) {
                     for (int channel = 0; channel < 3; ++channel) {
                         vertex.N[channel] =
@@ -668,7 +667,7 @@ void renderMicroGrid(MicroGrid &grid,
         }
     }
 
-    // Orient normals and run the surface shader.
+    /* Orient normals and run the surface shader. */
     for (GridVertex &vertex : grid.vertices) {
 
         RtNormal facingNormal;
@@ -713,7 +712,7 @@ void renderMicroGrid(MicroGrid &grid,
         }
     }
 
-    // Rasterize the shaded grid.
+    /* Rasterize the shaded grid. */
     for (int j = 0; j < grid.nv; ++j) {
         for (int i = 0; i < grid.nu; ++i) {
             rasterizeQuad(
@@ -804,7 +803,6 @@ RtVoid RiDisplay(const char *name, RtToken type, RtToken mode)
 
 /* RiFrameBegin/End bracket one frame of an animation: save the graphics
  * state at Begin and restore it at End, so that each frame starts afresh. */
-// RtVoid RiFrameBegin(RtInt /*frame*/) {}
 RtVoid RiFrameBegin(RtInt /*frame*/)
 {
     FrameState saved;
@@ -871,7 +869,7 @@ RtVoid RiWorldBegin(void)
     zbuffer.assign(sampleCount, INFINITY);
     samplePositions.resize(sampleCount);
 
-    // Fixed seed makes repeated renders reproducible.
+    /* Fixed seed makes repeated renders reproducible. */
     std::mt19937 generator(285);
     std::uniform_real_distribution<double> random01(0.0, 1.0);
 
@@ -888,7 +886,7 @@ RtVoid RiWorldBegin(void)
                     const size_t index =
                         pixel * samplesPerPixel + localSample;
 
-                    // One random point inside each subcell.
+                    /* One random point inside each subcell. */
                     samplePositions[index].x =
                         x + (sx + random01(generator)) / options.xsamples;
 
@@ -915,7 +913,7 @@ RtVoid RiWorldEnd(void)
 
     framebuffer.assign(pixelCount * 4, 0.0f);
 
-    // Kept as per-sample depth for depth output.
+    /* Kept as per-sample depth for depth output. */
     zbuffer.assign(sampleHits.size(), INFINITY);
 
     for (size_t pixel = 0; pixel < pixelCount; ++pixel) {
@@ -1005,7 +1003,7 @@ RtVoid RiProjection(RtToken name, RtToken token, RtPointer value)
         }
     }
 
-    // Each time a projection is set, the current transformation is reset.
+    /* Each time a projection is set, the current transformation is reset. */
     currentTransform = identityMatrix();
 }
 
@@ -1153,7 +1151,6 @@ RtVoid RiSphere(RtFloat radius, RtFloat zmin,
         return;
     }
 
-    // 1. Build the entire undisplaced grid.
     for (int j = 0; j <= grid.nv; ++j) {
         const float v = static_cast<float>(j) / grid.nv;
         const float phi = phiMin + v * (phiMax - phiMin);
@@ -1173,7 +1170,7 @@ RtVoid RiSphere(RtFloat radius, RtFloat zmin,
                 radius * std::cos(phi) * std::sin(theta);
             vertex.Po[2] = radius * std::sin(phi);
 
-            // Make collapsed pole rows exact.
+            /* Make collapsed pole rows exact. */
             if ((j == 0 && zmin == -radius) ||
                 (j == grid.nv && zmax == radius)) {
                 vertex.Po[0] = 0.0f;
@@ -1263,7 +1260,7 @@ RtVoid RiCylinder(RtFloat radius,
 
             transformPoint(currentTransform, vertex.Po, vertex.P);
 
-            // Cylinder side normal points radially outward.
+            /* Cylinder side normal points radially outward. */
             const RtNormal objectNormal = {
                 cosine, sine, 0.0f
             };
@@ -1276,7 +1273,7 @@ RtVoid RiCylinder(RtFloat radius,
         }
     }
 
-    // A cylinder side has no collapsed pole rows.
+    /* A cylinder side has no collapsed pole rows. */
     renderMicroGrid(grid);
 }
 
@@ -1318,7 +1315,7 @@ RtVoid RiCone(RtFloat height,
     for (int j = 0; j <= grid.nv; ++j) {
         const float v = static_cast<float>(j) / grid.nv;
 
-        // Radius decreases from radius at the base to zero at the tip.
+        /* Radius decreases from radius at the base to zero at the tip. */
         const float localRadius = radius * (1.0f - v);
         const float z = height * v;
 
@@ -1340,8 +1337,8 @@ RtVoid RiCone(RtFloat height,
 
             transformPoint(currentTransform, vertex.Po, vertex.P);
 
-            // Outward side normal, including its upward component.
-            // At the tip, use the limiting normal for this theta.
+            /* Outward side normal, including its upward component.
+               At the tip, use the limiting normal for this theta. */
             const RtNormal objectNormal = {
                 height * cosine,
                 height * sine,
@@ -1356,7 +1353,7 @@ RtVoid RiCone(RtFloat height,
         }
     }
 
-    // The final row collapses to the cone tip.
+    /* The final row collapses to the cone tip. */
     renderMicroGrid(grid, false, true);
 }
 
@@ -1420,7 +1417,7 @@ RtVoid RiTorus(RtFloat majorradius,
         const float cosPhi = std::cos(phi);
         const float sinPhi = std::sin(phi);
 
-        // Distance from the z axis to this point on the tube.
+        /* Distance from the z axis to this point on the tube. */
         const float radial =
             majorradius + minorradius * cosPhi;
 
@@ -1442,7 +1439,7 @@ RtVoid RiTorus(RtFloat majorradius,
 
             transformPoint(currentTransform, vertex.Po, vertex.P);
 
-            // Normal points outward from the tube's centerline.
+            /* Normal points outward from the tube's centerline. */
             const RtNormal objectNormal = {
                 cosPhi * cosTheta,
                 cosPhi * sinTheta,
@@ -1485,7 +1482,7 @@ RtVoid RiPointsPolygons(RtInt npolys,
         return;
     }
 
-    // Process one triangle or quad at a time.
+    /* Process one triangle or quad at a time. */
     auto renderPatch = [&](int p0, int p1, int p2, int p3,
                            bool triangle) {
         const int indices[4] = {p0, p1, p2, p3};
@@ -1501,7 +1498,7 @@ RtVoid RiPointsPolygons(RtInt npolys,
             }
         }
 
-        // For a triangle, p3 repeats p2.
+        /* For a triangle, p3 repeats p2. */
         double edgeU[3];
         double edgeV[3];
 
@@ -1580,7 +1577,7 @@ RtVoid RiPointsPolygons(RtInt npolys,
                     }
                 }
 
-                // Keep the triangle's collapsed row exactly coincident.
+                /* Keep the triangle's collapsed row exactly coincident. */
                 if (triangle && j == grid.nv) {
                     for (int channel = 0; channel < 3; ++channel) {
                         vertex.Po[channel] = P[p2][channel];
@@ -1821,7 +1818,7 @@ RtVoid RiTexture(RtInt slot,
         return;
     }
 
-    // Repeat wrap, including negative texture coordinates.
+    /* Repeat wrap, including negative texture coordinates. */
     const double wrappedS =
         static_cast<double>(s) - std::floor(static_cast<double>(s));
     const double wrappedT =
