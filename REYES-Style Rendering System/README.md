@@ -8,8 +8,9 @@ Tested on: macOS (Apple Silicon), AppleClang, CMake 4.4.4
 
 ## Build
 
-From this folder (the one containing `scenes/`, `textures/` and `renders/`):
+From the starter/ folder (the one containing `scenes/`, `textures/` and `renders/`):
 
+    cd starter
     cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
     cmake --build build -j4
 
