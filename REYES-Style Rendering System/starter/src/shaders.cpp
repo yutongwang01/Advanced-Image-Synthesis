@@ -28,7 +28,6 @@ void CONSTANT(RtShaderContext *c)
     /* TODO: copy the color and the opacity. */
     for (int i = 0; i < 3; ++i) {
         c->Ci[i] = c->Cs[i];
-        // c->Ci[i] = 1.0f; /* Test that the color originates from the shader. */
         c->Oi[i] = c->Os[i];
     }
 }
@@ -43,12 +42,7 @@ void CONSTANT(RtShaderContext *c)
  * from P toward the eye is -P. Normalize N and the light directions. Write
  * Ci as the color itself, not multiplied by Oi: the hider applies the
  * opacity when it composites (Section 7). */
-// void STANDARD(RtShaderContext *c)
-// {
-//     /* TODO: the lighting. For now, the surface color, unlit. */
-//     CONSTANT(c);
-// }
-
+/* TODO: the lighting. For now, the surface color, unlit. */
 void STANDARD(RtShaderContext *c)
 {
     struct Light {
