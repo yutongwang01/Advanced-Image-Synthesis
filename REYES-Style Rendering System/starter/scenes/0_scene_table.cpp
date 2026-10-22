@@ -43,6 +43,7 @@ void AndysRoom(void);
 void WallEMovie(void); /* 72 frames, into renders/3_CinematicScenes/WallEMovie/ */
 /* 4_OriginalScene */
 void GipsyDanger(void);
+void GipsyHangar(void);
 
 /* wrappers for scenes that take an argument */
 static void FirstPrimitive_sphere(void) { FirstPrimitive("sphere"); }
@@ -93,5 +94,6 @@ extern "C" const RtSceneEntry RI_SCENES[] = {
     {"AndysRoom", AndysRoom, "cinematic"},
     {"WallEMovie", WallEMovie, "cinematic"},
     {"GipsyDanger", GipsyDanger, "original"},
+    {"GipsyHangar", GipsyHangar, "original"},
     {NULL, NULL, NULL}
 };
