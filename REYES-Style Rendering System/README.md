@@ -18,7 +18,7 @@ Enter the starter/ folder (the one containing `scenes/`, `textures/` and `render
 
 ## Run
 
-Run the executable from this folder so it finds `textures/` and `models/`
+Run the executable from the starter/ folder so it finds `textures/` and `models/`
 and writes into `renders/`:
 
     ./build-mac/reyes <scene>        one scene by name (no argument lists them)
