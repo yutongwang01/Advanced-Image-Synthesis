@@ -1,0 +1,4 @@
+WhittedRayTracer/models/barbershop/barbershop.mesh filter=lfs diff=lfs merge=lfs -text
+WhittedRayTracer/models/crown/crown.mesh filter=lfs diff=lfs merge=lfs -text
+WhittedRayTracer/models/fishycat/fishycat.mesh filter=lfs diff=lfs merge=lfs -text
+WhittedRayTracer/models/sanmiguel/sanmiguel.mesh filter=lfs diff=lfs merge=lfs -text
