@@ -20,7 +20,7 @@ using namespace std;
  * this main calls one. SIMPLE_MAIN 0 is the real one: the scene named on
  * the command line, found in the scene tables, with every option. Switch
  * once your first scene renders. */
-#define SIMPLE_MAIN 0
+#define SIMPLE_MAIN 1
 
 #if SIMPLE_MAIN
 
@@ -33,7 +33,7 @@ int main()
      * by hand: uncomment what a step of the Suggested Workflow asks for. */
     // options.out = "renders/hello"; /* the image goes to renders/hello.png; rename it to keep the last one */
     // options.aov = "raydir";        /* output the ray direction for debugging eye ray calculation */
-    // options.aov = "normal";        /* output the normals for debugging (or "depth", "uv", "albedo", "shadow") */
+    options.aov = "normal";        /* output the normals for debugging (or "depth", "uv", "albedo", "shadow") */
     // options.pfm = true;            /* also write the exact floats, renders/hello.pfm (tools/compare.py reads both) */
     // options.width = 240; options.height = 135; /* a quarter-size image while a scene is slow */
     // options.threads = 1;           /* one worker, to debug the pixel loop */

@@ -32,9 +32,11 @@
  */
 #include "rt.h"
 
+#include "camera.h"
 #include "debug.h"
 #include "image.h"
 #include "options.h"
+#include "scene.h"
 #include "texture.h"
 #include "timer.h"
 #include "transform.h"
@@ -51,20 +53,6 @@
 /* Everything inside this unnamed namespace is private to this file; only
  * the rt* functions below are visible to the scenes. */
 namespace {
-
-/* A bound shader: the function and its own copy of the parameter block,
- * made at bind time (HW2 handout: shaders). The copy is shallow: what the
- * block points to stays the scene's. */
-template <typename Fn> struct Binding {
-    Fn fn = nullptr;
-    std::vector<unsigned char> params;
-
-    void bind(Fn f, const void *p, size_t nbytes)
-    {
-        fn = f;
-        params.assign((const unsigned char *)p, (const unsigned char *)p + (f && p ? nbytes : 0));
-    }
-};
 
 /* The graphics state. rtBegin resets it to the defaults listed at
  * rtBegin. Options and attributes persist across rtWorldBegin/End pairs;
@@ -98,13 +86,16 @@ struct State {
     float portal[4][3];
 
     RtMaterial material;
-    Binding<RtShaderFn> surface;
-    Binding<RtCutoutFn> cutout;
+    ShaderBinding<RtShaderFn> surface;
+    ShaderBinding<RtCutoutFn> cutout;
 
-    /* TODO: the scene data structure (Workflow, step 4): a list of draw
-     * calls (what the primitives of one rtSphere or rtTriangleMesh call
-     * share), a list of spheres, a list of meshes and one of their
-     * triangles, a list of lights, and from step 14 the BVH. */
+    /* The scene data structure (Workflow, step 4), see scene.h: a list of
+     * draw calls (what the primitives of one rtSphere or rtTriangleMesh
+     * call share), a list of spheres, a list of meshes and one of their
+     * triangles, and a list of lights. The world's contents: cleared by
+     * clearWorld().
+     * TODO: from step 14, the BVH. */
+    Scene scene;
 };
 
 State state;
@@ -112,8 +103,7 @@ State state;
 /* The world's contents gone (rtWorldBegin, and rtWorldEnd when it is done). */
 void clearWorld()
 {
-    /* TODO: empty the lists of draw calls, spheres, meshes, triangles and
-     * lights (Workflow, step 4) */
+    state.scene.clear(); /* the lists of draw calls, spheres, meshes, triangles and lights */
 }
 
 RtMaterial defaultMaterial()
@@ -305,6 +295,59 @@ RtVoid rtCutout(RtCutoutFn fn, const void *params, size_t nbytes) { state.cutout
  * inverse, the material and the shaders bound at the call) is one
  * draw-call record they name by index (Intersection handout). */
 
+/* Ray-sphere intersection (Workflow, step 6; Intersection handout). The
+ * ray is carried into the sphere's object space through the inverse CTM:
+ * the origin as a point, the direction as a vector and NOT renormalized, so
+ * t means the same point in both spaces. There the sphere is |P'| = r, and
+ * |O' + t D'|^2 = r^2 is A t^2 + B t + C = 0 with A = D'.D', B = 2 O'.D',
+ * C = O'.O' - r^2. The nearer root inside [tMin, tMax] (and nearer than a
+ * hit already in `hit`) wins. The object-space normal P' / |P'| comes back
+ * through the inverse transpose, n (M^-1)^T in the row-vector convention,
+ * which stays perpendicular to the surface under a non-uniform scale.
+ * Returns whether `hit` was updated; Ng and N are the outward normal. */
+bool intersectSphere(const Ray &ray, const Sphere &sphere, int drawCallIndex, const DrawCall &dc, Hit &hit)
+{
+    /* 1. the ray in object space */
+    const Vec3 o = dc.worldToObject.point(ray.o);
+    const Vec3 d = dc.worldToObject.vector(ray.d);
+
+    /* 2. the quadratic */
+    const float A = dot(d, d);
+    if (!(A > 0))
+        return false; /* a degenerate direction */
+    const float B = 2.0f * dot(o, d);
+    const float C = dot(o, o) - sphere.radius * sphere.radius;
+    const float disc = B * B - 4.0f * A * C;
+    if (disc < 0)
+        return false; /* no intersection */
+
+    const float sq = std::sqrt(disc);
+    const float t1 = (-B - sq) / (2.0f * A); /* the nearer root */
+    const float t2 = (-B + sq) / (2.0f * A);
+
+    const float tFar = std::min(ray.tMax, hit.t);
+    float t;
+    if (t1 >= ray.tMin && t1 <= tFar)
+        t = t1;
+    else if (t2 >= ray.tMin && t2 <= tFar)
+        t = t2; /* the origin is inside the sphere, or t1 is behind tMin */
+    else
+        return false;
+
+    /* 3. the hit point and the normal */
+    const Vec3 pObj = o + d * t;
+    const Vec3 nObj = normalize(pObj);
+    const Vec3 n = normalize(dc.worldToObject.transposed().vector(nObj));
+
+    hit.t = t;
+    hit.P = ray.at(t);
+    hit.Ng = n;
+    hit.N = n;
+    hit.drawCall = drawCallIndex;
+    hit.hit = true;
+    return true;
+}
+
 /* A sphere of the given radius at the CTM's origin. */
 RtVoid rtSphere(RtFloat radius)
 {
@@ -312,9 +355,23 @@ RtVoid rtSphere(RtFloat radius)
         std::fprintf(stderr, "%s: rtSphere with radius %g, skipped\n", options.scene, radius);
         return;
     }
-    /* TODO: add a draw call (a copy of ctm(), object to world; its inverse,
-     * world to object; the material and the shaders bound now) and the
-     * sphere, its radius and its draw call, to their lists (Workflow, step 6) */
+    /* The draw call: everything copied now, since the CTM, the material and
+     * the shaders may change after this call. */
+    DrawCall dc;
+    dc.objectToWorld = ctm();
+    dc.worldToObject = dc.objectToWorld.inverse();
+    dc.material = state.material;
+    dc.surface = state.surface;
+    dc.cutout = state.cutout;
+    dc.emissive = state.material.emission[0] > 0 || state.material.emission[1] > 0 ||
+                  state.material.emission[2] > 0;
+    state.scene.drawCalls.push_back(dc);
+
+    /* The sphere, naming the draw call just added. */
+    Sphere sphere;
+    sphere.radius = radius;
+    sphere.drawCall = (int)state.scene.drawCalls.size() - 1;
+    state.scene.spheres.push_back(sphere);
 }
 
 /* ntris triangles over nverts vertices, counterclockwise from outside; N,
@@ -442,6 +499,7 @@ RtVoid rtWorldEnd(void)
 
     const int w = options.width > 0 ? options.width : state.xres;
     const int h = options.height > 0 ? options.height : state.yres;
+    const Camera camera = makeCamera(Vec3(state.eye), Vec3(state.lookat), Vec3(state.up), state.fovy, w, h);
     const int threads = threadCount();
     if (!options.aov.empty() && !isAov(options.aov)) {
         std::fprintf(stderr, "%s: --aov %s: not an image this renderer writes; it has raydir, normal, ng, depth, uv, albedo, "
@@ -462,6 +520,43 @@ RtVoid rtWorldEnd(void)
     RenderBudget budget(options.timeLimit); /* --time-limit: the clock starts here (timer.h) */
     if (options.progress)
         budget.progress((long long)w * h); /* --progress: a line every two seconds */
+    for (int y = 0; y < h; ++y) {
+        for (int x = 0; x < w; ++x) {
+
+            traceBegin(x, y);
+
+            const Ray ray = generateCameraRay(camera, x, y, w, h);
+
+            const size_t index = 3 * ((size_t)y * w + x);
+
+            RT_TRACE("camera ray: pixel (%d, %d) origin (%g, %g, %g) direction (%g, %g, %g)", x, y, ray.o.x, ray.o.y,
+                     ray.o.z, ray.d.x, ray.d.y, ray.d.z);
+
+            // --aov raydir: the camera ray's direction as a color. The beauty image stays black until shading exists.
+            if (options.aov == "raydir") {
+                float dir[3];
+                ray.d.store(dir);
+                aovNormalColor(dir, rgb.data() + index);
+            } else if (options.aov == "normal") {
+                // Brute force over every sphere (no BVH yet); intersectSphere
+                // keeps only a hit nearer than the one already in `hit`.
+                Hit hit;
+                for (size_t i = 0; i < state.scene.spheres.size(); ++i) {
+                    const Sphere &sphere = state.scene.spheres[i];
+                    intersectSphere(ray, sphere, sphere.drawCall, state.scene.drawCalls[sphere.drawCall], hit);
+                }
+
+                // The shading normal as a color; a miss stays black.
+                if (hit.hit) {
+                    float n[3];
+                    hit.N.store(n);
+                    aovNormalColor(n, rgb.data() + index);
+                }
+            }
+
+            traceEnd();
+        }
+    }
     budget.done((long long)w * h);
     budget.finish();
     const double renderTime = render.seconds();
