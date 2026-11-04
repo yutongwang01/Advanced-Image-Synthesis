@@ -348,6 +348,54 @@ bool intersectSphere(const Ray &ray, const Sphere &sphere, int drawCallIndex, co
     return true;
 }
 
+/* Ray-triangle intersection. A hit needs u >= 0, v >= 0, u + v <= 1 and t in [tMin, min(tMax, hit.t)].
+ * Both sides count (no back-face culling): rays inside glass hit the back.
+ * Ng is the unit e1 x e2, outward by the winding rtTriangleMesh kept; N is
+ * the vertex normals interpolated with the barycentrics (1 - u - v, u, v)
+ * when the mesh has them, else Ng. Neither is turned toward the ray here.
+ * Returns whether `hit` was updated. */
+bool intersectTriangle(const Ray &ray, const Triangle &tri, const Mesh &mesh, Hit &hit)
+{
+    const Vec3 p = cross(ray.d, tri.e2);
+    const float det = dot(tri.e1, p);
+    /* det = -D . (e1 x e2), so det / (|e1 x e2| |D|) is the cosine between the
+     * ray and the plane's normal: a relative test, the same for any triangle
+     * size. |cos| < 1e-6 is a grazing ray or a degenerate triangle. */
+    const Vec3 nGeom = cross(tri.e1, tri.e2);
+    if (!(det * det > 1e-12f * lengthSquared(nGeom) * lengthSquared(ray.d)))
+        return false;
+    const float invDet = 1.0f / det;
+
+    const Vec3 sv = ray.o - tri.p0;
+    const float u = dot(sv, p) * invDet;
+    if (u < 0.0f || u > 1.0f)
+        return false;
+
+    const Vec3 q = cross(sv, tri.e1);
+    const float v = dot(ray.d, q) * invDet;
+    if (v < 0.0f || u + v > 1.0f)
+        return false;
+
+    const float t = dot(tri.e2, q) * invDet;
+    if (t < ray.tMin || t > std::min(ray.tMax, hit.t))
+        return false;
+
+    const Vec3 ng = normalize(nGeom);
+    Vec3 n = ng;
+    if (mesh.hasNormals()) {
+        const float w = 1.0f - u - v;
+        n = normalize(mesh.N[(size_t)tri.v[0]] * w + mesh.N[(size_t)tri.v[1]] * u + mesh.N[(size_t)tri.v[2]] * v);
+    }
+
+    hit.t = t;
+    hit.P = ray.at(t);
+    hit.Ng = ng;
+    hit.N = n;
+    hit.drawCall = mesh.drawCall;
+    hit.hit = true;
+    return true;
+}
+
 /* A sphere of the given radius at the CTM's origin. */
 RtVoid rtSphere(RtFloat radius)
 {
@@ -385,11 +433,88 @@ RtVoid rtTriangleMesh(RtInt nverts, const RtPoint P[], const RtNormal N[], const
 {
     if (nverts <= 0 || ntris <= 0 || !P || !indices)
         return;
-    (void)N;
-    (void)st;
-    (void)Cs;
-    /* TODO: add a draw call, then bake the mesh to world space and add it and
-     * its triangles to their lists (Workflow, step 7) */
+    /* The draw call: everything copied now, as in rtSphere. */
+    DrawCall dc;
+    dc.objectToWorld = ctm();
+    dc.worldToObject = dc.objectToWorld.inverse();
+    dc.material = state.material;
+    dc.surface = state.surface;
+    dc.cutout = state.cutout;
+    dc.emissive = state.material.emission[0] > 0 || state.material.emission[1] > 0 ||
+                  state.material.emission[2] > 0;
+    state.scene.drawCalls.push_back(dc);
+    const int drawCallIndex = (int)state.scene.drawCalls.size() - 1;
+
+    /* The mesh, baked to world space. */
+    const Mat4 &toWorld = dc.objectToWorld;
+    const Mat4 normalMatrix = dc.worldToObject.transposed();
+
+    Mesh mesh;
+    mesh.drawCall = drawCallIndex;
+    mesh.P.resize((size_t)nverts);
+    for (int i = 0; i < nverts; ++i)
+        mesh.P[(size_t)i] = toWorld.point(Vec3(P[i]));
+    if (N) {
+        mesh.N.resize((size_t)nverts);
+        for (int i = 0; i < nverts; ++i)
+            mesh.N[(size_t)i] = normalize(normalMatrix.vector(Vec3(N[i])));
+    }
+    if (st)
+        mesh.st.assign(st, st + 2 * (size_t)nverts);
+    if (Cs) {
+        mesh.Cs.resize((size_t)nverts);
+        for (int i = 0; i < nverts; ++i)
+            mesh.Cs[(size_t)i] = Vec3(Cs[i]);
+    }
+
+    /* The triangles. */
+    const bool mirrored = toWorld.determinant3() < 0;
+    const int meshIndex = (int)state.scene.meshes.size();
+    mesh.firstTriangle = (int)state.scene.triangles.size();
+    int skipped = 0;
+    for (int k = 0; k < ntris; ++k) {
+        int i0 = indices[3 * k], i1 = indices[3 * k + 1], i2 = indices[3 * k + 2];
+        if (i0 < 0 || i0 >= nverts || i1 < 0 || i1 >= nverts || i2 < 0 || i2 >= nverts) {
+            ++skipped;
+            continue;
+        }
+        if (mirrored)
+            std::swap(i1, i2);
+
+        Triangle tri;
+        tri.p0 = mesh.P[(size_t)i0];
+        tri.e1 = mesh.P[(size_t)i1] - tri.p0;
+        tri.e2 = mesh.P[(size_t)i2] - tri.p0;
+
+        /* The tangents dP/ds and dP/dt from e1 = ds1 dPdu + dt1 dPdv,
+         * e2 = ds2 dPdu + dt2 dPdv (world space, as e1 and e2 are); zero
+         * without st or when the st are degenerate. */
+        tri.dPdu = Vec3(0, 0, 0);
+        tri.dPdv = Vec3(0, 0, 0);
+        if (mesh.hasTexCoords()) {
+            const float ds1 = mesh.st[2 * (size_t)i1] - mesh.st[2 * (size_t)i0];
+            const float ds2 = mesh.st[2 * (size_t)i2] - mesh.st[2 * (size_t)i0];
+            const float dt1 = mesh.st[2 * (size_t)i1 + 1] - mesh.st[2 * (size_t)i0 + 1];
+            const float dt2 = mesh.st[2 * (size_t)i2 + 1] - mesh.st[2 * (size_t)i0 + 1];
+            const float det = ds1 * dt2 - dt1 * ds2;
+            if (std::fabs(det) > 1e-12f) {
+                const float inv = 1.0f / det;
+                tri.dPdu = (tri.e1 * dt2 - tri.e2 * dt1) * inv;
+                tri.dPdv = (tri.e2 * ds1 - tri.e1 * ds2) * inv;
+            }
+        }
+        tri.v[0] = i0;
+        tri.v[1] = i1;
+        tri.v[2] = i2;
+        tri.mesh = meshIndex;
+        state.scene.triangles.push_back(tri);
+    }
+    mesh.triangleCount = (int)state.scene.triangles.size() - mesh.firstTriangle;
+    if (skipped > 0)
+        std::fprintf(stderr, "%s: rtTriangleMesh: %d of %d triangles have an index outside [0, %d), skipped\n",
+                     options.scene, skipped, (int)ntris, (int)nverts);
+
+    state.scene.meshes.push_back(std::move(mesh));
 }
 
 /* textures --------------------------------------------------------------- */
@@ -544,6 +669,15 @@ RtVoid rtWorldEnd(void)
                 for (size_t i = 0; i < state.scene.spheres.size(); ++i) {
                     const Sphere &sphere = state.scene.spheres[i];
                     intersectSphere(ray, sphere, sphere.drawCall, state.scene.drawCalls[sphere.drawCall], hit);
+                }
+
+                // Then every triangle, into the same Hit, so the nearest of
+                // spheres and triangles wins. intersectTriangle reads the
+                // draw call index from the mesh.
+                for (size_t i = 0; i < state.scene.triangles.size(); ++i) {
+                    const Triangle &triangle = state.scene.triangles[i];
+                    const Mesh &mesh = state.scene.meshes[(size_t)triangle.mesh];
+                    intersectTriangle(ray, triangle, mesh, hit);
                 }
 
                 // The shading normal as a color; a miss stays black.
