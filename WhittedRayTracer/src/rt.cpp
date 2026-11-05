@@ -46,6 +46,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <limits>
 #include <string>
 #include <thread>
 #include <vector>
@@ -233,30 +234,41 @@ RtVoid rtCamera(RtPoint eye, RtPoint lookat, RtVector up, RtFloat fovy)
  * handout). */
 RtVoid rtPointLight(RtPoint position, RtColor intensity)
 {
-    (void)position;
-    (void)intensity;
-    /* TODO: add the light to the list, its position through the CTM */
+    Light light;
+    light.type = LightType::Point;
+    light.position = ctm().point(Vec3(position)); /* through the CTM now, not at render time */
+    light.intensity = Vec3(intensity);
+    state.scene.lights.push_back(light);
 }
 
+/* direction is where the light travels (light from above has a negative y),
+ * not the direction from a surface toward the light: shading uses -direction. */
 RtVoid rtDirectionalLight(RtVector direction, RtColor irradiance)
 {
-    (void)direction;
-    (void)irradiance;
-    /* TODO: add the light to the list, its direction through the CTM, normalized */
+    Light light;
+    light.type = LightType::Directional;
+    light.direction = normalize(ctm().vector(Vec3(direction)));
+    light.intensity = Vec3(irradiance);
+    state.scene.lights.push_back(light);
 }
 
 /* The cone is stored as cosines; the penumbra is clamped into the cone. */
 RtVoid rtSpotLight(RtPoint position, RtVector direction, RtColor intensity, RtFloat coneAngle, RtFloat penumbraAngle,
                    RtFloat maxDistance)
 {
-    (void)position;
-    (void)direction;
-    (void)intensity;
-    (void)coneAngle;
-    (void)penumbraAngle;
-    (void)maxDistance;
-    /* TODO: add the light to the list: position and direction through the
-     * CTM, the cosines of the outer angle and of outer - penumbra, the reach */
+    const float kDegToRad = 3.14159265358979323846f / 180.0f;
+    const float cone = std::max(0.0f, coneAngle);
+    const float penumbra = std::min(std::max(0.0f, penumbraAngle), cone); /* into [0, cone] */
+
+    Light light;
+    light.type = LightType::Spot;
+    light.position = ctm().point(Vec3(position));
+    light.direction = normalize(ctm().vector(Vec3(direction))); /* where the light travels */
+    light.intensity = Vec3(intensity);
+    light.cosOuter = std::cos(cone * kDegToRad);              /* gone at the cone angle */
+    light.cosInner = std::cos((cone - penumbra) * kDegToRad); /* full strength inside cone - penumbra */
+    light.maxDistance = std::max(0.0f, maxDistance);          /* 0: no limit */
+    state.scene.lights.push_back(light);
 }
 
 /* attributes ------------------------------------------------------------- */
@@ -299,68 +311,74 @@ RtVoid rtCutout(RtCutoutFn fn, const void *params, size_t nbytes) { state.cutout
  * ray is carried into the sphere's object space through the inverse CTM:
  * the origin as a point, the direction as a vector and NOT renormalized, so
  * t means the same point in both spaces. There the sphere is |P'| = r, and
- * |O' + t D'|^2 = r^2 is A t^2 + B t + C = 0 with A = D'.D', B = 2 O'.D',
- * C = O'.O' - r^2. The nearer root inside [tMin, tMax] (and nearer than a
- * hit already in `hit`) wins. The object-space normal P' / |P'| comes back
+ * |O' + t D'|^2 = r^2 is a t^2 + 2 b t + c = 0, solved in double. The
+ * smaller root with tMin < t < min(tMax, hit.t) wins. The object-space normal P' / |P'| comes back
  * through the inverse transpose, n (M^-1)^T in the row-vector convention,
  * which stays perpendicular to the surface under a non-uniform scale.
- * Returns whether `hit` was updated; Ng and N are the outward normal. */
+ * Returns whether `hit` was updated; Ng and N are the outward normal,
+ * hit.entering whether the ray met the outside. */
 bool intersectSphere(const Ray &ray, const Sphere &sphere, int drawCallIndex, const DrawCall &dc, Hit &hit)
 {
     /* 1. the ray in object space */
     const Vec3 o = dc.worldToObject.point(ray.o);
     const Vec3 d = dc.worldToObject.vector(ray.d);
 
-    /* 2. the quadratic */
-    const float A = dot(d, d);
-    if (!(A > 0))
+    /* 2. the quadratic a t^2 + 2 b t + c = 0, in double precision against
+     * cancellation in b^2 - a c (Intersection handout, section 2.2):
+     * a = d'.d', b = o'.d', c = o'.o' - r^2, t0,1 = (-b -+ sqrt(b^2 - a c)) / a */
+    const double ox = o.x, oy = o.y, oz = o.z, dx = d.x, dy = d.y, dz = d.z, r = sphere.radius;
+    const double a = dx * dx + dy * dy + dz * dz;
+    if (!(a > 0))
         return false; /* a degenerate direction */
-    const float B = 2.0f * dot(o, d);
-    const float C = dot(o, o) - sphere.radius * sphere.radius;
-    const float disc = B * B - 4.0f * A * C;
+    const double b = ox * dx + oy * dy + oz * dz;
+    const double c = ox * ox + oy * oy + oz * oz - r * r;
+    const double disc = b * b - a * c;
     if (disc < 0)
         return false; /* no intersection */
+    const double sq = std::sqrt(disc);
+    const double t0 = (-b - sq) / a; /* t0 <= t1 */
+    const double t1 = (-b + sq) / a;
 
-    const float sq = std::sqrt(disc);
-    const float t1 = (-B - sq) / (2.0f * A); /* the nearer root */
-    const float t2 = (-B + sq) / (2.0f * A);
-
-    const float tFar = std::min(ray.tMax, hit.t);
-    float t;
-    if (t1 >= ray.tMin && t1 <= tFar)
-        t = t1;
-    else if (t2 >= ray.tMin && t2 <= tFar)
-        t = t2; /* the origin is inside the sphere, or t1 is behind tMin */
+    /* The smallest root strictly ahead of tMin and nearer than the hit so
+     * far: t0, else t1 (the origin inside the sphere). */
+    const double tFar = std::min(ray.tMax, hit.t);
+    double tHit;
+    if (t0 > ray.tMin && t0 < tFar)
+        tHit = t0;
+    else if (t1 > ray.tMin && t1 < tFar)
+        tHit = t1;
     else
         return false;
+    const float t = (float)tHit;
 
-    /* 3. the hit point and the normal */
+    /* 3. the hit point and the normal: Po through (M^-1)^T, normalized */
     const Vec3 pObj = o + d * t;
-    const Vec3 nObj = normalize(pObj);
-    const Vec3 n = normalize(dc.worldToObject.transposed().vector(nObj));
+    const Vec3 n = normalize(dc.worldToObject.transposed().vector(pObj));
 
     hit.t = t;
     hit.P = ray.at(t);
     hit.Ng = n;
     hit.N = n;
     hit.drawCall = drawCallIndex;
+    hit.entering = dot(n, ray.d) < 0;
+    hit.b1 = hit.b2 = 0;
     hit.hit = true;
     return true;
 }
 
-/* Ray-triangle intersection. A hit needs u >= 0, v >= 0, u + v <= 1 and t in [tMin, min(tMax, hit.t)].
+/* Ray-triangle intersection. A hit needs u >= 0, v >= 0, u + v <= 1 (exact, no tolerance, as the
+ * reference) and tMin < t < min(tMax, hit.t).
  * Both sides count (no back-face culling): rays inside glass hit the back.
  * Ng is the unit e1 x e2, outward by the winding rtTriangleMesh kept; N is
  * the vertex normals interpolated with the barycentrics (1 - u - v, u, v)
- * when the mesh has them, else Ng. Neither is turned toward the ray here.
+ * when the mesh has them (Ng then turned to N's side), else Ng. Neither is
+ * turned toward the ray here; hit.entering says which side was met, and
+ * hit.b1, hit.b2 keep the barycentrics.
  * Returns whether `hit` was updated. */
 bool intersectTriangle(const Ray &ray, const Triangle &tri, const Mesh &mesh, Hit &hit)
 {
     const Vec3 p = cross(ray.d, tri.e2);
     const float det = dot(tri.e1, p);
-    /* det = -D . (e1 x e2), so det / (|e1 x e2| |D|) is the cosine between the
-     * ray and the plane's normal: a relative test, the same for any triangle
-     * size. |cos| < 1e-6 is a grazing ray or a degenerate triangle. */
     const Vec3 nGeom = cross(tri.e1, tri.e2);
     if (!(det * det > 1e-12f * lengthSquared(nGeom) * lengthSquared(ray.d)))
         return false;
@@ -377,14 +395,18 @@ bool intersectTriangle(const Ray &ray, const Triangle &tri, const Mesh &mesh, Hi
         return false;
 
     const float t = dot(tri.e2, q) * invDet;
-    if (t < ray.tMin || t > std::min(ray.tMax, hit.t))
-        return false;
+    if (!(t > ray.tMin && t < std::min(ray.tMax, hit.t)))
+        return false; /* strictly ahead of tMin (t > 0 for tMin = 0) and nearer than the hit so far */
 
-    const Vec3 ng = normalize(nGeom);
+    Vec3 ng = normalize(nGeom);
     Vec3 n = ng;
     if (mesh.hasNormals()) {
         const float w = 1.0f - u - v;
         n = normalize(mesh.N[(size_t)tri.v[0]] * w + mesh.N[(size_t)tri.v[1]] * u + mesh.N[(size_t)tri.v[2]] * v);
+        /* Ng to the interpolated normal's side first, as the reference
+         * does (Intersection handout, section 3.3). */
+        if (dot(ng, n) < 0)
+            ng = -ng;
     }
 
     hit.t = t;
@@ -392,8 +414,364 @@ bool intersectTriangle(const Ray &ray, const Triangle &tri, const Mesh &mesh, Hi
     hit.Ng = ng;
     hit.N = n;
     hit.drawCall = mesh.drawCall;
+    hit.entering = dot(ng, ray.d) < 0; /* from Ng as stored, before the facing flip */
+    hit.b1 = u;
+    hit.b2 = v;
     hit.hit = true;
     return true;
+}
+
+/* The nearest hit of the ray in the whole scene, spheres and triangles
+ * alike, by brute force over every primitive (no BVH yet, Workflow step
+ * 14). One Hit is shared by both loops: each intersect function accepts
+ * only a hit nearer than the one already there, so what is left at the end
+ * is the nearest, and occlusion between spheres and triangles is right. */
+bool intersectScene(const Ray &ray, const Scene &scene, Hit &hit, int skipDrawCall = -1)
+{
+    bool found = false;
+    for (size_t i = 0; i < scene.spheres.size(); ++i) {
+        const Sphere &sphere = scene.spheres[i];
+        if (sphere.drawCall == skipDrawCall)
+            continue;
+        if (intersectSphere(ray, sphere, sphere.drawCall, scene.drawCalls[(size_t)sphere.drawCall], hit)) {
+            hit.prim = (int)i;
+            found = true;
+        }
+    }
+    for (size_t i = 0; i < scene.triangles.size(); ++i) {
+        const Triangle &triangle = scene.triangles[i];
+        const Mesh &mesh = scene.meshes[(size_t)triangle.mesh];
+        if (mesh.drawCall == skipDrawCall)
+            continue;
+        if (intersectTriangle(ray, triangle, mesh, hit)) {
+            hit.prim = (int)(scene.spheres.size() + i);
+            found = true;
+        }
+    }
+    return found;
+}
+
+/* The offset that keeps a secondary ray off the surface it starts on: the
+ * ray starts at P + Ng * kRayEpsilon (Whitted Illumination handout, section
+ * 4; Intersection handout, section 5). */
+const float kRayEpsilon = 1e-4f;
+
+/* Whether anything lies on the ray within [tMin, tMax]: an any-hit test for
+ * shadow rays (Whitted Illumination handout, section 4). The first hit ends
+ * the search, nearest or not. skipDrawCall names a draw call whose
+ * primitives are ignored (the emitter a stand-in light sits inside), -1
+ * for none. Transparent blockers block completely. Brute force, like
+ * intersectScene, until the BVH. */
+bool occluded(const Ray &ray, const Scene &scene, int skipDrawCall = -1)
+{
+    for (size_t i = 0; i < scene.spheres.size(); ++i) {
+        const Sphere &sphere = scene.spheres[i];
+        if (sphere.drawCall == skipDrawCall)
+            continue;
+        Hit hit;
+        if (intersectSphere(ray, sphere, sphere.drawCall, scene.drawCalls[(size_t)sphere.drawCall], hit))
+            return true;
+    }
+    for (size_t i = 0; i < scene.triangles.size(); ++i) {
+        const Triangle &triangle = scene.triangles[i];
+        const Mesh &mesh = scene.meshes[(size_t)triangle.mesh];
+        if (mesh.drawCall == skipDrawCall)
+            continue;
+        Hit hit;
+        if (intersectTriangle(ray, triangle, mesh, hit))
+            return true;
+    }
+    return false;
+}
+
+/* The irradiance E and the unit direction L (from P toward the light) that
+ * one light delivers at P (Whitted Illumination handout, section 3), and
+ * the distance d to it (infinite for a directional light). Returns false
+ * when it delivers nothing: outside a spot's cone or past its reach. */
+bool lightAt(const Light &light, const Vec3 &P, Vec3 &E, Vec3 &L, float &d)
+{
+    if (light.type == LightType::Directional) {
+        L = -light.direction; /* direction is where the light travels */
+        E = light.intensity;  /* the irradiance, the same everywhere */
+        d = std::numeric_limits<float>::infinity();
+        return true;
+    }
+
+    /* Point, spot (and, later, the emitters' stand-ins): I / d^2 */
+    const Vec3 toLight = light.position - P;
+    const float d2 = lengthSquared(toLight);
+    if (!(d2 > 0))
+        return false;
+    d = std::sqrt(d2);
+    L = toLight / d;
+    E = light.intensity / d2;
+
+    if (light.type == LightType::Emissive && light.oneSided) {
+        /* a flat emitter's stand-in shines forward only: I(w) = Le A max(n . w, 0),
+         * w the direction from the light toward P */
+        const float c = dot(light.normal, -L);
+        if (!(c > 0))
+            return false;
+        E = E * c;
+    }
+
+    if (light.type == LightType::Spot) {
+        /* cone: 1 inside cone - penumbra, 0 outside the cone, smoothstep
+         * u^2 (3 - 2u) of the cosine's position in between */
+        const float c = dot(light.direction, -L); /* axis . (light toward P) */
+        float cone;
+        if (c >= light.cosInner)
+            cone = 1.0f;
+        else if (c <= light.cosOuter)
+            cone = 0.0f;
+        else {
+            const float u = (c - light.cosOuter) / (light.cosInner - light.cosOuter);
+            cone = u * u * (3.0f - 2.0f * u);
+        }
+        /* reach: (1 - (d / dmax)^2)^2 before dmax, 0 beyond, 1 for dmax = 0 */
+        float reach = 1.0f;
+        if (light.maxDistance > 0) {
+            if (d >= light.maxDistance)
+                reach = 0.0f;
+            else {
+                const float r = 1.0f - d2 / (light.maxDistance * light.maxDistance);
+                reach = r * r;
+            }
+        }
+        if (!(cone * reach > 0))
+            return false;
+        E = E * (cone * reach);
+    }
+    return true;
+}
+
+/* The shadow ray toward a light (Whitted Illumination handout, section 4):
+ * from P + Ng eps, Ng facing the light, up to d - eps for a point, spot or
+ * stand-in light and without end for a directional one; depth -1 marks it
+ * a shadow ray (the cutout shaders' convention). */
+Ray shadowRay(const Light &light, const Vec3 &P, const Vec3 &Ng, const Vec3 &L, float d)
+{
+    const float tMax = light.type == LightType::Directional ? std::numeric_limits<float>::infinity() : d - kRayEpsilon;
+    return Ray(P + Ng * kRayEpsilon, L, 0.0f, tMax, -1);
+}
+
+/* The draw call a shadow ray toward this light ignores: a stand-in sits
+ * inside its own emitter. -1 for the other lights. */
+int shadowSkip(const Light &light) { return light.type == LightType::Emissive ? light.drawCall : -1; }
+
+/* Whether light j reaches P, in the handout's order: the light's range
+ * (a spot's cone and reach, a flat emitter's back), the geometric horizon
+ * (Ng . L <= 0: no shadow ray), then the shadow ray. Ng faces the ray.
+ * Shared by the shading and --aov shadow, so the two always agree. */
+enum class LightReach { OutOfReach, Behind, Shadowed, Visible };
+
+LightReach lightReach(const Light &light, const Vec3 &P, const Vec3 &Ng, Vec3 &E, Vec3 &L, float &d)
+{
+    if (!lightAt(light, P, E, L, d))
+        return LightReach::OutOfReach;
+    if (dot(Ng, L) <= 0)
+        return LightReach::Behind;
+    if (occluded(shadowRay(light, P, Ng, L, d), state.scene, shadowSkip(light)))
+        return LightReach::Shadowed;
+    return LightReach::Visible;
+}
+
+/* The emitters' stand-in point lights, added after the scene's own lights at rtWorldEnd: one per
+ * draw call whose bound material emits, with Le that emission.
+ * Zero-area triangles count neither for the area, the centroid nor the
+ * flatness test; a draw call with no area gets no light. */
+void addEmitterLights()
+{
+    const float kPi = 3.14159265358979323846f;
+    Scene &scene = state.scene;
+    for (size_t dci = 0; dci < scene.drawCalls.size(); ++dci) {
+        const DrawCall &dc = scene.drawCalls[dci];
+        if (!dc.emissive)
+            continue;
+        const Vec3 Le(dc.material.emission);
+
+        Light light;
+        light.type = LightType::Emissive;
+        light.drawCall = (int)dci;
+        bool made = false;
+
+        for (const Sphere &sphere : scene.spheres) {
+            if (sphere.drawCall != (int)dci)
+                continue;
+            const Mat4 &M = dc.objectToWorld;
+            const float meanScale = (length(M.vector(Vec3(1, 0, 0))) + length(M.vector(Vec3(0, 1, 0))) +
+                                     length(M.vector(Vec3(0, 0, 1)))) / 3.0f;
+            const float r = sphere.radius * meanScale;
+            if (!(r > 0))
+                break;
+            light.position = M.point(Vec3(0, 0, 0));
+            light.intensity = Le * (kPi * r * r);
+            made = true;
+            break;
+        }
+
+        for (const Mesh &mesh : scene.meshes) {
+            if (made || mesh.drawCall != (int)dci)
+                continue;
+            float area = 0;
+            Vec3 centroid(0.0f), n0(0.0f);
+            bool haveN0 = false, flat = true;
+            for (int k = mesh.firstTriangle; k < mesh.firstTriangle + mesh.triangleCount; ++k) {
+                const Triangle &tri = scene.triangles[(size_t)k];
+                const Vec3 c = cross(tri.e1, tri.e2);
+                const float a = 0.5f * length(c);
+                if (!(a > 0))
+                    continue; /* zero area: skipped */
+                const Vec3 ni = c / (2.0f * a);
+                if (!haveN0) {
+                    n0 = ni;
+                    haveN0 = true;
+                } else if (!(dot(ni, n0) > 0.9998f))
+                    flat = false;
+                area += a;
+                centroid += (tri.p0 + (tri.e1 + tri.e2) / 3.0f) * a;
+            }
+            if (!(area > 0))
+                break;
+            light.position = centroid / area;
+            if (flat) {
+                light.oneSided = true;
+                light.normal = n0;
+                light.intensity = Le * area;
+            } else
+                light.intensity = Le * (area / 4.0f);
+            made = true;
+            break;
+        }
+
+        if (made)
+            scene.lights.push_back(light);
+        else
+            std::fprintf(stderr, "%s: emissive draw call %zu has no area, no light made for it\n", options.scene, dci);
+    }
+}
+
+/* The radiance a ray returns (Whitted Illumination handout, Eq. 1). So far
+ * the first two lines and the emission:
+ *     (1 - kt) (ka kd + sum_j Sj Ej kd/pi max(N.Lj, 0)) + sum_j Sj Ej ks max(Rj.V, 0)^n + emission
+ * with Rj = 2 (N.Lj) N - Lj, V = -I, alpha = clamp(roughness^2, 0.05, 1) and
+ * n = max(1, 2 / alpha^2 - 2): Lambert with its 1/pi, unnormalized Phong
+ * not dimmed by (1 - kt). Per light, in the handout's order: its range,
+ * the horizon, the shadow ray (lightReach), then N . L > 0. A miss returns
+ * the background. The emission of a draw call whose bound material emits
+ * shows on its front face only. With --trace, the handout's log lines.
+ * The mirror ray of an opaque surface (step 10) recurses one level deeper.
+ * Not yet: the surface shader, the refracted ray (step 11). */
+#define RT_V3(v) (double)(v).x, (double)(v).y, (double)(v).z
+Vec3 traceRay(const Ray &ray, int depth)
+{
+    const int ind = 2 * depth;   /* this depth's lines */
+    const int sub = ind + 2;     /* the lines under a hit */
+
+    Hit hit;
+    if (!intersectScene(ray, state.scene, hit)) {
+        const Vec3 bg(state.background);
+        RT_TRACE("%*sdepth %d: miss, environment (%g, %g, %g)", ind, "", depth, RT_V3(bg));
+        return bg;
+    }
+
+    const DrawCall &dc = state.scene.drawCalls[(size_t)hit.drawCall];
+    const RtMaterial &m = dc.material;
+    const Vec3 kd(m.albedo), ks(m.specular);
+    const float kt = m.transmission;
+    const Vec3 ka = options.ambientSet ? Vec3(options.ambient) : Vec3(state.ambient); /* --ambient overrides */
+
+    /* Which face the ray met, from Ng before the flip (kept for the
+     * emission and, later, refraction), then the facing rule: Ng turned
+     * toward the ray, N along with it. */
+    const bool entering = hit.entering;
+    Vec3 Ng = hit.Ng, N = hit.N;
+    if (!entering) {
+        Ng = -Ng;
+        N = -N;
+    }
+    const Vec3 V = -ray.d;
+
+    RT_TRACE("%*sdepth %d: hit prim %d t=%g P=(%g, %g, %g) N=(%g, %g, %g) Ng=(%g, %g, %g) %s", ind, "", depth,
+             hit.prim, (double)hit.t, RT_V3(hit.P), RT_V3(N), RT_V3(Ng), entering ? "entering" : "leaving");
+    RT_TRACE("%*smaterial: albedo (%g, %g, %g) specular (%g, %g, %g) roughness %g transmission %g ior %g "
+             "emission (%g, %g, %g)", sub, "", RT_V3(kd), RT_V3(ks), (double)m.roughness, (double)kt, (double)m.ior,
+             (double)m.emission[0], (double)m.emission[1], (double)m.emission[2]);
+
+    /* The Phong exponent from the roughness, not the roughness itself. */
+    const float alpha = std::min(1.0f, std::max(0.05f, m.roughness * m.roughness));
+    const float n = std::max(1.0f, 2.0f / (alpha * alpha) - 2.0f);
+    const bool hasSpecular = ks.x > 0 || ks.y > 0 || ks.z > 0;
+
+    const float kInvPi = 1.0f / 3.14159265358979323846f;
+    Vec3 diffuse(0.0f), specular(0.0f);
+    for (size_t j = 0; j < state.scene.lights.size(); ++j) {
+        const Light &light = state.scene.lights[j];
+        Vec3 E, L;
+        float d = 0;
+        const LightReach reach = lightReach(light, hit.P, Ng, E, L, d);
+        if (reach == LightReach::OutOfReach) {
+            RT_TRACE("%*slight %zu: out of reach", sub, "", j);
+            continue;
+        }
+        if (reach == LightReach::Behind) {
+            RT_TRACE("%*slight %zu: behind the surface", sub, "", j);
+            continue;
+        }
+        if (reach == LightReach::Shadowed) {
+            if (tracing()) { /* the nearest blocker, for the log only */
+                Hit b;
+                intersectScene(shadowRay(light, hit.P, Ng, L, d), state.scene, b, shadowSkip(light));
+                const Vec3 ba = b.drawCall >= 0 ? Vec3(state.scene.drawCalls[(size_t)b.drawCall].material.albedo) : Vec3(0.0f);
+                RT_TRACE("%*slight %zu: shadowed, L=(%g, %g, %g) by prim %d of object %d at t=%g P=(%g, %g, %g), "
+                         "albedo (%g, %g, %g)", sub, "", j, RT_V3(L), b.prim, b.drawCall, (double)b.t, RT_V3(b.P),
+                         RT_V3(ba));
+            }
+            continue;
+        }
+        const float NdotL = dot(N, L);
+        if (NdotL <= 0) {
+            RT_TRACE("%*slight %zu: N . L <= 0", sub, "", j);
+            continue; /* the shading normal faces away: both terms zero */
+        }
+        RT_TRACE("%*slight %zu: lit, L=(%g, %g, %g) E=(%g, %g, %g) N.L=%g", sub, "", j, RT_V3(L), RT_V3(E),
+                 (double)NdotL);
+
+        diffuse += E * kd * (NdotL * kInvPi);
+        if (hasSpecular) {
+            const Vec3 R = N * (2.0f * NdotL) - L;
+            const float RdotV = std::max(0.0f, dot(R, V));
+            specular += E * ks * std::pow(RdotV, n);
+        }
+    }
+
+    const Vec3 ambientDiffuse = ka * kd + diffuse;
+    RT_TRACE("%*sdirect: ambient+diffuse (%g, %g, %g) x (1 - %g) + specular (%g, %g, %g)", sub, "",
+             RT_V3(ambientDiffuse), (double)kt, RT_V3(specular));
+
+    Vec3 result = ambientDiffuse * (1.0f - kt) + specular;
+
+    /* Reflection (Whitted Illumination handout, section 7): an opaque
+     * surface with ks > 0 traces one mirror ray, weighted by the
+     * smoothness wr = max(0, 1 - roughness^2 / 0.15), while the depth is
+     * below rtMaxDepth (--max-depth overrides it). The ray starts at
+     * P + Ng eps, Ng facing the ray, in the direction R = I - 2 (N . I) N,
+     * with tMin = 0 and no tMax, one level deeper. */
+    const float wr = std::max(0.0f, 1.0f - m.roughness * m.roughness / 0.15f);
+    const int maxDepth = options.maxDepth >= 0 ? options.maxDepth : state.maxDepth;
+    if (kt == 0.0f && hasSpecular && wr > 0.0f && depth < maxDepth) {
+        const Vec3 R = ray.d - N * (2.0f * dot(N, ray.d));
+        const Ray reflected(hit.P + Ng * kRayEpsilon, R, 0.0f, std::numeric_limits<float>::infinity(), depth + 1);
+        RT_TRACE("%*sreflect: w=%g ks=(%g, %g, %g)", sub, "", (double)wr, RT_V3(ks));
+        result += ks * traceRay(reflected, depth + 1) * wr;
+    }
+
+    /* The emission: an emitter's (its bound material emits) on its front
+     * face only, as its stand-in shines forward only; anything else (a
+     * shader's, later) from both sides. */
+    if (!dc.emissive || entering)
+        result += Vec3(m.emission);
+    return result;
 }
 
 /* A sphere of the given radius at the CTM's origin. */
@@ -632,9 +1010,10 @@ RtVoid rtWorldEnd(void)
         std::exit(1);
     }
 
-    /* TODO: build (Workflow, steps 9 and 14): the light list (the delta
-     * lights and the emissive draw calls' stand-ins) and the BVH over every
-     * primitive. */
+    /* Build: the light list gets the emissive draw calls' stand-ins after the
+     * scene's own lights (Whitted Illumination handout, section 3).
+     * TODO (Workflow, step 14): the BVH over every primitive. */
+    addEmitterLights();
     const double build = total.seconds();
 
     /* TODO: render (Workflow, step 5 on): the pixel loop, one ray through
@@ -654,8 +1033,7 @@ RtVoid rtWorldEnd(void)
 
             const size_t index = 3 * ((size_t)y * w + x);
 
-            RT_TRACE("camera ray: pixel (%d, %d) origin (%g, %g, %g) direction (%g, %g, %g)", x, y, ray.o.x, ray.o.y,
-                     ray.o.z, ray.d.x, ray.d.y, ray.d.z);
+            RT_TRACE("pixel (%d, %d): camera ray o=(%g, %g, %g) d=(%g, %g, %g)", x, y, RT_V3(ray.o), RT_V3(ray.d));
 
             // --aov raydir: the camera ray's direction as a color. The beauty image stays black until shading exists.
             if (options.aov == "raydir") {
@@ -663,22 +1041,9 @@ RtVoid rtWorldEnd(void)
                 ray.d.store(dir);
                 aovNormalColor(dir, rgb.data() + index);
             } else if (options.aov == "normal") {
-                // Brute force over every sphere (no BVH yet); intersectSphere
-                // keeps only a hit nearer than the one already in `hit`.
+                // The nearest hit among every sphere and triangle.
                 Hit hit;
-                for (size_t i = 0; i < state.scene.spheres.size(); ++i) {
-                    const Sphere &sphere = state.scene.spheres[i];
-                    intersectSphere(ray, sphere, sphere.drawCall, state.scene.drawCalls[sphere.drawCall], hit);
-                }
-
-                // Then every triangle, into the same Hit, so the nearest of
-                // spheres and triangles wins. intersectTriangle reads the
-                // draw call index from the mesh.
-                for (size_t i = 0; i < state.scene.triangles.size(); ++i) {
-                    const Triangle &triangle = state.scene.triangles[i];
-                    const Mesh &mesh = state.scene.meshes[(size_t)triangle.mesh];
-                    intersectTriangle(ray, triangle, mesh, hit);
-                }
+                intersectScene(ray, state.scene, hit);
 
                 // The shading normal as a color; a miss stays black.
                 if (hit.hit) {
@@ -686,6 +1051,28 @@ RtVoid rtWorldEnd(void)
                     hit.N.store(n);
                     aovNormalColor(n, rgb.data() + index);
                 }
+            } else if (options.aov == "shadow") {
+                // The fraction of the lights that reach the nearest hit: in
+                // range, above the geometric horizon (Ng . L > 0) and
+                // unblocked (lightReach, as the shading decides it). A miss,
+                // or a scene without lights, stays black.
+                Hit hit;
+                if (intersectScene(ray, state.scene, hit)) {
+                    const Vec3 Ng = hit.entering ? hit.Ng : -hit.Ng; // the facing rule
+                    int unblocked = 0;
+                    for (const Light &light : state.scene.lights) {
+                        Vec3 E, L;
+                        float d;
+                        if (lightReach(light, hit.P, Ng, E, L, d) == LightReach::Visible)
+                            ++unblocked;
+                    }
+                    aovShadowColor(unblocked, (int)state.scene.lights.size(), rgb.data() + index);
+                }
+            } else if (options.aov.empty()) {
+                // The beauty image: the radiance of the camera ray.
+                const Vec3 L = traceRay(ray, 0);
+                L.store(rgb.data() + index);
+                RT_TRACE("pixel (%d, %d): value (%g, %g, %g)", x, y, RT_V3(L));
             }
 
             traceEnd();

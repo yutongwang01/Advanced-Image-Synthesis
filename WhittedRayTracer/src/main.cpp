@@ -20,7 +20,7 @@ using namespace std;
  * this main calls one. SIMPLE_MAIN 0 is the real one: the scene named on
  * the command line, found in the scene tables, with every option. Switch
  * once your first scene renders. */
-#define SIMPLE_MAIN 1
+#define SIMPLE_MAIN 0
 
 #if SIMPLE_MAIN
 

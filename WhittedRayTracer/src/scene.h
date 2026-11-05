@@ -115,6 +115,12 @@ struct Hit {
     Vec3 Ng;                                          /* the geometric normal */
     Vec3 N;                                           /* the shading normal */
     int drawCall = -1;                                /* index into Scene::drawCalls: material and transforms */
+    int prim = -1;                                    /* the primitive hit: a sphere's index, or spheres.size() plus
+                                                         a triangle's index (the renderer's own numbers, for --trace) */
+    bool entering = false;                            /* the ray met the front: Ng . I < 0 with Ng as stored, before
+                                                         any flip (Intersection handout, section 4) */
+    float b1 = 0, b2 = 0;                             /* a triangle's barycentric weights of P1 and P2 (P0's is
+                                                         1 - b1 - b2); 0 for a sphere */
     bool hit = false;                                 /* whether a valid intersection was found */
 };
 
@@ -135,6 +141,8 @@ struct Light {
     float cosOuter = -1.0f;    /* Spot: cosine of the cone angle; the light is gone at this angle */
     float cosInner = -1.0f;    /* Spot: cosine of (cone - penumbra); full strength inside this angle */
     float maxDistance = 0.0f;  /* Spot: the reach, fading to nothing there; 0 for no limit */
+    Vec3 normal;               /* Emissive, one-sided: the flat mesh's unit normal, the side it shines toward */
+    bool oneSided = false;     /* Emissive: a flat mesh, I(w) = intensity * max(normal . w, 0) toward w */
     int drawCall = -1;         /* Emissive: index into Scene::drawCalls; -1 for the others */
 };
 
