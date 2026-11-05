@@ -660,8 +660,9 @@ void addEmitterLights()
  * the horizon, the shadow ray (lightReach), then N . L > 0. A miss returns
  * the background. The emission of a draw call whose bound material emits
  * shows on its front face only. With --trace, the handout's log lines.
- * The mirror ray of an opaque surface (step 10) recurses one level deeper.
- * Not yet: the surface shader, the refracted ray (step 11). */
+ * The mirror ray (step 10) and, for a dielectric, the refracted ray with
+ * the Fresnel split (step 11) recurse one level deeper. Not yet: the
+ * surface shader. */
 #define RT_V3(v) (double)(v).x, (double)(v).y, (double)(v).z
 Vec3 traceRay(const Ray &ray, int depth)
 {
@@ -751,19 +752,70 @@ Vec3 traceRay(const Ray &ray, int depth)
 
     Vec3 result = ambientDiffuse * (1.0f - kt) + specular;
 
-    /* Reflection (Whitted Illumination handout, section 7): an opaque
-     * surface with ks > 0 traces one mirror ray, weighted by the
-     * smoothness wr = max(0, 1 - roughness^2 / 0.15), while the depth is
-     * below rtMaxDepth (--max-depth overrides it). The ray starts at
-     * P + Ng eps, Ng facing the ray, in the direction R = I - 2 (N . I) N,
-     * with tMin = 0 and no tMax, one level deeper. */
-    const float wr = std::max(0.0f, 1.0f - m.roughness * m.roughness / 0.15f);
+    /* The secondary rays (Whitted Illumination handout, sections 7 to 9),
+     * each traced only while the depth is below rtMaxDepth (--max-depth
+     * overrides it) and only if its weight times its coefficient is
+     * nonzero; one level deeper, tMin = 0, no tMax, the parent's time.
+     *
+     * Opaque (kt = 0): the mirror ray, weighted by the smoothness
+     *     wr = max(0, 1 - roughness^2 / 0.15).
+     * Transparent (kt > 0), a dielectric: roughness plays no part.
+     *   entering: (eta_i, eta_t) = (1, ior); leaving: (ior, 1); eta = eta_i / eta_t
+     *   cos_i = -N . I (N faces the ray), sin^2_t = eta^2 (1 - cos_i^2)
+     *   sin^2_t > 1: total internal reflection, the mirror ray alone, wr = 1
+     *   else cos_t = sqrt(1 - sin^2_t), T = eta I + (eta cos_i - cos_t) N,
+     *     Schlick: F0 = ((eta_t - eta_i) / (eta_t + eta_i))^2,
+     *     F = F0 + (1 - F0) (1 - c)^5 with c = cos_i entering, cos_t leaving
+     *     (the air side), F = 0 when eta_i = eta_t; wr = F, wt = 1 - F.
+     * The mirror ray adds wr ks L(R), R = I - 2 (N . I) N, from P + Ng eps;
+     * the refracted ray adds wt kt L(T), from P - Ng eps, the far side. */
     const int maxDepth = options.maxDepth >= 0 ? options.maxDepth : state.maxDepth;
-    if (kt == 0.0f && hasSpecular && wr > 0.0f && depth < maxDepth) {
+    float wr = 0.0f, wt = 0.0f;
+    bool tir = false;
+    Vec3 T;
+    if (kt > 0.0f) {
+        const float etaI = entering ? 1.0f : m.ior;
+        const float etaT = entering ? m.ior : 1.0f;
+        const float eta = etaI / etaT;
+        const float cosI = -dot(N, ray.d);
+        const float sin2T = eta * eta * (1.0f - cosI * cosI);
+        if (sin2T > 1.0f) {
+            tir = true; /* only when leaving, beyond the critical angle */
+            wr = 1.0f;
+        } else {
+            const float cosT = std::sqrt(1.0f - sin2T);
+            T = ray.d * eta + N * (eta * cosI - cosT);
+            float F = 0.0f;
+            if (etaI != etaT) {
+                const float r0 = (etaT - etaI) / (etaT + etaI);
+                const float F0 = r0 * r0;
+                const float c = entering ? cosI : cosT;
+                const float x = 1.0f - c;
+                F = F0 + (1.0f - F0) * x * x * x * x * x;
+            }
+            wr = F;
+            wt = 1.0f - F;
+        }
+    } else
+        wr = std::max(0.0f, 1.0f - m.roughness * m.roughness / 0.15f);
+
+    if (hasSpecular && wr > 0.0f && depth < maxDepth) {
         const Vec3 R = ray.d - N * (2.0f * dot(N, ray.d));
-        const Ray reflected(hit.P + Ng * kRayEpsilon, R, 0.0f, std::numeric_limits<float>::infinity(), depth + 1);
+        Ray reflected(hit.P + Ng * kRayEpsilon, R, 0.0f, std::numeric_limits<float>::infinity(), depth + 1);
+        reflected.time = ray.time;
         RT_TRACE("%*sreflect: w=%g ks=(%g, %g, %g)", sub, "", (double)wr, RT_V3(ks));
         result += ks * traceRay(reflected, depth + 1) * wr;
+    }
+
+    if (kt > 0.0f) {
+        if (tir)
+            RT_TRACE("%*srefract: total internal reflection", sub, "");
+        else if (wt > 0.0f && depth < maxDepth) {
+            Ray refracted(hit.P - Ng * kRayEpsilon, T, 0.0f, std::numeric_limits<float>::infinity(), depth + 1);
+            refracted.time = ray.time;
+            RT_TRACE("%*srefract: w=%g kt=%g", sub, "", (double)wt, (double)kt);
+            result += traceRay(refracted, depth + 1) * (wt * kt);
+        }
     }
 
     /* The emission: an emitter's (its bound material emits) on its front
