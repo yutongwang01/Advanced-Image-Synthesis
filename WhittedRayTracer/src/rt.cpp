@@ -42,6 +42,7 @@
 #include "transform.h"
 
 #include <algorithm>
+#include <atomic>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -204,8 +205,9 @@ RtVoid rtBackground(RtColor radiance) { std::memcpy(state.background, radiance, 
  * file that does not load leaves the background showing. */
 RtVoid rtEnvironment(const char *file, RtFloat scale, RtFloat rotateY)
 {
-    state.environment = -1; /* TODO (step 13): file ? rtMakeTexture(file, 1) : -1 */
-    (void)file;
+    /* NULL removes the map; a file that does not load (rtMakeTexture returns
+     * -1, with a message) leaves the background showing. */
+    state.environment = file ? rtMakeTexture(file, 1) : -1;
     state.environmentScale = scale;
     state.environmentRotateY = rotateY;
 }
@@ -307,6 +309,95 @@ RtVoid rtCutout(RtCutoutFn fn, const void *params, size_t nbytes) { state.cutout
  * inverse, the material and the shaders bound at the call) is one
  * draw-call record they name by index (Intersection handout). */
 
+/* The tie rule: a candidate at exactly the t of the hit so far wins when
+ * its primitive number is lower. Brute force tests the primitives in
+ * number order, so there the earlier (lower) one keeps a tie; this makes
+ * the BVH, which meets them in another order, keep the same one, and the
+ * image independent of the traversal order (on a corner where a floor and
+ * a wall meet, the camera ray meets both at the same t). */
+bool winsTie(float t, int prim, const Ray &ray, const Hit &hit)
+{
+    return hit.hit && prim >= 0 && hit.prim >= 0 && prim < hit.prim && t == hit.t && t < ray.tMax;
+}
+
+/* The shade context at a hit (Intersection handout, Table 1), what the
+ * shaders and the lighting read:
+ *   P the hit point; Po = M^-1 P, the point in the primitive's object space;
+ *   Ng, N turned by the facing rule (both toward the ray, together);
+ *   u, v: a sphere's longitude and latitude of Po,
+ *     u = atan2(Po.x, Po.z) / 2pi wrapped into [0, 1), v = acos(Po.y / r) / pi;
+ *     a triangle's interpolated st, or (b1, b2) without st;
+ *   dP/du, dP/dv: the triangle's tangents, zero for a sphere;
+ *   I the ray's direction, time and depth the ray's (-1 for a shadow ray);
+ *   m the material bound at the call, its albedo replaced by the
+ *     interpolated vertex color when the mesh has colors.
+ * params is left NULL: the caller sets the bound shader's block. */
+void fillShadeContext(const Ray &ray, const Hit &hit, RtShadeContext &c)
+{
+    const float kPi = 3.14159265358979323846f;
+    const Scene &scene = state.scene;
+    const DrawCall &dc = scene.drawCalls[(size_t)hit.drawCall];
+
+    const Vec3 Po = dc.worldToObject.point(hit.P);
+    const Vec3 Ng = hit.entering ? hit.Ng : -hit.Ng;
+    const Vec3 N = hit.entering ? hit.N : -hit.N;
+    hit.P.store(c.P);
+    Po.store(c.Po);
+    Ng.store(c.Ng);
+    N.store(c.N);
+    ray.d.store(c.I);
+    c.time = ray.time;
+    c.depth = ray.depth;
+    c.params = nullptr;
+    c.m = dc.material;
+
+    Vec3 dPdu(0.0f), dPdv(0.0f);
+    float u = 0.0f, v = 0.0f;
+    const size_t nSpheres = scene.spheres.size();
+    if (hit.prim >= 0 && (size_t)hit.prim < nSpheres) {
+        const Sphere &sphere = scene.spheres[(size_t)hit.prim];
+        u = std::atan2(Po.x, Po.z) / (2.0f * kPi);
+        if (u < 0.0f)
+            u += 1.0f;
+        const float y = std::min(1.0f, std::max(-1.0f, Po.y / sphere.radius)); /* rounding can leave [-1, 1] */
+        v = std::acos(y) / kPi;
+    } else if (hit.prim >= 0) {
+        const Triangle &tri = scene.triangles[(size_t)hit.prim - nSpheres];
+        const Mesh &mesh = scene.meshes[(size_t)tri.mesh];
+        const float w0 = 1.0f - hit.b1 - hit.b2, w1 = hit.b1, w2 = hit.b2;
+        const size_t i0 = (size_t)tri.v[0], i1 = (size_t)tri.v[1], i2 = (size_t)tri.v[2];
+        if (mesh.hasTexCoords()) {
+            u = w0 * mesh.st[2 * i0] + w1 * mesh.st[2 * i1] + w2 * mesh.st[2 * i2];
+            v = w0 * mesh.st[2 * i0 + 1] + w1 * mesh.st[2 * i1 + 1] + w2 * mesh.st[2 * i2 + 1];
+        } else {
+            u = hit.b1;
+            v = hit.b2;
+        }
+        if (mesh.hasColors())
+            (mesh.Cs[i0] * w0 + mesh.Cs[i1] * w1 + mesh.Cs[i2] * w2).store(c.m.albedo);
+        dPdu = tri.dPdu;
+        dPdv = tri.dPdv;
+    }
+    c.u = u;
+    c.v = v;
+    dPdu.store(c.dPdu);
+    dPdv.store(c.dPdv);
+}
+
+/* Whether a candidate hit survives the cutout shader bound at its draw call
+ * (rt.h): the shader returns 0 where the surface does not exist, and the
+ * ray goes on as if nothing were there. Run on every candidate of every
+ * ray, shadow rays included (their depth is -1); no cutout: solid. */
+bool cutoutKeeps(const Ray &ray, const Hit &candidate, const DrawCall &dc)
+{
+    if (!dc.cutout.fn)
+        return true;
+    RtShadeContext c;
+    fillShadeContext(ray, candidate, c);
+    c.params = dc.cutout.data();
+    return dc.cutout.fn(&c) != 0;
+}
+
 /* Ray-sphere intersection (Workflow, step 6; Intersection handout). The
  * ray is carried into the sphere's object space through the inverse CTM:
  * the origin as a point, the direction as a vector and NOT renormalized, so
@@ -317,7 +408,8 @@ RtVoid rtCutout(RtCutoutFn fn, const void *params, size_t nbytes) { state.cutout
  * which stays perpendicular to the surface under a non-uniform scale.
  * Returns whether `hit` was updated; Ng and N are the outward normal,
  * hit.entering whether the ray met the outside. */
-bool intersectSphere(const Ray &ray, const Sphere &sphere, int drawCallIndex, const DrawCall &dc, Hit &hit)
+bool intersectSphere(const Ray &ray, const Sphere &sphere, int drawCallIndex, const DrawCall &dc, Hit &hit,
+                     int prim = -1)
 {
     /* 1. the ray in object space */
     const Vec3 o = dc.worldToObject.point(ray.o);
@@ -339,31 +431,37 @@ bool intersectSphere(const Ray &ray, const Sphere &sphere, int drawCallIndex, co
     const double t0 = (-b - sq) / a; /* t0 <= t1 */
     const double t1 = (-b + sq) / a;
 
-    /* The smallest root strictly ahead of tMin and nearer than the hit so
-     * far: t0, else t1 (the origin inside the sphere). */
+    /* The roots in order, t0 then t1 (the origin inside the sphere), the
+     * first strictly ahead of tMin, nearer than the hit so far, and kept by
+     * the cutout shader wins: both roots are candidates, so a hole cut in
+     * the near side shows the inside. */
     const double tFar = std::min(ray.tMax, hit.t);
-    double tHit;
-    if (t0 > ray.tMin && t0 < tFar)
-        tHit = t0;
-    else if (t1 > ray.tMin && t1 < tFar)
-        tHit = t1;
-    else
-        return false;
-    const float t = (float)tHit;
+    const double roots[2] = {t0, t1};
+    for (double tRoot : roots) {
+        if (!(tRoot > ray.tMin && (tRoot < tFar || winsTie((float)tRoot, prim, ray, hit))))
+            continue;
+        const float t = (float)tRoot;
 
-    /* 3. the hit point and the normal: Po through (M^-1)^T, normalized */
-    const Vec3 pObj = o + d * t;
-    const Vec3 n = normalize(dc.worldToObject.transposed().vector(pObj));
+        /* 3. the hit point and the normal: Po through (M^-1)^T, normalized */
+        const Vec3 pObj = o + d * t;
+        const Vec3 n = normalize(dc.worldToObject.transposed().vector(pObj));
 
-    hit.t = t;
-    hit.P = ray.at(t);
-    hit.Ng = n;
-    hit.N = n;
-    hit.drawCall = drawCallIndex;
-    hit.entering = dot(n, ray.d) < 0;
-    hit.b1 = hit.b2 = 0;
-    hit.hit = true;
-    return true;
+        Hit c;
+        c.t = t;
+        c.P = ray.at(t);
+        c.Ng = n;
+        c.N = n;
+        c.drawCall = drawCallIndex;
+        c.prim = prim;
+        c.entering = dot(n, ray.d) < 0;
+        c.b1 = c.b2 = 0;
+        c.hit = true;
+        if (!cutoutKeeps(ray, c, dc))
+            continue; /* cut away: the next root */
+        hit = c;
+        return true;
+    }
+    return false;
 }
 
 /* Ray-triangle intersection. A hit needs u >= 0, v >= 0, u + v <= 1 (exact, no tolerance, as the
@@ -375,7 +473,7 @@ bool intersectSphere(const Ray &ray, const Sphere &sphere, int drawCallIndex, co
  * turned toward the ray here; hit.entering says which side was met, and
  * hit.b1, hit.b2 keep the barycentrics.
  * Returns whether `hit` was updated. */
-bool intersectTriangle(const Ray &ray, const Triangle &tri, const Mesh &mesh, Hit &hit)
+bool intersectTriangle(const Ray &ray, const Triangle &tri, const Mesh &mesh, Hit &hit, int prim = -1)
 {
     const Vec3 p = cross(ray.d, tri.e2);
     const float det = dot(tri.e1, p);
@@ -395,7 +493,7 @@ bool intersectTriangle(const Ray &ray, const Triangle &tri, const Mesh &mesh, Hi
         return false;
 
     const float t = dot(tri.e2, q) * invDet;
-    if (!(t > ray.tMin && t < std::min(ray.tMax, hit.t)))
+    if (!(t > ray.tMin && (t < std::min(ray.tMax, hit.t) || winsTie(t, prim, ray, hit))))
         return false; /* strictly ahead of tMin (t > 0 for tMin = 0) and nearer than the hit so far */
 
     Vec3 ng = normalize(nGeom);
@@ -409,17 +507,325 @@ bool intersectTriangle(const Ray &ray, const Triangle &tri, const Mesh &mesh, Hi
             ng = -ng;
     }
 
-    hit.t = t;
-    hit.P = ray.at(t);
-    hit.Ng = ng;
-    hit.N = n;
-    hit.drawCall = mesh.drawCall;
-    hit.entering = dot(ng, ray.d) < 0; /* from Ng as stored, before the facing flip */
-    hit.b1 = u;
-    hit.b2 = v;
-    hit.hit = true;
+    Hit c;
+    c.t = t;
+    c.P = ray.at(t);
+    c.Ng = ng;
+    c.N = n;
+    c.drawCall = mesh.drawCall;
+    c.prim = prim;
+    c.entering = dot(ng, ray.d) < 0; /* from Ng as stored, before the facing flip */
+    c.b1 = u;
+    c.b2 = v;
+    c.hit = true;
+    if (!cutoutKeeps(ray, c, state.scene.drawCalls[(size_t)mesh.drawCall]))
+        return false; /* cut away: the ray goes on to the primitives behind */
+    hit = c;
     return true;
 }
+
+/* BVH (Workflow, step 14) --------------------------------------------------
+ *
+ * Bounds: a triangle's box holds its three vertices; a sphere's is exact
+ * for the ellipsoid it is under its CTM M (row vectors, p' = p M): its
+ * center is M's origin and its half extent along world axis k is
+ * r |(M[0][k], M[1][k], M[2][k])|, the largest k-coordinate of r times a
+ * unit vector through M's linear part.
+ *
+ * Build: top down, by --bvh (options.bvh):
+ *   sah (the default): binned Surface Area Heuristic. On each axis the
+ *     centroids' box is cut into kSahBins bins; for each of the
+ *     kSahBins - 1 planes between bins the cost of the split is
+ *         C = C_trav + (A_L / A_P) N_L + (A_R / A_P) N_R,
+ *     A the surface areas of the children's boxes and of the parent's, N
+ *     their primitive counts, C_trav = kSahTraversalCost relative to one
+ *     primitive test. The cheapest plane over the three axes wins; a node
+ *     of at most kSahMaxLeafSize primitives that no split makes cheaper
+ *     than testing them all (C >= N) becomes a leaf.
+ *   midpoint: the longest axis of the centroids' box, cut at its middle.
+ * When a split leaves one side empty (or the tree is already deep) the
+ * node is split at the median instead, so the build always makes
+ * progress. Up to kBvhLeafSize primitives always make a leaf.
+ *
+ * Traversal: a stack, nearer child first for the nearest hit, any order for
+ * shadow rays (the first hit ends them). A leaf calls the same
+ * intersectSphere / intersectTriangle as brute force, so the cutouts, the
+ * skipped draw call and "nearer than the hit so far" are unchanged. */
+const int kBvhLeafSize = 4;
+const int kBvhMaxDepth = 64; /* past this, median splits only */
+const int kSahBins = 12;
+const float kSahTraversalCost = 0.125f; /* a node visit, relative to a primitive test (pbrt's 1/8) */
+const int kSahMaxLeafSize = 16;         /* a larger node is always split */
+
+/* The binned SAH split of bvhPrims[begin, end): the axis and the plane (a
+ * bin boundary, 1 .. kSahBins - 1: primitives in bins below it go left)
+ * of the cheapest split, and its cost. Returns false when no axis has any
+ * extent to split. */
+bool sahSplit(const Scene &scene, const std::vector<AABB> &boxes, const std::vector<Vec3> &centroids, int begin,
+              int end, const AABB &bounds, const AABB &centroidBounds, int &bestAxis, int &bestPlane, float &bestCost)
+{
+    const float parentArea = bounds.surfaceArea();
+    bestAxis = -1;
+    bestPlane = -1;
+    bestCost = std::numeric_limits<float>::infinity();
+    if (!(parentArea > 0))
+        return false;
+    const Vec3 cmin = centroidBounds.min, cext = centroidBounds.extent();
+    for (int axis = 0; axis < 3; ++axis) {
+        if (!(cext[axis] > 0))
+            continue;
+        AABB binBox[kSahBins];
+        int binCount[kSahBins] = {0};
+        for (int i = begin; i < end; ++i) {
+            const int prim = scene.bvhPrims[(size_t)i];
+            int b = (int)(kSahBins * ((centroids[(size_t)prim][axis] - cmin[axis]) / cext[axis]));
+            b = std::min(kSahBins - 1, std::max(0, b));
+            ++binCount[b];
+            binBox[b].expand(boxes[(size_t)prim]);
+        }
+        /* sweep from the right: the box and count of bins [plane, kSahBins) */
+        float rightArea[kSahBins];
+        int rightCount[kSahBins];
+        AABB acc;
+        int n = 0;
+        for (int b = kSahBins - 1; b >= 1; --b) {
+            acc.expand(binBox[b]);
+            n += binCount[b];
+            rightArea[b] = acc.surfaceArea();
+            rightCount[b] = n;
+        }
+        /* sweep from the left, evaluating each plane */
+        acc = AABB();
+        n = 0;
+        for (int plane = 1; plane < kSahBins; ++plane) {
+            acc.expand(binBox[plane - 1]);
+            n += binCount[plane - 1];
+            if (n == 0 || rightCount[plane] == 0)
+                continue;
+            const float cost = kSahTraversalCost + (acc.surfaceArea() * (float)n +
+                                                    rightArea[plane] * (float)rightCount[plane]) / parentArea;
+            if (cost < bestCost) {
+                bestCost = cost;
+                bestAxis = axis;
+                bestPlane = plane;
+            }
+        }
+    }
+    return bestAxis >= 0;
+}
+const int kBvhStackSize = 128;
+
+AABB primBounds(const Scene &scene, int prim)
+{
+    AABB b;
+    const size_t nSpheres = scene.spheres.size();
+    if ((size_t)prim < nSpheres) {
+        const Sphere &sphere = scene.spheres[(size_t)prim];
+        const Mat4 &M = scene.drawCalls[(size_t)sphere.drawCall].objectToWorld;
+        const Vec3 c = M.point(Vec3(0, 0, 0));
+        Vec3 e;
+        for (int k = 0; k < 3; ++k)
+            e[k] = sphere.radius * std::sqrt(M.m[0][k] * M.m[0][k] + M.m[1][k] * M.m[1][k] + M.m[2][k] * M.m[2][k]);
+        b.expand(c - e);
+        b.expand(c + e);
+    } else {
+        const Triangle &tri = scene.triangles[(size_t)prim - nSpheres];
+        b.expand(tri.p0);
+        b.expand(tri.p0 + tri.e1);
+        b.expand(tri.p0 + tri.e2);
+    }
+    return b;
+}
+
+/* Build the subtree over bvhPrims[begin, end); returns its node's index. */
+int buildBvhNode(Scene &scene, const std::vector<AABB> &boxes, const std::vector<Vec3> &centroids, int begin, int end,
+                 int depth)
+{
+    const int index = (int)scene.bvh.size();
+    scene.bvh.emplace_back();
+
+    AABB bounds, centroidBounds;
+    for (int i = begin; i < end; ++i) {
+        const int prim = scene.bvhPrims[(size_t)i];
+        bounds.expand(boxes[(size_t)prim]);
+        centroidBounds.expand(centroids[(size_t)prim]);
+    }
+    scene.bvh[(size_t)index].bounds = bounds;
+
+    const int count = end - begin;
+    const Vec3 extent = centroidBounds.extent();
+    const int axis = maxAxis(extent);
+    if (count <= kBvhLeafSize || !(extent[axis] > 0)) { /* small, or every centroid in one place */
+        scene.bvh[(size_t)index].first = begin;
+        scene.bvh[(size_t)index].count = count;
+        return index;
+    }
+
+    int *const prims = scene.bvhPrims.data();
+    int mid = begin;
+    int splitAxis = axis;
+    if (depth < kBvhMaxDepth) {
+        if (options.bvh == "midpoint") {
+            const float split = centroidBounds.centroid()[axis];
+            mid = (int)(std::partition(prims + begin, prims + end,
+                                       [&](int p) { return centroids[(size_t)p][axis] < split; }) -
+                        prims);
+        } else { /* sah */
+            int sahAxis, plane;
+            float cost;
+            if (sahSplit(scene, boxes, centroids, begin, end, bounds, centroidBounds, sahAxis, plane, cost)) {
+                if (cost >= (float)count && count <= kSahMaxLeafSize) { /* splitting does not pay */
+                    scene.bvh[(size_t)index].first = begin;
+                    scene.bvh[(size_t)index].count = count;
+                    return index;
+                }
+                splitAxis = sahAxis;
+                const float cmin = centroidBounds.min[sahAxis], cext = centroidBounds.extent()[sahAxis];
+                mid = (int)(std::partition(prims + begin, prims + end,
+                                           [&](int p) {
+                                               int b = (int)(kSahBins * ((centroids[(size_t)p][sahAxis] - cmin) / cext));
+                                               b = std::min(kSahBins - 1, std::max(0, b));
+                                               return b < plane;
+                                           }) -
+                            prims);
+            }
+        }
+    }
+    if (mid == begin || mid == end) { /* one side empty (or too deep): the median */
+        const int axis = splitAxis;
+        mid = begin + count / 2;
+        std::nth_element(prims + begin, prims + mid, prims + end,
+                         [&](int a, int b) { return centroids[(size_t)a][axis] < centroids[(size_t)b][axis]; });
+    }
+
+    buildBvhNode(scene, boxes, centroids, begin, mid, depth + 1); /* the first child: index + 1 */
+    const int second = buildBvhNode(scene, boxes, centroids, mid, end, depth + 1);
+    scene.bvh[(size_t)index].second = second;
+    return index;
+}
+
+void buildBvh(Scene &scene)
+{
+    scene.bvh.clear();
+    scene.bvhPrims.clear();
+    const size_t n = scene.spheres.size() + scene.triangles.size();
+    if (n == 0)
+        return;
+    std::vector<AABB> boxes(n);
+    std::vector<Vec3> centroids(n);
+    scene.bvhPrims.resize(n);
+    for (size_t p = 0; p < n; ++p) {
+        boxes[p] = primBounds(scene, (int)p);
+        centroids[p] = boxes[p].centroid();
+        scene.bvhPrims[p] = (int)p;
+    }
+    scene.bvh.reserve(2 * n);
+    buildBvhNode(scene, boxes, centroids, 0, (int)n, 0);
+}
+
+/* The slab test: whether the ray meets the box within [tMin, tMax], and
+ * where it enters (tEnter). The far distance is widened by 2 gamma_3 (pbrt)
+ * so that rounding never drops a box whose primitive the exact test
+ * would hit; a direction component of 0 tests the origin against the slab. */
+bool rayHitsBox(const AABB &b, const Ray &ray, const Vec3 &invD, float tMax, float &tEnter)
+{
+    const float kWiden = 1.0f + 2.0f * (3.0f * 0.5f * std::numeric_limits<float>::epsilon()) /
+                                    (1.0f - 3.0f * 0.5f * std::numeric_limits<float>::epsilon());
+    float t0 = ray.tMin, t1 = tMax;
+    for (int k = 0; k < 3; ++k) {
+        if (ray.d[k] == 0.0f) {
+            if (ray.o[k] < b.min[k] || ray.o[k] > b.max[k])
+                return false;
+            continue;
+        }
+        float tNear = (b.min[k] - ray.o[k]) * invD[k];
+        float tFar = (b.max[k] - ray.o[k]) * invD[k];
+        if (tNear > tFar)
+            std::swap(tNear, tFar);
+        tFar *= kWiden;
+        t0 = tNear > t0 ? tNear : t0;
+        t1 = tFar < t1 ? tFar : t1;
+        if (t0 > t1)
+            return false;
+    }
+    tEnter = t0;
+    return true;
+}
+
+/* One primitive of a leaf, through the same tests brute force uses. */
+bool intersectPrim(const Ray &ray, const Scene &scene, int prim, Hit &hit, int skipDrawCall)
+{
+    const size_t nSpheres = scene.spheres.size();
+    if ((size_t)prim < nSpheres) {
+        const Sphere &sphere = scene.spheres[(size_t)prim];
+        if (sphere.drawCall == skipDrawCall)
+            return false;
+        return intersectSphere(ray, sphere, sphere.drawCall, scene.drawCalls[(size_t)sphere.drawCall], hit, prim);
+    }
+    const Triangle &triangle = scene.triangles[(size_t)prim - nSpheres];
+    const Mesh &mesh = scene.meshes[(size_t)triangle.mesh];
+    if (mesh.drawCall == skipDrawCall)
+        return false;
+    return intersectTriangle(ray, triangle, mesh, hit, prim);
+}
+
+/* Walk the BVH. anyHit: stop at the first hit (shadow rays); otherwise the
+ * nearest, visiting the nearer child first and skipping boxes beyond the
+ * hit so far. Returns whether `hit` was updated. */
+bool traverseBvh(const Ray &ray, const Scene &scene, Hit &hit, int skipDrawCall, bool anyHit)
+{
+    const Vec3 invD(1.0f / ray.d.x, 1.0f / ray.d.y, 1.0f / ray.d.z);
+    int stack[kBvhStackSize];
+    int top = 0;
+    stack[top++] = 0;
+    bool found = false;
+    float tEnter;
+    while (top > 0) {
+        const BVHNode &node = scene.bvh[(size_t)stack[--top]];
+        if (!rayHitsBox(node.bounds, ray, invD, std::min(ray.tMax, hit.t), tEnter))
+            continue;
+        if (node.isLeaf()) {
+            for (int i = node.first; i < node.first + node.count; ++i)
+                if (intersectPrim(ray, scene, scene.bvhPrims[(size_t)i], hit, skipDrawCall)) {
+                    found = true;
+                    if (anyHit)
+                        return true;
+                }
+            continue;
+        }
+        const int a = (int)(&node - scene.bvh.data()) + 1, b = node.second;
+        if (top + 2 > kBvhStackSize) { /* cannot happen with kBvhMaxDepth; checked anyway */
+            std::fprintf(stderr, "BVH stack overflow\n");
+            std::abort();
+        }
+        if (anyHit) {
+            stack[top++] = b;
+            stack[top++] = a;
+            continue;
+        }
+        /* nearer child on top of the stack, so it is visited first */
+        float ta = 0, tb = 0;
+        const float tLimit = std::min(ray.tMax, hit.t);
+        const bool hitA = rayHitsBox(scene.bvh[(size_t)a].bounds, ray, invD, tLimit, ta);
+        const bool hitB = rayHitsBox(scene.bvh[(size_t)b].bounds, ray, invD, tLimit, tb);
+        if (hitA && hitB) {
+            if (ta <= tb) {
+                stack[top++] = b;
+                stack[top++] = a;
+            } else {
+                stack[top++] = a;
+                stack[top++] = b;
+            }
+        } else if (hitA)
+            stack[top++] = a;
+        else if (hitB)
+            stack[top++] = b;
+    }
+    return found;
+}
+
+/* Whether the BVH is to be used: built, and not turned off by --no-accel. */
+bool useBvh(const Scene &scene) { return !options.noAccel && !scene.bvh.empty(); }
 
 /* The nearest hit of the ray in the whole scene, spheres and triangles
  * alike, by brute force over every primitive (no BVH yet, Workflow step
@@ -428,25 +834,25 @@ bool intersectTriangle(const Ray &ray, const Triangle &tri, const Mesh &mesh, Hi
  * is the nearest, and occlusion between spheres and triangles is right. */
 bool intersectScene(const Ray &ray, const Scene &scene, Hit &hit, int skipDrawCall = -1)
 {
+    if (useBvh(scene))
+        return traverseBvh(ray, scene, hit, skipDrawCall, false);
+
+    /* --no-accel: every primitive, for checking the BVH and timing it */
     bool found = false;
     for (size_t i = 0; i < scene.spheres.size(); ++i) {
         const Sphere &sphere = scene.spheres[i];
         if (sphere.drawCall == skipDrawCall)
             continue;
-        if (intersectSphere(ray, sphere, sphere.drawCall, scene.drawCalls[(size_t)sphere.drawCall], hit)) {
-            hit.prim = (int)i;
+        if (intersectSphere(ray, sphere, sphere.drawCall, scene.drawCalls[(size_t)sphere.drawCall], hit, (int)i))
             found = true;
-        }
     }
     for (size_t i = 0; i < scene.triangles.size(); ++i) {
         const Triangle &triangle = scene.triangles[i];
         const Mesh &mesh = scene.meshes[(size_t)triangle.mesh];
         if (mesh.drawCall == skipDrawCall)
             continue;
-        if (intersectTriangle(ray, triangle, mesh, hit)) {
-            hit.prim = (int)(scene.spheres.size() + i);
+        if (intersectTriangle(ray, triangle, mesh, hit, (int)(scene.spheres.size() + i)))
             found = true;
-        }
     }
     return found;
 }
@@ -464,13 +870,18 @@ const float kRayEpsilon = 1e-4f;
  * intersectScene, until the BVH. */
 bool occluded(const Ray &ray, const Scene &scene, int skipDrawCall = -1)
 {
+    if (useBvh(scene)) {
+        Hit hit;
+        return traverseBvh(ray, scene, hit, skipDrawCall, true);
+    }
+
     for (size_t i = 0; i < scene.spheres.size(); ++i) {
         const Sphere &sphere = scene.spheres[i];
         if (sphere.drawCall == skipDrawCall)
             continue;
         Hit hit;
-        if (intersectSphere(ray, sphere, sphere.drawCall, scene.drawCalls[(size_t)sphere.drawCall], hit))
-            return true;
+        if (intersectSphere(ray, sphere, sphere.drawCall, scene.drawCalls[(size_t)sphere.drawCall], hit, (int)i))
+            return true; /* cutouts were run inside: a hole lets the shadow ray through */
     }
     for (size_t i = 0; i < scene.triangles.size(); ++i) {
         const Triangle &triangle = scene.triangles[i];
@@ -478,7 +889,7 @@ bool occluded(const Ray &ray, const Scene &scene, int skipDrawCall = -1)
         if (mesh.drawCall == skipDrawCall)
             continue;
         Hit hit;
-        if (intersectTriangle(ray, triangle, mesh, hit))
+        if (intersectTriangle(ray, triangle, mesh, hit, (int)(scene.spheres.size() + i)))
             return true;
     }
     return false;
@@ -651,6 +1062,30 @@ void addEmitterLights()
     }
 }
 
+/* What a ray that leaves the scene returns, at any depth (Whitted
+ * Illumination handout, section 9): the background, or with rtEnvironment
+ * the latitude-longitude map's radiance in the ray's direction. The
+ * direction is turned by -rotateY about +y (the map turns by +rotateY, as
+ * rtRotate turns a textured sphere), then looked up at the sphere's u and
+ * v of that direction (Intersection handout, section 2.4):
+ *     u = fract(atan2(d.x, d.z) / 2pi),  v = acos(clamp(d.y, -1, 1)) / pi,
+ * and scaled by rtEnvironment's scale. */
+Vec3 environmentRadiance(const Vec3 &dir)
+{
+    if (state.environment < 0)
+        return Vec3(state.background);
+
+    const float kPi = 3.14159265358979323846f;
+    const Vec3 d = normalize(Mat4::rotate(-state.environmentRotateY, 0, 1, 0).vector(dir));
+    float u = std::atan2(d.x, d.z) / (2.0f * kPi);
+    u -= std::floor(u); /* fract: into [0, 1) */
+    const float v = std::acos(std::min(1.0f, std::max(-1.0f, d.y))) / kPi;
+
+    float rgba[4];
+    rtTexture(state.environment, u, v, rgba);
+    return Vec3(rgba[0], rgba[1], rgba[2]) * state.environmentScale;
+}
+
 /* The radiance a ray returns (Whitted Illumination handout, Eq. 1). So far
  * the first two lines and the emission:
  *     (1 - kt) (ka kd + sum_j Sj Ej kd/pi max(N.Lj, 0)) + sum_j Sj Ej ks max(Rj.V, 0)^n + emission
@@ -661,8 +1096,8 @@ void addEmitterLights()
  * the background. The emission of a draw call whose bound material emits
  * shows on its front face only. With --trace, the handout's log lines.
  * The mirror ray (step 10) and, for a dielectric, the refracted ray with
- * the Fresnel split (step 11) recurse one level deeper. Not yet: the
- * surface shader. */
+ * the Fresnel split (step 11) recurse one level deeper. The surface
+ * shader runs before the lights; cutouts run inside the intersection. */
 #define RT_V3(v) (double)(v).x, (double)(v).y, (double)(v).z
 Vec3 traceRay(const Ray &ray, int depth)
 {
@@ -671,30 +1106,39 @@ Vec3 traceRay(const Ray &ray, int depth)
 
     Hit hit;
     if (!intersectScene(ray, state.scene, hit)) {
-        const Vec3 bg(state.background);
-        RT_TRACE("%*sdepth %d: miss, environment (%g, %g, %g)", ind, "", depth, RT_V3(bg));
-        return bg;
+        /* camera, mirror and refracted rays alike: all of them end here */
+        const Vec3 env = environmentRadiance(ray.d);
+        RT_TRACE("%*sdepth %d: miss, environment (%g, %g, %g)", ind, "", depth, RT_V3(env));
+        return env;
     }
 
     const DrawCall &dc = state.scene.drawCalls[(size_t)hit.drawCall];
-    const RtMaterial &m = dc.material;
+
+    /* Which face the ray met, from Ng before the flip (for the emission and
+     * refraction); the shade context carries Ng and N turned toward the
+     * ray, together (the facing rule). */
+    const bool entering = hit.entering;
+    RT_TRACE("%*sdepth %d: hit prim %d t=%g P=(%g, %g, %g) N=(%g, %g, %g) Ng=(%g, %g, %g) %s", ind, "", depth,
+             hit.prim, (double)hit.t, RT_V3(hit.P), RT_V3(entering ? hit.N : -hit.N),
+             RT_V3(entering ? hit.Ng : -hit.Ng), entering ? "entering" : "leaving");
+
+    /* The shade context, then the surface shader bound at the call, which may
+     * rewrite the material (and replace N); the lighting reads what it leaves
+     * (Whitted Illumination handout, section 9: intersect, fill the shade
+     * context, run the surface shader, then the lights). */
+    RtShadeContext ctx;
+    fillShadeContext(ray, hit, ctx);
+    if (dc.surface.fn) {
+        ctx.params = dc.surface.data();
+        dc.surface.fn(&ctx);
+    }
+    const RtMaterial &m = ctx.m;
     const Vec3 kd(m.albedo), ks(m.specular);
     const float kt = m.transmission;
     const Vec3 ka = options.ambientSet ? Vec3(options.ambient) : Vec3(state.ambient); /* --ambient overrides */
-
-    /* Which face the ray met, from Ng before the flip (kept for the
-     * emission and, later, refraction), then the facing rule: Ng turned
-     * toward the ray, N along with it. */
-    const bool entering = hit.entering;
-    Vec3 Ng = hit.Ng, N = hit.N;
-    if (!entering) {
-        Ng = -Ng;
-        N = -N;
-    }
+    const Vec3 Ng(ctx.Ng);
+    const Vec3 N = normalize(Vec3(ctx.N)); /* a shader may have replaced it */
     const Vec3 V = -ray.d;
-
-    RT_TRACE("%*sdepth %d: hit prim %d t=%g P=(%g, %g, %g) N=(%g, %g, %g) Ng=(%g, %g, %g) %s", ind, "", depth,
-             hit.prim, (double)hit.t, RT_V3(hit.P), RT_V3(N), RT_V3(Ng), entering ? "entering" : "leaving");
     RT_TRACE("%*smaterial: albedo (%g, %g, %g) specular (%g, %g, %g) roughness %g transmission %g ior %g "
              "emission (%g, %g, %g)", sub, "", RT_V3(kd), RT_V3(ks), (double)m.roughness, (double)kt, (double)m.ior,
              (double)m.emission[0], (double)m.emission[1], (double)m.emission[2]);
@@ -1063,9 +1507,12 @@ RtVoid rtWorldEnd(void)
     }
 
     /* Build: the light list gets the emissive draw calls' stand-ins after the
-     * scene's own lights (Whitted Illumination handout, section 3).
-     * TODO (Workflow, step 14): the BVH over every primitive. */
+     * scene's own lights (Whitted Illumination handout, section 3); then the
+     * BVH over every primitive (midpoint split), unless --no-accel asks for
+     * brute force. */
     addEmitterLights();
+    if (!options.noAccel)
+        buildBvh(state.scene);
     const double build = total.seconds();
 
     /* TODO: render (Workflow, step 5 on): the pixel loop, one ray through
@@ -1076,61 +1523,98 @@ RtVoid rtWorldEnd(void)
     RenderBudget budget(options.timeLimit); /* --time-limit: the clock starts here (timer.h) */
     if (options.progress)
         budget.progress((long long)w * h); /* --progress: a line every two seconds */
-    for (int y = 0; y < h; ++y) {
-        for (int x = 0; x < w; ++x) {
+    /* One pixel: its camera ray through the center, and what the image
+     * shows there (a debug image by --aov, or the radiance). traceBegin and
+     * traceEnd around it, so --trace logs the one pixel it names. */
+    auto renderPixel = [&](int x, int y) {
+        traceBegin(x, y);
 
-            traceBegin(x, y);
+        const Ray ray = generateCameraRay(camera, x, y, w, h);
 
-            const Ray ray = generateCameraRay(camera, x, y, w, h);
+        const size_t index = 3 * ((size_t)y * w + x);
 
-            const size_t index = 3 * ((size_t)y * w + x);
+        RT_TRACE("pixel (%d, %d): camera ray o=(%g, %g, %g) d=(%g, %g, %g)", x, y, RT_V3(ray.o), RT_V3(ray.d));
 
-            RT_TRACE("pixel (%d, %d): camera ray o=(%g, %g, %g) d=(%g, %g, %g)", x, y, RT_V3(ray.o), RT_V3(ray.d));
+        // --aov raydir: the camera ray's direction as a color. The beauty image stays black until shading exists.
+        if (options.aov == "raydir") {
+            float dir[3];
+            ray.d.store(dir);
+            aovNormalColor(dir, rgb.data() + index);
+        } else if (options.aov == "normal") {
+            // The nearest hit among every sphere and triangle.
+            Hit hit;
+            intersectScene(ray, state.scene, hit);
 
-            // --aov raydir: the camera ray's direction as a color. The beauty image stays black until shading exists.
-            if (options.aov == "raydir") {
-                float dir[3];
-                ray.d.store(dir);
-                aovNormalColor(dir, rgb.data() + index);
-            } else if (options.aov == "normal") {
-                // The nearest hit among every sphere and triangle.
-                Hit hit;
-                intersectScene(ray, state.scene, hit);
-
-                // The shading normal as a color; a miss stays black.
-                if (hit.hit) {
-                    float n[3];
-                    hit.N.store(n);
-                    aovNormalColor(n, rgb.data() + index);
-                }
-            } else if (options.aov == "shadow") {
-                // The fraction of the lights that reach the nearest hit: in
-                // range, above the geometric horizon (Ng . L > 0) and
-                // unblocked (lightReach, as the shading decides it). A miss,
-                // or a scene without lights, stays black.
-                Hit hit;
-                if (intersectScene(ray, state.scene, hit)) {
-                    const Vec3 Ng = hit.entering ? hit.Ng : -hit.Ng; // the facing rule
-                    int unblocked = 0;
-                    for (const Light &light : state.scene.lights) {
-                        Vec3 E, L;
-                        float d;
-                        if (lightReach(light, hit.P, Ng, E, L, d) == LightReach::Visible)
-                            ++unblocked;
-                    }
-                    aovShadowColor(unblocked, (int)state.scene.lights.size(), rgb.data() + index);
-                }
-            } else if (options.aov.empty()) {
-                // The beauty image: the radiance of the camera ray.
-                const Vec3 L = traceRay(ray, 0);
-                L.store(rgb.data() + index);
-                RT_TRACE("pixel (%d, %d): value (%g, %g, %g)", x, y, RT_V3(L));
+            // The shading normal as a color; a miss stays black.
+            if (hit.hit) {
+                float n[3];
+                hit.N.store(n);
+                aovNormalColor(n, rgb.data() + index);
             }
-
-            traceEnd();
+        } else if (options.aov == "shadow") {
+            // The fraction of the lights that reach the nearest hit: in
+            // range, above the geometric horizon (Ng . L > 0) and
+            // unblocked (lightReach, as the shading decides it). A miss,
+            // or a scene without lights, stays black.
+            Hit hit;
+            if (intersectScene(ray, state.scene, hit)) {
+                const Vec3 Ng = hit.entering ? hit.Ng : -hit.Ng; // the facing rule
+                int unblocked = 0;
+                for (const Light &light : state.scene.lights) {
+                    Vec3 E, L;
+                    float d;
+                    if (lightReach(light, hit.P, Ng, E, L, d) == LightReach::Visible)
+                        ++unblocked;
+                }
+                aovShadowColor(unblocked, (int)state.scene.lights.size(), rgb.data() + index);
+            }
+        } else if (options.aov.empty()) {
+            // The beauty image: the radiance of the camera ray.
+            const Vec3 L = traceRay(ray, 0);
+            L.store(rgb.data() + index);
+            RT_TRACE("pixel (%d, %d): value (%g, %g, %g)", x, y, RT_V3(L));
         }
-    }
-    budget.done((long long)w * h);
+
+        traceEnd();
+    };
+
+    /* The pixel loop (Workflow, step 15): the image is cut into 16 x 16 tiles,
+     * handed out from an atomic counter, in the order the budget gives
+     * (shuffled under --time-limit), to a pool of std::thread workers, one per
+     * thread. A worker writes only the pixels of its own tiles, so the image
+     * is the same at any thread count. Under a time limit a worker stops
+     * before a new tile or a new row once the budget has expired; each row
+     * done is reported to the budget (progress and the LIMIT line). */
+    const int kTile = 16;
+    const int tilesX = (w + kTile - 1) / kTile, tilesY = (h + kTile - 1) / kTile;
+    const int nTiles = tilesX * tilesY;
+    const std::vector<int> order = budget.tileOrder(nTiles);
+    std::atomic<int> nextTile(0);
+    auto worker = [&]() {
+        for (;;) {
+            if (budget.expired())
+                return;
+            const int k = nextTile.fetch_add(1);
+            if (k >= nTiles)
+                return;
+            const int tile = order[(size_t)k];
+            const int x0 = (tile % tilesX) * kTile, y0 = (tile / tilesX) * kTile;
+            const int x1 = std::min(w, x0 + kTile), y1 = std::min(h, y0 + kTile);
+            for (int y = y0; y < y1; ++y) {
+                if (budget.expired())
+                    return;
+                for (int x = x0; x < x1; ++x)
+                    renderPixel(x, y);
+                budget.done(x1 - x0);
+            }
+        }
+    };
+    std::vector<std::thread> pool;
+    pool.reserve((size_t)threads);
+    for (int i = 0; i < threads; ++i)
+        pool.emplace_back(worker);
+    for (std::thread &t : pool)
+        t.join();
     budget.finish();
     const double renderTime = render.seconds();
 

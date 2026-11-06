@@ -146,6 +146,48 @@ struct Light {
     int drawCall = -1;         /* Emissive: index into Scene::drawCalls; -1 for the others */
 };
 
+/* An axis-aligned bounding box; empty (min > max) until something is added. */
+struct AABB {
+    Vec3 min = Vec3(std::numeric_limits<float>::infinity());
+    Vec3 max = Vec3(-std::numeric_limits<float>::infinity());
+
+    void expand(const Vec3 &p)
+    {
+        min = vmin(min, p);
+        max = vmax(max, p);
+    }
+    void expand(const AABB &b)
+    {
+        min = vmin(min, b.min);
+        max = vmax(max, b.max);
+    }
+    bool empty() const { return min.x > max.x || min.y > max.y || min.z > max.z; }
+    Vec3 centroid() const { return (min + max) * 0.5f; }
+    Vec3 extent() const { return max - min; }
+    /* 2 (xy + yz + zx); 0 for an empty box */
+    float surfaceArea() const
+    {
+        if (empty())
+            return 0.0f;
+        const Vec3 e = extent();
+        return 2.0f * (e.x * e.y + e.y * e.z + e.z * e.x);
+    }
+};
+
+/* One node of the BVH (Workflow, step 14), stored depth first: an interior
+ * node's first child is the next node and `second` its second child; a
+ * leaf names its primitives Scene::bvhPrims[first, first + count), each
+ * a primitive number as in Hit::prim (a sphere's index, or spheres.size()
+ * plus a triangle's index). */
+struct BVHNode {
+    AABB bounds;
+    int first = 0;  /* leaf: the first of its entries in Scene::bvhPrims */
+    int count = 0;  /* leaf: how many primitives; 0 for an interior node */
+    int second = -1; /* interior: the index of the second child */
+
+    bool isLeaf() const { return count > 0; }
+};
+
 /* The world between rtWorldBegin and rtWorldEnd. */
 struct Scene {
     std::vector<DrawCall> drawCalls;
@@ -153,6 +195,8 @@ struct Scene {
     std::vector<Mesh> meshes;
     std::vector<Triangle> triangles; /* every mesh's triangles, one mesh after another */
     std::vector<Light> lights;
+    std::vector<BVHNode> bvh;  /* over every sphere and triangle, built at rtWorldEnd; empty: brute force */
+    std::vector<int> bvhPrims; /* the primitive numbers, in the leaves' order */
 
     void clear()
     {
@@ -161,6 +205,8 @@ struct Scene {
         meshes.clear();
         triangles.clear();
         lights.clear();
+        bvh.clear();
+        bvhPrims.clear();
     }
 };
 
