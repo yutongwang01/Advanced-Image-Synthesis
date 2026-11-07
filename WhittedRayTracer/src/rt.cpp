@@ -723,6 +723,55 @@ void buildBvh(Scene &scene)
     buildBvhNode(scene, boxes, centroids, 0, (int)n, 0);
 }
 
+/* Print statistics about the BVH structure */
+void printBvhStats(const Scene& scene)
+{
+    if (scene.bvh.empty())
+        return;
+
+    int leaves = 0;
+    int maxDepth = 0;
+    long long totalPrims = 0;
+
+    struct Entry {
+        int index;
+        int depth;
+    };
+
+    std::vector<Entry> stack;
+    stack.push_back({0, 0});
+
+    while (!stack.empty()) {
+        Entry e = stack.back();
+        stack.pop_back();
+
+        const BVHNode& node = scene.bvh[e.index];
+        maxDepth = std::max(maxDepth, e.depth);
+
+        if (node.isLeaf()) {
+            ++leaves;
+            totalPrims += node.count;
+        } else {
+            stack.push_back({e.index + 1, e.depth + 1});
+            stack.push_back({node.second, e.depth + 1});
+        }
+    }
+
+    const double avg = leaves > 0
+        ? double(totalPrims) / leaves : 0.0;
+
+    std::printf(
+        "BVH_STATS %s %s nodes=%zu leaves=%d "
+        "maxDepth=%d avgPrimsPerLeaf=%.2f\n",
+        options.scene,
+        options.bvh.c_str(),
+        scene.bvh.size(),
+        leaves,
+        maxDepth,
+        avg
+    );
+}
+
 /* The slab test: whether the ray meets the box within [tMin, tMax], and
  * where it enters (tEnter). The far distance is widened by 2 gamma_3 (pbrt)
  * so that rounding never drops a box whose primitive the exact test
@@ -1510,10 +1559,18 @@ RtVoid rtWorldEnd(void)
      * scene's own lights (Whitted Illumination handout, section 3); then the
      * BVH over every primitive (midpoint split), unless --no-accel asks for
      * brute force. */
+    // addEmitterLights();
+    // if (!options.noAccel)
+    //     buildBvh(state.scene);
+    // const double build = total.seconds();
     addEmitterLights();
     if (!options.noAccel)
         buildBvh(state.scene);
+
     const double build = total.seconds();
+
+    if (!options.noAccel)
+        printBvhStats(state.scene);
 
     /* TODO: render (Workflow, step 5 on): the pixel loop, one ray through
      * each pixel's center, shaded by the Whitted model. For now, a black
@@ -1551,11 +1608,34 @@ RtVoid rtWorldEnd(void)
                 hit.N.store(n);
                 aovNormalColor(n, rgb.data() + index);
             }
+        } else if (options.aov == "depth") {
+            Hit hit;
+            if (intersectScene(ray, state.scene, hit)) {
+                aovDepthColor(hit.t, rgb.data() + index);
+            }
+        } else if (options.aov == "uv" || options.aov == "albedo") {
+            Hit hit;
+            if (intersectScene(ray, state.scene, hit)) {
+                RtShadeContext ctx;
+                fillShadeContext(ray, hit, ctx);
+
+                const DrawCall& dc =
+                    state.scene.drawCalls[(size_t)hit.drawCall];
+
+                if (dc.surface.fn) {
+                    ctx.params = dc.surface.data();
+                    dc.surface.fn(&ctx);
+                }
+
+                if (options.aov == "uv") {
+                    aovUvColor(ctx.u, ctx.v, rgb.data() + index);
+                } else {
+                    rgb[index]     = ctx.m.albedo[0];
+                    rgb[index + 1] = ctx.m.albedo[1];
+                    rgb[index + 2] = ctx.m.albedo[2];
+                }
+            }
         } else if (options.aov == "shadow") {
-            // The fraction of the lights that reach the nearest hit: in
-            // range, above the geometric horizon (Ng . L > 0) and
-            // unblocked (lightReach, as the shading decides it). A miss,
-            // or a scene without lights, stays black.
             Hit hit;
             if (intersectScene(ray, state.scene, hit)) {
                 const Vec3 Ng = hit.entering ? hit.Ng : -hit.Ng; // the facing rule

@@ -55,9 +55,9 @@ target_link_libraries(gauchoRT PRIVATE Threads::Threads)
 target_compile_definitions(gauchoRT PRIVATE ${SCENE_TABLE_DEFINES})
 
 if(MSVC)
-  target_compile_options(gauchoRT PRIVATE /W4)
+  target_compile_options(gauchoRT PRIVATE /W4 /fp:strict)
 else()
-  target_compile_options(gauchoRT PRIVATE -Wall -Wextra)
+  target_compile_options(gauchoRT PRIVATE -Wall -Wextra -ffp-contract=off)
 endif()
 # fopen and snprintf are fine: silences Microsoft's C runtime, which clang
 # on Windows uses too. Harmless elsewhere.
