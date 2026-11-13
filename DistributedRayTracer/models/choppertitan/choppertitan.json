@@ -1,0 +1,61 @@
+{
+ "camera": {
+  "eye": [
+   -3.0,
+   1.5,
+   -10.0
+  ],
+  "lookat": [
+   2.0,
+   1.0,
+   20.0
+  ],
+  "up": [
+   0.0,
+   1.0,
+   0.0
+  ],
+  "type": "perspective",
+  "fov": 60.0,
+  "lensradius": 0.0,
+  "focaldistance": 1000000.0,
+  "mirrored_by_scale": true,
+  "aspect": 1.5,
+  "fovy_deg": 60.0
+ },
+ "film": {
+  "xresolution": 1200,
+  "yresolution": 800,
+  "cropwindow": null
+ },
+ "lights": [
+  {
+   "type": "infinite",
+   "scale": 20.0,
+   "filename": "textures/sky.exr",
+   "rotation_rows": [
+    [
+     0.984808,
+     -0.173542,
+     0.00606
+    ],
+    [
+     0.0,
+     0.034899,
+     0.999391
+    ],
+    [
+     -0.173648,
+     -0.984208,
+     0.034369
+    ]
+   ]
+  }
+ ],
+ "spheres": [],
+ "static_obj": "choppertitan.obj",
+ "static_triangles": 4516388,
+ "prototypes": {},
+ "instanced_triangles": 0,
+ "materials": 23
+}

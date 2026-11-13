@@ -1,0 +1,184 @@
+[
+ {
+  "scene": "Dragon",
+  "sah": {
+   "build": 0.276,
+   "render": 7.291,
+   "estimate": null
+  },
+  "midpoint": {
+   "build": 0.087,
+   "render": 8.524,
+   "estimate": null
+  }
+ },
+ {
+  "scene": "Stadium",
+  "sah": {
+   "build": 0.323,
+   "render": 0.173,
+   "estimate": null
+  },
+  "midpoint": {
+   "build": 0.112,
+   "render": 0.214,
+   "estimate": null
+  }
+ },
+ {
+  "scene": "Forest",
+  "sah": {
+   "build": 2.528,
+   "render": 0.348,
+   "estimate": null
+  },
+  "midpoint": {
+   "build": 0.645,
+   "render": 0.392,
+   "estimate": null
+  }
+ },
+ {
+  "scene": "Sponza",
+  "sah": {
+   "build": 0.083,
+   "render": 0.46,
+   "estimate": null
+  },
+  "midpoint": {
+   "build": 0.019,
+   "render": 0.586,
+   "estimate": null
+  }
+ },
+ {
+  "scene": "WhiteLands",
+  "sah": {
+   "build": 0.56,
+   "render": 1.41,
+   "estimate": null
+  },
+  "midpoint": {
+   "build": 0.135,
+   "render": 1.632,
+   "estimate": null
+  }
+ },
+ {
+  "scene": "BarcelonaPavilion",
+  "sah": {
+   "build": 8.0,
+   "render": 16.124,
+   "estimate": null
+  },
+  "midpoint": {
+   "build": 2.147,
+   "render": 25.133,
+   "estimate": null
+  }
+ },
+ {
+  "scene": "BarcelonaPavilionSunOnly",
+  "sah": {
+   "build": 7.985,
+   "render": 1.035,
+   "estimate": null
+  },
+  "midpoint": {
+   "build": 2.105,
+   "render": 2.019,
+   "estimate": null
+  }
+ },
+ {
+  "scene": "SanMiguel",
+  "sah": {
+   "build": 3.98,
+   "render": 0.71,
+   "estimate": null
+  },
+  "midpoint": {
+   "build": 1.139,
+   "render": 1.541,
+   "estimate": null
+  }
+ },
+ {
+  "scene": "Crown",
+  "sah": {
+   "build": 0.957,
+   "render": 1.994,
+   "estimate": null
+  },
+  "midpoint": {
+   "build": 0.275,
+   "render": 2.515,
+   "estimate": null
+  }
+ },
+ {
+  "scene": "Barbershop",
+  "sah": {
+   "build": 5.308,
+   "render": 8.303,
+   "estimate": null
+  },
+  "midpoint": {
+   "build": 1.308,
+   "render": 11.08,
+   "estimate": null
+  }
+ },
+ {
+  "scene": "BarbershopSunOnly",
+  "sah": {
+   "build": 5.259,
+   "render": 7.118,
+   "estimate": null
+  },
+  "midpoint": {
+   "build": 1.301,
+   "render": 9.757,
+   "estimate": null
+  }
+ },
+ {
+  "scene": "Chess",
+  "sah": {
+   "build": 0.016,
+   "render": 0.285,
+   "estimate": null
+  },
+  "midpoint": {
+   "build": 0.005,
+   "render": 0.427,
+   "estimate": null
+  }
+ },
+ {
+  "scene": "FishyCat",
+  "sah": {
+   "build": 5.807,
+   "render": 0.863,
+   "estimate": null
+  },
+  "midpoint": {
+   "build": 1.479,
+   "render": 1.228,
+   "estimate": null
+  }
+ },
+ {
+  "scene": "AtticCloseup",
+  "sah": {
+   "build": 0.044,
+   "render": 0.753,
+   "estimate": null
+  },
+  "midpoint": {
+   "build": 0.012,
+   "render": 1.126,
+   "estimate": null
+  }
+ }
+]

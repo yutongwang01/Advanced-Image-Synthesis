@@ -1,0 +1,139 @@
+# written by tools/blender2obj.py
+
+newmtl background_01
+Kd 0.0000 0.0000 0.0000
+Ks 0.0000 0.0000 0.0000
+Ke 1.0000 1.0000 1.0000
+Ns 6.0000
+Ni 1.5000
+map_Ke textures/background_01_1_background_01.jpg
+
+newmtl black_mat_01
+Kd 0.0140 0.0140 0.0140
+Ks 0.1200 0.1200 0.1200
+Ns 48.0956
+Ni 1.5000
+
+newmtl black_mat_02
+Kd 0.0140 0.0140 0.0140
+Ks 0.1200 0.1200 0.1200
+Ns 48.0956
+Ni 1.5000
+
+newmtl concrete_01
+Kd 0.8000 0.8000 0.8000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/concrete_01_concrete_01.jpg
+
+newmtl concrete_02
+Kd 0.8000 0.8000 0.8000
+Ks 0.0400 0.0400 0.0400
+Ns 48.0956
+Ni 1.5000
+map_Kd textures/concrete_01_concrete_02.jpg
+
+newmtl concrete_03
+Kd 0.8000 0.8000 0.8000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/concrete_01_concrete_03.jpg
+
+newmtl glass_01
+Kd 0.0000 0.0000 0.0000
+Ks 0.8300 0.8300 0.8300
+Ns 6.0000
+Ni 1.5000
+Tr 1.0000
+
+newmtl leaves_01
+Kd 0.8000 0.8000 0.8000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/papers_01_1_leaves_01.jpg
+map_d textures/papers_01_1_alpha_mask.png
+
+newmtl metal_01
+Kd 0.8000 0.8000 0.8000
+Ks 0.2500 0.2500 0.2500
+Ns 46.7731
+Ni 1.5000
+map_Kd textures/metal_01_1_metal_01.jpg
+
+newmtl metal_02
+Kd 0.8000 0.8000 0.8000
+Ks 0.2500 0.2500 0.2500
+Ns 46.7731
+Ni 1.5000
+map_Kd textures/metal_01_1_metal_02.jpg
+
+newmtl metal_03_UV
+Kd 0.8000 0.8000 0.8000
+Ks 0.2500 0.2500 0.2500
+Ns 46.7731
+Ni 1.5000
+map_Kd textures/metal_01_1_metal_03_UV.jpg
+
+newmtl metal_bright_01
+Kd 0.0000 0.0000 0.0000
+Ks 0.8000 0.8000 0.8000
+Ns 403.5520
+Ni 1.5000
+Pm 1.0000
+
+newmtl paper_01
+Kd 0.8000 0.8000 0.8000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/papers_01_1_paper_01.jpg
+map_d textures/papers_01_1_alpha_mask.png
+
+newmtl price_tag_01
+Kd 0.8000 0.8000 0.8000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/price_tag_01_1.png
+
+newmtl price_tag_02
+Kd 0.8000 0.8000 0.8000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/price_tag_01_1_price_tag_02.jpg
+
+newmtl smoke_01_1
+Kd 0.0000 0.0000 0.0000
+Ks 0.0000 0.0000 0.0000
+Ke 5.0000 5.0000 5.0000
+Ns 6.0000
+Ni 1.5000
+map_Ke textures/smoke_01___smoke_01_1.jpg
+map_d textures/smoke_01_2_alpha_mask.png
+
+newmtl sparks_01_1
+Kd 0.0000 0.0000 0.0000
+Ks 0.0000 0.0000 0.0000
+Ke 3.0000 3.0000 3.0000
+Ns 6.0000
+Ni 1.5000
+map_Ke textures/sparks_01_1.png
+map_d textures/sparks_01_1_mask.png
+
+newmtl white_mat_01
+Kd 0.8000 0.8000 0.8000
+Ks 0.3000 0.3000 0.3000
+Ns 48.0956
+Ni 1.5000
+map_Kd textures/metal_01_1_white_mat_01.jpg
+
+newmtl wood_01
+Kd 0.8000 0.8000 0.8000
+Ks 0.0500 0.0500 0.0500
+Ns 19.8564
+Ni 1.5000
+map_Kd textures/wood_v1_01_wood_01.jpg

@@ -1,0 +1,2142 @@
+# written by tools/pbrt2obj.py
+
+newmtl Vidrio
+Kd 0.0000 0.0000 0.0000
+Ks 1.0000 1.0000 1.0000
+Ns 319998.0000
+Ni 1.5000
+Tr 1.0000
+
+newmtl Jardinera_1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/jardinera_1_color.png
+
+newmtl Moldura_Detalle_Escalera
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/cantera_naranja_liso.png
+
+newmtl Moldura_Techo_arcos
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/moldura_volado.png
+
+newmtl Moldura_Techo
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/moldura_techo.png
+
+newmtl Escalera
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/escalera_color.png
+
+newmtl Muros
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/pared_barro_afinado.png
+
+newmtl techos
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/techo.png
+
+newmtl Vigas_Concreto
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/concreto_02.png
+
+newmtl Moldura_Volado
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/moldura_volado.png
+
+newmtl Losa_Volados
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/losa.png
+
+newmtl Moldura2piso
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/moldura2piso_color.png
+
+newmtl Piso_Interior
+Kd 0.7500 0.7500 0.7500
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+
+newmtl Azotea
+Kd 0.5490 0.5490 0.5490
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+
+newmtl Piso_Pasillos_Arriba
+Kd 0.5000 0.5000 0.5000
+Ks 0.0400 0.0400 0.0400
+Ns 398.0000
+Ni 1.5000
+map_Kd textures/piso_rustico.png
+
+newmtl Puerta_Arco
+Kd 0.5000 0.5000 0.5000
+Ks 0.0400 0.0400 0.0400
+Ns 198.0000
+Ni 1.5000
+map_Kd textures/madera_triplay_01.png
+
+newmtl Barandal_Postes
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/rust_a1.png
+
+newmtl Pared_SanMiguel_B
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_a.png
+
+newmtl Pared_SanMiguel_B1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_b1.png
+
+newmtl Pared_SanMiguel_C2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_c2.png
+
+newmtl Pared_SanMiguel_F
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_f.png
+
+newmtl Pared_SanMiguel_E
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_e.png
+
+newmtl Pared_SanMiguel_D
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_d.png
+
+newmtl Pared_SanMiguel_G
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_g.png
+
+newmtl Pared_SanMiguel_H
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_h.png
+
+newmtl Pared_SanMiguel_I
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_l.png
+
+newmtl Pared_SanMiguel_J
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_j.png
+
+newmtl Muro_Naranja_Escalera
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_l.png
+
+newmtl Pared_SanMiguel_M
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_m.png
+
+newmtl Pared_SanMiguel_N
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_n.png
+
+newmtl Pared_SanMiguel_A
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_b.png
+
+newmtl Pared_SanMiguel_P2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_p_.png
+
+newmtl Pared_SanMiguel_Q
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_q3.png
+
+newmtl Pared_SanMiguel_Q2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_q.png
+
+newmtl Pared_SanMiguel_Q4
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_q4.png
+
+newmtl Techo_Vigas
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/techo.png
+
+newmtl Tierra
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/052terresable.png
+
+newmtl Pared_SanMiguel_Qpatio
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_q_patio2.png
+
+newmtl Banqueta
+Kd 0.5490 0.5490 0.5490
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+
+newmtl Arcos_Lisos_2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/arcos_lisos_2_color.png
+
+newmtl Arcos_Lisos_3
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/arcos_lisos_3_color_1.png
+
+newmtl Pared_SanMiguel_B2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_b2.png
+
+newmtl Vigas_Techo_B
+Kd 0.5000 0.5000 0.5000
+Ks 0.0400 0.0400 0.0400
+Ns 198.0000
+Ni 1.5000
+map_Kd textures/madera_rustica_2.png
+
+newmtl Vigas_Techo_A
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/madera_rustica_2.png
+
+newmtl Pared_SanMiguel_K
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/muros_k.png
+
+newmtl Piso_Patio_Exterior_Concreto
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/concreto_01.png
+
+newmtl Vigas_Volados
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/Vigas_A2.png
+
+newmtl Techos_2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/techo_01.png
+
+newmtl Piso_Patio_Exterior
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/piso_patio_exterior.png
+
+newmtl Jardinera_2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/fuente_piedra_01.png
+
+newmtl Calle
+Kd 0.5490 0.5490 0.5490
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+
+newmtl Arco_Frente
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/arco_frente.png
+
+newmtl Puerta_Agarradera01
+Kd 0.3373 0.2863 0.2235
+Ks 0.0400 0.0400 0.0400
+Ns 18.0000
+Ni 1.5000
+
+newmtl Pintura_15
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/D30_Smiguel_2003_7785.png
+
+newmtl Pintura_1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/0001_carros.png
+
+newmtl Pintura_2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/D30_Smiguel_2003_7815.png
+
+newmtl Pintura_3
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/D30_Smiguel_2003_7812.png
+
+newmtl Pintura_12
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/027_Cola_Caballo_06-30-1997.png
+
+newmtl Pintura_5
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/D30_Smiguel_2003_7812.png
+
+newmtl Pintura_6
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/D30_Smiguel_2003_7843.png
+
+newmtl Pintura_7
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/D30_Smiguel_2003_7785.png
+
+newmtl Pintura_8
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/D30_Smiguel_2003_7758.png
+
+newmtl Pintura_9
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/D30_Smiguel_2003_7843.png
+
+newmtl Pintura_10
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/D30_Smiguel_2003_7833.png
+
+newmtl Pintura_11
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/D30_Smiguel_2003_7768.png
+
+newmtl Pintura_4
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/D30_Smiguel_2003_7833.png
+
+newmtl Pintura_13
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/D30_Smiguel_2003_7833.png
+
+newmtl Pintura_14
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/D30_Smiguel_2003_7833.png
+
+newmtl Pintura_Marcos
+Kd 0.5000 0.5000 0.5000
+Ks 0.0400 0.0400 0.0400
+Ns 1998.0000
+Ni 1.5000
+map_Kd textures/madera_marcos.png
+
+newmtl Postes_Barandal
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/postes_barandal_color.png
+
+newmtl Piso_Patio_Exterior2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/piso_patio_exterior2.png
+
+newmtl Barandal_Detalle_Extremos
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/rust_a1.png
+
+newmtl Barandal_Detalle_Centro
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/rust_detalle.png
+
+newmtl Madera_Barandal
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/madera_barandal_esc_2.png
+
+newmtl Pared_Calle
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/pared_calle.png
+
+newmtl Candil_Cadena
+Kd 0.5000 0.5000 0.5000
+Ks 0.0400 0.0400 0.0400
+Ns 38.0000
+Ni 1.5000
+map_Kd textures/fierro_b.png
+
+newmtl Candil_Metal
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/fierro_b.png
+
+newmtl Fake_Foco
+Kd 0.0000 0.0000 0.0000
+Ks 1.0000 1.0000 1.0000
+Ns 319998.0000
+Ni 1.5000
+Tr 1.0000
+
+newmtl Candil_Foco
+Kd 0.0000 0.0000 0.0000
+Ks 1.0000 1.0000 1.0000
+Ns 319998.0000
+Ni 1.5000
+Tr 1.0000
+
+newmtl Candil_Madera
+Kd 0.5000 0.5000 0.5000
+Ks 0.0400 0.0400 0.0400
+Ns 18.0000
+Ni 1.5000
+map_Kd textures/candil_madera.png
+
+newmtl Candil_2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0400 0.0400 0.0400
+Ns 319998.0000
+Ni 1.5000
+map_Kd textures/metal_viejo_2.png
+
+newmtl Candil_2_Negro
+Kd 0.0588 0.0588 0.0588
+Ks 0.0400 0.0400 0.0400
+Ns 18.0000
+Ni 1.5000
+
+newmtl Candil_2_Foco
+Kd 0.0000 0.0000 0.0000
+Ks 1.0000 1.0000 1.0000
+Ns 319998.0000
+Ni 1.5000
+Tr 1.0000
+
+newmtl DetMoldura_06
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/detmoldura_06_color.png
+
+newmtl DetMoldura_05
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/detmoldura_05_color.png
+
+newmtl DetMoldura_04
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/detmoldura_04_color.png
+
+newmtl DetMoldura_03
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/detmoldura_03_color.png
+
+newmtl Det_Moldura_02
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/detmoldura_02_color.png
+
+newmtl Det_Moldura_01
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/detmoldura_01_color.png
+
+newmtl Escurridera
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/escurridera_color.png
+
+newmtl Detalle_Escalera
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/rust_a1.png
+
+newmtl Hoja_Seca_2C
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/sm_leaf_seca_03b.png
+map_d textures/sm_hoja_c_seca_Mask.png
+
+newmtl Hoja_Seca_2B
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/sm_leaf_seca_02b.png
+map_d textures/sm_hoja_c_seca_Mask.png
+
+newmtl Hoja_Seca_2A
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/sm_hoja_c_seca.png
+map_d textures/sm_hoja_c_seca_Mask.png
+
+newmtl Marco_Puerta_1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/marco_puerta_1.png
+
+newmtl Marco_Puerta
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/madera_barandal_esc_2.png
+
+newmtl Mold_Arco_01
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/mold_arco_01_color.png
+
+newmtl Mold_Terraza
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/molduraterraza__color.png
+
+newmtl Puerta_Agarradera
+Kd 0.3922 0.3686 0.3412
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+
+newmtl Puerta_01
+Kd 0.5000 0.5000 0.5000
+Ks 0.0400 0.0400 0.0400
+Ns 18.0000
+Ni 1.5000
+map_Kd textures/puerta.png
+
+newmtl Teja
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/Barro_2.png
+
+newmtl Columna_A1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/columna_a_color.png
+
+newmtl Columna_A2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/columna_a_color_2.png
+
+newmtl Columna_A3
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/columna_a_color_3.png
+
+newmtl Columna_B1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/columna_b_color.png
+
+newmtl Columna_B3
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/columna_b_color_3.png
+
+newmtl Columna_B2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/columna_b_color_2.png
+
+newmtl Negro
+Kd 0.0000 0.0000 0.0000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+
+newmtl Candil_2_Glass
+Kd 0.0000 0.0000 0.0000
+Ks 1.0000 1.0000 1.0000
+Ns 319998.0000
+Ni 1.5000
+Tr 1.0000
+
+newmtl Agua
+Kd 0.0000 0.0000 0.0000
+Ks 1.0000 1.0000 1.0000
+Ns 319998.0000
+Ni 1.3300
+Tr 1.0000
+
+newmtl Fuente_Centro
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/fuente_piedra_02.png
+
+newmtl Fuente_Fondo
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/fuente_azulejo.png
+
+newmtl Fuente
+Kd 0.7500 0.7500 0.7500
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+
+newmtl Tronco
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/sm_tronco.png
+
+newmtl Leave_A_c
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/sm_leaf_03a.png
+map_d textures/sm_leaf_02_alpah.png
+
+newmtl Tronco-enredadera
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/bark06mi.png
+
+newmtl Hoja_Verde_B-enredadera
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/l33-upper.png
+map_d textures/l33-clip.png
+
+newmtl Hoja_Verde_A-enredadera
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/l37-upper.png
+map_d textures/l37-clip.png
+
+newmtl Hojas_Rojas_top-enredadera
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/l04-upper.png
+map_d textures/l04-clip.png
+
+newmtl Forja_Macetas
+Kd 0.5000 0.5000 0.5000
+Ks 0.0400 0.0400 0.0400
+Ns 319998.0000
+Ni 1.5000
+map_Kd textures/Forja_Macetas.png
+
+newmtl Maceta_A
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/Maceta_A_Color.png
+
+newmtl Maceta_A2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/Maceta_A2_Color.png
+
+newmtl Maceta_B
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/Maceta_B_Color.png
+
+newmtl Maceta_B2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/Maceta_B2_Color.png
+
+newmtl Maceta_C
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/Maceta_C_Color.png
+
+newmtl Maceta_C2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/Maceta_C2_Color.png
+
+newmtl Maceta_D2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/Maceta_D2_Color_0.png
+
+newmtl fragrans_Leaf1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/dracaena_fragrans_leaf.png
+map_d textures/dracaena_fragrans_leaf_Mask.png
+
+newmtl Cercis_trunk
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/BS01brk.png
+
+newmtl Cercis_leaves01
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/BS01lef.png
+map_d textures/BS01lef_Mask.png
+
+newmtl Cercis_CE1c01
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/BS01flo1.png
+map_d textures/BS01flo1_Mask.png
+
+newmtl Cercis_CE01
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/BS01flo2.png
+map_d textures/BS01flo2_Mask.png
+
+newmtl aglaonema_Leaf
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/aglaonema_leaf.png
+map_d textures/aglaonema_leaf_alpha.png
+
+newmtl aglaonema_Tree
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/aglaonema_bark.png
+
+newmtl Azalea_1_blattg1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_d textures/FL17lef2_Mask.png
+
+newmtl Azalea_1_Blutenb
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_d textures/fl16pet1_alpha.png
+
+newmtl Azalea_1_leafcal
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_d textures/FL16lef3_Mask.png
+
+newmtl Azalea_1_Stengel
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL16stm.png
+
+newmtl Azalea_2_blattg1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL16lef1.png
+map_d textures/FL16lef1_Mask.png
+
+newmtl Azalea_2_Blutenb
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL16pet1.png
+map_d textures/FL16pet1_Mask.png
+
+newmtl Azalea_2_leafcal
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL16lef3.png
+map_d textures/FL16lef3_Mask.png
+
+newmtl brevipedunculata_Leaf1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/TR14lef1.png
+map_d textures/TR14lef1_Mask.png
+
+newmtl brevipedunculata_stem
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/ampelopsis_brevipedunculata_bark.png
+
+newmtl Chusan_Palm_1_Speer
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP19stm1.png
+
+newmtl Chusan_Palm_1_Base
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP19stm2.png
+
+newmtl Chusan_Palm_1_Leaf
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP19lef2.png
+map_d textures/HP19lef2_Mask.png
+
+newmtl Chusan_Palm_2_Leaf
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP19lef3.png
+map_d textures/HP19lef3_Mask.png
+
+newmtl Chusan_Palm3_Leaf
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP19lef2.png
+map_d textures/HP19lef2_Mask.png
+
+newmtl Cinquefoil_1_Blatt1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL15lef1.png
+map_d textures/FL15lef1_Mask.png
+
+newmtl Cinquefoil_1_kelchgr
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL15cnt2.png
+
+newmtl Cinquefoil_1_S1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL15stm.png
+
+newmtl Cinquefoil_1_Leafg1_
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL15pet2.png
+map_d textures/FL15pet2_Mask.png
+
+newmtl Cinquefoil_1_Leafg1c
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL15lef2.png
+map_d textures/FL15lef2_Mask.png
+
+newmtl Cinquefoil_1_Revo
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL15cnt1.png
+
+newmtl Cinquefoil_2_Blatt1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL15lef1.png
+map_d textures/FL15lef1_Mask.png
+
+newmtl Cinquefoil_2_Leafg1c
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL15lef2.png
+map_d textures/FL15lef2_Mask.png
+
+newmtl Cinquefoil_2_Leafg1_
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL15pet2.png
+map_d textures/FL15pet2_Mask.png
+
+newmtl Dracaena_2_Leaf
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP07lef1.png
+map_d textures/HP07lef1_Mask.png
+
+newmtl Dracaena_2_Segme01
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP07stm1.png
+
+newmtl Dracaena_2_Leaf2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP07lef2.png
+map_d textures/HP07lef2_Mask.png
+
+newmtl Dracaena_2_Top
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP07stm2.png
+
+newmtl Dutch_Iris_fl1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL11pet1.png
+map_d textures/FL11pet1_Mask.png
+
+newmtl Dutch_Iris_fl1inne
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL11pet2.png
+map_d textures/FL11pet2_Mask.png
+
+newmtl Dutch_Iris_fl2stem
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL11sta.png
+map_d textures/FL11sta_Mask.png
+
+newmtl Dutch_Iris_fl2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL11pet3.png
+map_d textures/FL11pet3_Mask.png
+
+newmtl Dutch_Iris_fl2inne
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL11pet4.png
+map_d textures/FL11pet4_Mask.png
+
+newmtl Dutch_Iris_Leaf
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL11lef1.png
+map_d textures/FL11lef1_Mask.png
+
+newmtl Dutch_Iris_Leaf1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL11lef2.png
+map_d textures/FL11lef2_Mask.png
+
+newmtl Dutch_Iris_Stem
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL11stm.png
+
+newmtl Dutch_Iris_flB
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL11pet1.png
+map_d textures/FL11pet1_Mask.png
+
+newmtl Dutch_Iris_fl1inne_B
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL11pet2.png
+map_d textures/FL11pet2_Mask.png
+
+newmtl Dutch_Iris_fl2_B
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL11pet3.png
+map_d textures/FL11pet3_Mask.png
+
+newmtl Dutch_Iris_fl2inne_B
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL11pet4.png
+map_d textures/FL11pet4_Mask.png
+
+newmtl Dutch_Iris_Leaf_B
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL11lef1.png
+map_d textures/FL11lef1_Mask.png
+
+newmtl Fern_1_Fan
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP17lef1.png
+map_d textures/HP17lef1_Mask.png
+
+newmtl Fern_3_Leaf
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP17lef2.png
+map_d textures/HP17lef2_Mask.png
+
+newmtl Fern_3_Stem1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP17stm.png
+
+newmtl Ficus_1_Stem1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP11stm.png
+
+newmtl Ficus_1_Leaf1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0400 0.0400 0.0400
+Ns 198.0000
+Ni 1.5000
+map_Kd textures/HP11lef2.png
+map_d textures/HP11lef2_Mask.png
+
+newmtl Geranium_1_blbl1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL13pet1.png
+map_d textures/FL13pet1_Mask.png
+
+newmtl Geranium_1_blbl2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL13pet2.png
+map_d textures/FL13pet2_Mask.png
+
+newmtl Geranium_1_blbl3
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL13pet3.png
+map_d textures/FL13pet3_Mask.png
+
+newmtl Geranium_1_Stem1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL13stm.png
+
+newmtl Geranium_1_Flowerc
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL13lef5.png
+map_d textures/FL13lef5_Mask.png
+
+newmtl Geranium_1_Kelchbl
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL13lef4.png
+map_d textures/FL13lef4_Mask.png
+
+newmtl Geranium_1_Leaf
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL13lef1.png
+map_d textures/FL13lef1_Mask.png
+
+newmtl hybrids_stem
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/elaeagnus_umbellate_bark.png
+
+newmtl hybrids_blossom
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/impatiens_newguinea_hybrids_petal.png
+map_d textures/impatiens_newguinea_hybrids_petal_Mask.png
+
+newmtl hybrids_Leaf
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/citrus_limon_leaf.png
+map_d textures/citrus_limon_leaf_Mask.png
+
+newmtl Ivy_1_Tree
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP13stm2.png
+
+newmtl Ivy_1_Leaf
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_d textures/HP13lef1_Mask.png
+
+newmtl Ivy_2_Leaf2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP13lef2.png
+map_d textures/HP13lef2_Mask.png
+
+newmtl Ivy_2_Tree
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP13stm2.png
+
+newmtl Ivy_3_Leaf
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP13lef3.png
+map_d textures/HP13lef3_Mask.png
+
+newmtl Lagerstroemia_leaves
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/BS04lef.png
+map_d textures/BS04lef_Mask.png
+
+newmtl Lagerstroemia_petals
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/BS04flo.png
+map_d textures/BS04flo_Mask.png
+
+newmtl Lagerstroemia_base
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/BS04brk.png
+
+newmtl Lilium_head_Blatt2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL12lef1.png
+map_d textures/FL12lef1_Mask.png
+
+newmtl Lilium_head_BluBlatt1_
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL12pet2.png
+map_d textures/FL12pet2_Mask.png
+
+newmtl Lilium_head_Stengel1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL12pis1.png
+
+newmtl Lilium_head_Kopf_HP_co
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL12sta1.png
+
+newmtl Lilium_head_Size_Mitte
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL12stm.png
+
+newmtl Lilium_Stengel
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL12pis1.png
+
+newmtl Lilium_BluBlat
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL12pet1.png
+map_d textures/FL12pet1_Mask.png
+
+newmtl Lilium_Stil
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL12stm.png
+
+newmtl Mona_Lisa_1_Branch1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP01stm1.png
+
+newmtl Mona_Lisa_1_Branch3
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP01stm2.png
+
+newmtl Mona_Lisa_1_Flowerb
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP01stm1.png
+
+newmtl Mona_Lisa_1_petal11
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_d textures/HP01pet1_Mask.png
+
+newmtl Mona_Lisa_1_Flowers
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP01stm1.png
+
+newmtl Mona_Lisa_1_Horn1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP01stm2.png
+
+newmtl Mona_Lisa_1_petal12
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_d textures/HP01pet1_Mask.png
+
+newmtl Mona_Lisa_1_Leaf1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP01lef2.png
+map_d textures/HP01lef2_Mask.png
+
+newmtl Mona_Lisa_1_Leaf2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP01lef1.png
+map_d textures/HP01lef1_Mask.png
+
+newmtl Mona_Lisa_1_flowerc
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP01pet3.png
+
+newmtl Mona_Lisa_2_Leaf1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_d textures/citrus_limon_leaf_Mask.png
+
+newmtl Oxeye_Daisy_blattg1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL04lef1.png
+map_d textures/FL04lef1_Mask.png
+
+newmtl Oxeye_Daisy_blattk1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL04lef2.png
+map_d textures/FL04lef2_Mask.png
+
+newmtl Oxeye_Daisy_Blutenb
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL04pet1.png
+map_d textures/FL04pet1_Mask.png
+
+newmtl Oxeye_Daisy_Blutenk
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL04cnt2.png
+
+newmtl Oxeye_Daisy_Simple
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL04cnt1.png
+map_d textures/FL04cnt1_Mask.png
+
+newmtl Default_Stengel
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL04stm.png
+
+newmtl paniceum_Leaf
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/TR02lef5.png
+map_d textures/TR02lef5_Mask.png
+
+newmtl paniceum_stem
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/quercus_rubra_bark.png
+
+newmtl Pansy_1_blblbac
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL19pe13.png
+map_d textures/FL19pe13_Mask.png
+
+newmtl Pansy_1_blbll_c
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL19pe16.png
+map_d textures/FL19pe16_Mask.png
+
+newmtl Pansy_1_blblr
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL19pe14.png
+map_d textures/FL19pe14_Mask.png
+
+newmtl Pansy_1_blblu_c
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL19pe15.png
+map_d textures/FL19pe15_Mask.png
+
+newmtl Pansy_1_Leafsma
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL19lef4.png
+map_d textures/FL19lef4_Mask.png
+
+newmtl Pansy_1_Leaf
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL19lef2.png
+map_d textures/FL19lef2_Mask.png
+
+newmtl Pansy_1_Leafcop
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL19lef3.png
+map_d textures/FL19lef3_Mask.png
+
+newmtl Pansy_1_Stengel
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL19stm.png
+
+newmtl pendula_Leaf1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/HP04lef2.png
+map_d textures/HP04lef2_Mask.png
+
+newmtl pendula_stem
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/zebrina_pendula_bark.png
+
+newmtl phyllostachya_Leaf1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/BL05lef2.png
+map_d textures/BL05lef2_Mask.png
+
+newmtl phyllostachya_stem
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/hypoestes_phyllostachya_bark.png
+
+newmtl Poinsettia_1_blossom
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL29cnt1.png
+
+newmtl Poinsettia_1_bloss01
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL29cnt2.png
+
+newmtl Poinsettia_1_Leaf
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL29lef.png
+map_d textures/FL29lef_Mask.png
+
+newmtl Poinsettia_1_Tree2_c
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL29twg.png
+
+newmtl Poinsettia_1_redleaf
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL29pet1.png
+map_d textures/FL29pet1_Mask.png
+
+newmtl Poinsettia_1_smallre
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL29pet2.png
+map_d textures/FL29pet2_Mask.png
+
+newmtl Poinsettia_1_Tree
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL29stm1.png
+
+newmtl Poinsettia_2_leaftru
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL29twg.png
+
+newmtl Default_wchrype
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL29stm2.png
+
+newmtl Poinsettia_2_Leaf
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL29lef.png
+map_d textures/FL29lef_Mask.png
+
+newmtl Poinsettia_2_smallre
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL29pet2.png
+map_d textures/FL29pet2_Mask.png
+
+newmtl Rose_1_Blatt1_
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL17lef1.png
+map_d textures/FL17lef1_Mask.png
+
+newmtl Rose_1_Blatt2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL17lef2.png
+map_d textures/FL17lef2_Mask.png
+
+newmtl Rose_1_Blutenb
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL17pet5.png
+map_d textures/FL17pet5_Mask.png
+
+newmtl Rose_1_Stil
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL17stm.png
+
+newmtl Rose_1_Kelchbl
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL17lef6.png
+map_d textures/FL17lef6_Mask.png
+
+newmtl Rose_1_Kelchco
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL17cnt.png
+
+newmtl Rose_2_Blatt1_
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL17lef3.png
+map_d textures/FL17lef3_Mask.png
+
+newmtl Rose_2__Blutenb
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL17pet1.png
+map_d textures/FL17pet1_Mask.png
+
+newmtl Rose_2__Stil
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL17stm.png
+
+newmtl Rose_2__Kelch_c
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL17cnt.png
+
+newmtl Rose_2__Kelchbl
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL17lef5.png
+map_d textures/FL17lef5_Mask.png
+
+newmtl Rose_3_Blatt2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL17lef2.png
+map_d textures/FL17lef2_Mask.png
+
+newmtl Rose_3_Blutenb
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL17pet2.png
+map_d textures/FL17pet2_Mask.png
+
+newmtl verschaffeltii_Leaf1
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL03lef1.png
+map_d textures/FL03lef1_Mask.png
+
+newmtl verschaffeltii_stem
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/fittonia_verschaffeltii_bark.png
+
+newmtl zebrina_Leaf
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/EU15lef.png
+map_d textures/EU15lef_Mask.png
+
+newmtl zebrina_stem
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/FL24stm.png
+
+newmtl Silla_D_Tachuelas
+Kd 0.5000 0.5000 0.5000
+Ks 0.0400 0.0400 0.0400
+Ns 1.3333
+Ni 1.5000
+map_Kd textures/Fierro_A.png
+
+newmtl Silla_D_Piel
+Kd 0.5000 0.5000 0.5000
+Ks 0.0400 0.0400 0.0400
+Ns 8.0000
+Ni 1.5000
+map_Kd textures/silla_d_piel.png
+
+newmtl Silla_D_Madera
+Kd 0.5000 0.5000 0.5000
+Ks 0.0400 0.0400 0.0400
+Ns 11.3333
+Ni 1.5000
+map_Kd textures/WOOD08.png
+
+newmtl Mesa_D_Madera_Patas
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/WOOD08.png
+
+newmtl Mesa_D_Talabera
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/tapa_talabera.png
+
+newmtl Mesa_D_Madera_Orilla
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/WOOD08.png
+
+newmtl Tela_Mesa_D_2
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/tela_mesa_d.png
+map_d textures/tela_mesa_cuadrada_alpah.png
+
+newmtl Tela_Mesa_D
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/tela_mesa_b.png
+
+newmtl Madera_Silla
+Kd 0.5000 0.5000 0.5000
+Ks 0.0400 0.0400 0.0400
+Ns 18.0000
+Ni 1.5000
+map_Kd textures/WOOD08.png
+
+newmtl Silla_Tela
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/Finishes.Flooring.Carpet.Loop.5.png
+
+newmtl Madera_Mesa_Arriba
+Kd 0.5000 0.5000 0.5000
+Ks 0.0400 0.0400 0.0400
+Ns 319998.0000
+Ni 1.5000
+map_Kd textures/BWK_1024.png
+
+newmtl Tela_Mesa_A
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/tela_blanca.png
+
+newmtl Sila_Forja_A_Metal
+Kd 0.5000 0.5000 0.5000
+Ks 0.0400 0.0400 0.0400
+Ns 319998.0000
+Ni 1.5000
+map_Kd textures/Fierro_A.png
+
+newmtl Sila_Forja_A_Madera
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/wood.3.Bubinga.png
+
+newmtl Sila_Forja_A_Tela
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/tela_silla_b.png
+
+newmtl Standard_7
+Kd 0.5490 0.5490 0.5490
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+
+newmtl Mesa_Madera
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/Vigas_B.png
+
+newmtl Silla_C_Madera
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/BWK_1024.png
+
+newmtl Silla_C_Tela
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/tela_silla_b.png
+
+newmtl Plato_A
+Kd 0.5000 0.5000 0.5000
+Ks 0.0400 0.0400 0.0400
+Ns 398.0000
+Ni 1.5000
+map_Kd textures/plato_a.png
+
+newmtl Individual_Verde
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/individual_b.png
+
+newmtl Cenicero
+Kd 0.5000 0.5000 0.5000
+Ks 0.0400 0.0400 0.0400
+Ns 998.0000
+Ni 1.5000
+map_Kd textures/cenicero.png
+
+newmtl Base_Vela_Color
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/ceramic_tile.png
+
+newmtl Vela
+Kd 0.7765 0.7569 0.7216
+Ks 0.0400 0.0400 0.0400
+Ns 0.5000
+Ni 1.5000
+
+newmtl Vela_Mecha
+Kd 0.1216 0.1137 0.1020
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+
+newmtl Pimienta
+Kd 0.5000 0.5000 0.5000
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+map_Kd textures/PITTED.png
+
+newmtl Cromo
+Kd 0.0863 0.0824 0.0745
+Ks 0.0400 0.0400 0.0400
+Ns 998.0000
+Ni 1.5000
+
+newmtl Sal
+Kd 0.7765 0.7490 0.7098
+Ks 0.0000 0.0000 0.0000
+Ns 6.0000
+Ni 1.5000
+
+newmtl Plastico_Cubiertos
+Kd 0.0000 0.0000 0.0000
+Ks 1.0000 1.0000 1.0000
+Ns 319998.0000
+Ni 1.5000
+Tr 1.0000
+
+newmtl Copas
+Kd 0.0000 0.0000 0.0000
+Ks 1.0000 1.0000 1.0000
+Ns 319998.0000
+Ni 1.5000
+Tr 1.0000
+
+newmtl VidrioSalero
+Kd 0.0000 0.0000 0.0000
+Ks 1.0000 1.0000 1.0000
+Ns 319998.0000
+Ni 1.5000
+Tr 1.0000

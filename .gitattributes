@@ -2,3 +2,10 @@ WhittedRayTracer/models/barbershop/barbershop.mesh filter=lfs diff=lfs merge=lfs
 WhittedRayTracer/models/crown/crown.mesh filter=lfs diff=lfs merge=lfs -text
 WhittedRayTracer/models/fishycat/fishycat.mesh filter=lfs diff=lfs merge=lfs -text
 WhittedRayTracer/models/sanmiguel/sanmiguel.mesh filter=lfs diff=lfs merge=lfs -text
+DistributedRayTracer/models/choppertitan/choppertitan.mesh filter=lfs diff=lfs merge=lfs -text
+DistributedRayTracer/models/magicalclock/magicalclock.mesh filter=lfs diff=lfs merge=lfs -text
+DistributedRayTracer/models/barbershop/barbershop.mesh filter=lfs diff=lfs merge=lfs -text
+DistributedRayTracer/models/crown/crown.mesh filter=lfs diff=lfs merge=lfs -text
+DistributedRayTracer/models/fishycat/fishycat.mesh filter=lfs diff=lfs merge=lfs -text
+DistributedRayTracer/models/sanmiguel/sanmiguel.mesh filter=lfs diff=lfs merge=lfs -text
+DistributedRayTracer/models/candy/candy.mesh filter=lfs diff=lfs merge=lfs -text
