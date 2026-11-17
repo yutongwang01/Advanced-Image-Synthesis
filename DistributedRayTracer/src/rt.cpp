@@ -35,6 +35,7 @@
 #include "camera.h"
 #include "debug.h"
 #include "image.h"
+#include "integrator.h"
 #include "options.h"
 #include "scene.h"
 #include "texture.h"
@@ -340,11 +341,11 @@ bool winsTie(float t, int prim, const Ray &ray, const Hit &hit)
  *   I the ray's direction, time and depth the ray's (-1 for a shadow ray);
  *   m the material bound at the call, its albedo replaced by the
  *     interpolated vertex color when the mesh has colors.
- * params is left NULL: the caller sets the bound shader's block. */
-void fillShadeContext(const Ray &ray, const Hit &hit, RtShadeContext &c)
+ * params is left NULL: the caller sets the bound shader's block. Declared in
+ * integrator.h: the integrators call it with their World's scene. */
+void fillShadeContext(const Scene &scene, const Ray &ray, const Hit &hit, RtShadeContext &c)
 {
     const float kPi = 3.14159265358979323846f;
-    const Scene &scene = state.scene;
     const DrawCall &dc = scene.drawCalls[(size_t)hit.drawCall];
 
     const Vec3 Po = dc.worldToObject.point(hit.P);
@@ -402,7 +403,7 @@ bool cutoutKeeps(const Ray &ray, const Hit &candidate, const DrawCall &dc)
     if (!dc.cutout.fn)
         return true;
     RtShadeContext c;
-    fillShadeContext(ray, candidate, c);
+    fillShadeContext(state.scene, ray, candidate, c);
     c.params = dc.cutout.data();
     return dc.cutout.fn(&c) != 0;
 }
@@ -890,7 +891,7 @@ bool useBvh(const Scene &scene) { return !options.noAccel && !scene.bvh.empty();
  * 14). One Hit is shared by both loops: each intersect function accepts
  * only a hit nearer than the one already there, so what is left at the end
  * is the nearest, and occlusion between spheres and triangles is right. */
-bool intersectScene(const Ray &ray, const Scene &scene, Hit &hit, int skipDrawCall = -1)
+bool intersectScene(const Ray &ray, const Scene &scene, Hit &hit, int skipDrawCall)
 {
     if (useBvh(scene))
         return traverseBvh(ray, scene, hit, skipDrawCall, false);
@@ -915,10 +916,8 @@ bool intersectScene(const Ray &ray, const Scene &scene, Hit &hit, int skipDrawCa
     return found;
 }
 
-/* The offset that keeps a secondary ray off the surface it starts on: the
- * ray starts at P + Ng * kRayEpsilon (Whitted Illumination handout, section
- * 4; Intersection handout, section 5). */
-const float kRayEpsilon = 1e-4f;
+/* kRayEpsilon, the offset that keeps a secondary ray off the surface it
+ * starts on, is in integrator.h: the integrators use it too. */
 
 /* Whether anything lies on the ray within [tMin, tMax]: an any-hit test for
  * shadow rays (Whitted Illumination handout, section 4). The first hit ends
@@ -1031,16 +1030,16 @@ int shadowSkip(const Light &light) { return light.type == LightType::Emissive ? 
 /* Whether light j reaches P, in the handout's order: the light's range
  * (a spot's cone and reach, a flat emitter's back), the geometric horizon
  * (Ng . L <= 0: no shadow ray), then the shadow ray. Ng faces the ray.
- * Shared by the shading and --aov shadow, so the two always agree. */
-enum class LightReach { OutOfReach, Behind, Shadowed, Visible };
-
-LightReach lightReach(const Light &light, const Vec3 &P, const Vec3 &Ng, Vec3 &E, Vec3 &L, float &d)
+ * Shared by the shading and --aov shadow, so the two always agree.
+ * LightReach and the declaration are in integrator.h. */
+LightReach lightReach(const Scene &scene, const Light &light, const Vec3 &P, const Vec3 &Ng, Vec3 &E, Vec3 &L,
+                      float &d)
 {
     if (!lightAt(light, P, E, L, d))
         return LightReach::OutOfReach;
     if (dot(Ng, L) <= 0)
         return LightReach::Behind;
-    if (occluded(shadowRay(light, P, Ng, L, d), state.scene, shadowSkip(light)))
+    if (occluded(shadowRay(light, P, Ng, L, d), scene, shadowSkip(light)))
         return LightReach::Shadowed;
     return LightReach::Visible;
 }
@@ -1127,206 +1126,26 @@ void addEmitterLights()
  * rtRotate turns a textured sphere), then looked up at the sphere's u and
  * v of that direction (Intersection handout, section 2.4):
  *     u = fract(atan2(d.x, d.z) / 2pi),  v = acos(clamp(d.y, -1, 1)) / pi,
- * and scaled by rtEnvironment's scale. */
-Vec3 environmentRadiance(const Vec3 &dir)
+ * and scaled by rtEnvironment's scale. The map and the background come from
+ * the World (integrator.h), which rtWorldEnd fills from the graphics state. */
+Vec3 environmentRadiance(const World &world, const Vec3 &dir)
 {
-    if (state.environment < 0)
-        return Vec3(state.background);
+    if (world.environment < 0)
+        return world.background;
 
     const float kPi = 3.14159265358979323846f;
-    const Vec3 d = normalize(Mat4::rotate(-state.environmentRotateY, 0, 1, 0).vector(dir));
+    const Vec3 d = normalize(Mat4::rotate(-world.environmentRotateY, 0, 1, 0).vector(dir));
     float u = std::atan2(d.x, d.z) / (2.0f * kPi);
     u -= std::floor(u); /* fract: into [0, 1) */
     const float v = std::acos(std::min(1.0f, std::max(-1.0f, d.y))) / kPi;
 
     float rgba[4];
-    rtTexture(state.environment, u, v, rgba);
-    return Vec3(rgba[0], rgba[1], rgba[2]) * state.environmentScale;
+    rtTexture(world.environment, u, v, rgba);
+    return Vec3(rgba[0], rgba[1], rgba[2]) * world.environmentScale;
 }
 
-/* The radiance a ray returns (Whitted Illumination handout, Eq. 1). So far
- * the first two lines and the emission:
- *     (1 - kt) (ka kd + sum_j Sj Ej kd/pi max(N.Lj, 0)) + sum_j Sj Ej ks max(Rj.V, 0)^n + emission
- * with Rj = 2 (N.Lj) N - Lj, V = -I, alpha = clamp(roughness^2, 0.05, 1) and
- * n = max(1, 2 / alpha^2 - 2): Lambert with its 1/pi, unnormalized Phong
- * not dimmed by (1 - kt). Per light, in the handout's order: its range,
- * the horizon, the shadow ray (lightReach), then N . L > 0. A miss returns
- * the background. The emission of a draw call whose bound material emits
- * shows on its front face only. With --trace, the handout's log lines.
- * The mirror ray (step 10) and, for a dielectric, the refracted ray with
- * the Fresnel split (step 11) recurse one level deeper. The surface
- * shader runs before the lights; cutouts run inside the intersection. */
-#define RT_V3(v) (double)(v).x, (double)(v).y, (double)(v).z
-Vec3 traceRay(const Ray &ray, int depth)
-{
-    const int ind = 2 * depth;   /* this depth's lines */
-    const int sub = ind + 2;     /* the lines under a hit */
-
-    Hit hit;
-    if (!intersectScene(ray, state.scene, hit)) {
-        /* camera, mirror and refracted rays alike: all of them end here */
-        const Vec3 env = environmentRadiance(ray.d);
-        RT_TRACE("%*sdepth %d: miss, environment (%g, %g, %g)", ind, "", depth, RT_V3(env));
-        return env;
-    }
-
-    const DrawCall &dc = state.scene.drawCalls[(size_t)hit.drawCall];
-
-    /* Which face the ray met, from Ng before the flip (for the emission and
-     * refraction); the shade context carries Ng and N turned toward the
-     * ray, together (the facing rule). */
-    const bool entering = hit.entering;
-    RT_TRACE("%*sdepth %d: hit prim %d t=%g P=(%g, %g, %g) N=(%g, %g, %g) Ng=(%g, %g, %g) %s", ind, "", depth,
-             hit.prim, (double)hit.t, RT_V3(hit.P), RT_V3(entering ? hit.N : -hit.N),
-             RT_V3(entering ? hit.Ng : -hit.Ng), entering ? "entering" : "leaving");
-
-    /* The shade context, then the surface shader bound at the call, which may
-     * rewrite the material (and replace N); the lighting reads what it leaves
-     * (Whitted Illumination handout, section 9: intersect, fill the shade
-     * context, run the surface shader, then the lights). */
-    RtShadeContext ctx;
-    fillShadeContext(ray, hit, ctx);
-    if (dc.surface.fn) {
-        ctx.params = dc.surface.data();
-        dc.surface.fn(&ctx);
-    }
-    const RtMaterial &m = ctx.m;
-    const Vec3 kd(m.albedo), ks(m.specular);
-    const float kt = m.transmission;
-    const Vec3 ka = options.ambientSet ? Vec3(options.ambient) : Vec3(state.ambient); /* --ambient overrides */
-    const Vec3 Ng(ctx.Ng);
-    const Vec3 N = normalize(Vec3(ctx.N)); /* a shader may have replaced it */
-    const Vec3 V = -ray.d;
-    RT_TRACE("%*smaterial: albedo (%g, %g, %g) specular (%g, %g, %g) roughness %g transmission %g ior %g "
-             "emission (%g, %g, %g)", sub, "", RT_V3(kd), RT_V3(ks), (double)m.roughness, (double)kt, (double)m.ior,
-             (double)m.emission[0], (double)m.emission[1], (double)m.emission[2]);
-
-    /* The Phong exponent from the roughness, not the roughness itself. */
-    const float alpha = std::min(1.0f, std::max(0.05f, m.roughness * m.roughness));
-    const float n = std::max(1.0f, 2.0f / (alpha * alpha) - 2.0f);
-    const bool hasSpecular = ks.x > 0 || ks.y > 0 || ks.z > 0;
-
-    const float kInvPi = 1.0f / 3.14159265358979323846f;
-    Vec3 diffuse(0.0f), specular(0.0f);
-    for (size_t j = 0; j < state.scene.lights.size(); ++j) {
-        const Light &light = state.scene.lights[j];
-        Vec3 E, L;
-        float d = 0;
-        const LightReach reach = lightReach(light, hit.P, Ng, E, L, d);
-        if (reach == LightReach::OutOfReach) {
-            RT_TRACE("%*slight %zu: out of reach", sub, "", j);
-            continue;
-        }
-        if (reach == LightReach::Behind) {
-            RT_TRACE("%*slight %zu: behind the surface", sub, "", j);
-            continue;
-        }
-        if (reach == LightReach::Shadowed) {
-            if (tracing()) { /* the nearest blocker, for the log only */
-                Hit b;
-                intersectScene(shadowRay(light, hit.P, Ng, L, d), state.scene, b, shadowSkip(light));
-                const Vec3 ba = b.drawCall >= 0 ? Vec3(state.scene.drawCalls[(size_t)b.drawCall].material.albedo) : Vec3(0.0f);
-                RT_TRACE("%*slight %zu: shadowed, L=(%g, %g, %g) by prim %d of object %d at t=%g P=(%g, %g, %g), "
-                         "albedo (%g, %g, %g)", sub, "", j, RT_V3(L), b.prim, b.drawCall, (double)b.t, RT_V3(b.P),
-                         RT_V3(ba));
-            }
-            continue;
-        }
-        const float NdotL = dot(N, L);
-        if (NdotL <= 0) {
-            RT_TRACE("%*slight %zu: N . L <= 0", sub, "", j);
-            continue; /* the shading normal faces away: both terms zero */
-        }
-        RT_TRACE("%*slight %zu: lit, L=(%g, %g, %g) E=(%g, %g, %g) N.L=%g", sub, "", j, RT_V3(L), RT_V3(E),
-                 (double)NdotL);
-
-        diffuse += E * kd * (NdotL * kInvPi);
-        if (hasSpecular) {
-            const Vec3 R = N * (2.0f * NdotL) - L;
-            const float RdotV = std::max(0.0f, dot(R, V));
-            specular += E * ks * std::pow(RdotV, n);
-        }
-    }
-
-    const Vec3 ambientDiffuse = ka * kd + diffuse;
-    RT_TRACE("%*sdirect: ambient+diffuse (%g, %g, %g) x (1 - %g) + specular (%g, %g, %g)", sub, "",
-             RT_V3(ambientDiffuse), (double)kt, RT_V3(specular));
-
-    Vec3 result = ambientDiffuse * (1.0f - kt) + specular;
-
-    /* The secondary rays (Whitted Illumination handout, sections 7 to 9),
-     * each traced only while the depth is below rtMaxDepth (--max-depth
-     * overrides it) and only if its weight times its coefficient is
-     * nonzero; one level deeper, tMin = 0, no tMax, the parent's time.
-     *
-     * Opaque (kt = 0): the mirror ray, weighted by the smoothness
-     *     wr = max(0, 1 - roughness^2 / 0.15).
-     * Transparent (kt > 0), a dielectric: roughness plays no part.
-     *   entering: (eta_i, eta_t) = (1, ior); leaving: (ior, 1); eta = eta_i / eta_t
-     *   cos_i = -N . I (N faces the ray), sin^2_t = eta^2 (1 - cos_i^2)
-     *   sin^2_t > 1: total internal reflection, the mirror ray alone, wr = 1
-     *   else cos_t = sqrt(1 - sin^2_t), T = eta I + (eta cos_i - cos_t) N,
-     *     Schlick: F0 = ((eta_t - eta_i) / (eta_t + eta_i))^2,
-     *     F = F0 + (1 - F0) (1 - c)^5 with c = cos_i entering, cos_t leaving
-     *     (the air side), F = 0 when eta_i = eta_t; wr = F, wt = 1 - F.
-     * The mirror ray adds wr ks L(R), R = I - 2 (N . I) N, from P + Ng eps;
-     * the refracted ray adds wt kt L(T), from P - Ng eps, the far side. */
-    const int maxDepth = options.maxDepth >= 0 ? options.maxDepth : state.maxDepth;
-    float wr = 0.0f, wt = 0.0f;
-    bool tir = false;
-    Vec3 T;
-    if (kt > 0.0f) {
-        const float etaI = entering ? 1.0f : m.ior;
-        const float etaT = entering ? m.ior : 1.0f;
-        const float eta = etaI / etaT;
-        const float cosI = -dot(N, ray.d);
-        const float sin2T = eta * eta * (1.0f - cosI * cosI);
-        if (sin2T > 1.0f) {
-            tir = true; /* only when leaving, beyond the critical angle */
-            wr = 1.0f;
-        } else {
-            const float cosT = std::sqrt(1.0f - sin2T);
-            T = ray.d * eta + N * (eta * cosI - cosT);
-            float F = 0.0f;
-            if (etaI != etaT) {
-                const float r0 = (etaT - etaI) / (etaT + etaI);
-                const float F0 = r0 * r0;
-                const float c = entering ? cosI : cosT;
-                const float x = 1.0f - c;
-                F = F0 + (1.0f - F0) * x * x * x * x * x;
-            }
-            wr = F;
-            wt = 1.0f - F;
-        }
-    } else
-        wr = std::max(0.0f, 1.0f - m.roughness * m.roughness / 0.15f);
-
-    if (hasSpecular && wr > 0.0f && depth < maxDepth) {
-        const Vec3 R = ray.d - N * (2.0f * dot(N, ray.d));
-        Ray reflected(hit.P + Ng * kRayEpsilon, R, 0.0f, std::numeric_limits<float>::infinity(), depth + 1);
-        reflected.time = ray.time;
-        RT_TRACE("%*sreflect: w=%g ks=(%g, %g, %g)", sub, "", (double)wr, RT_V3(ks));
-        result += ks * traceRay(reflected, depth + 1) * wr;
-    }
-
-    if (kt > 0.0f) {
-        if (tir)
-            RT_TRACE("%*srefract: total internal reflection", sub, "");
-        else if (wt > 0.0f && depth < maxDepth) {
-            Ray refracted(hit.P - Ng * kRayEpsilon, T, 0.0f, std::numeric_limits<float>::infinity(), depth + 1);
-            refracted.time = ray.time;
-            RT_TRACE("%*srefract: w=%g kt=%g", sub, "", (double)wt, (double)kt);
-            result += traceRay(refracted, depth + 1) * (wt * kt);
-        }
-    }
-
-    /* The emission: an emitter's (its bound material emits) on its front
-     * face only, as its stand-in shines forward only; anything else (a
-     * shader's, later) from both sides. */
-    if (!dc.emissive || entering)
-        result += Vec3(m.emission);
-    return result;
-}
+/* The shading (traceRay of HW2) is in the integrators: whittedRadiance in
+ * whitted.cpp and cookRadiance in cook.cpp, behind integrator.h. */
 
 /* A sphere of the given radius at the CTM's origin. */
 RtVoid rtSphere(RtFloat radius)
@@ -1511,6 +1330,18 @@ int bsdfTest(const Options &o)
     return 1;
 }
 
+/* The shading function of an integrator's name (integrator.h): the one
+ * place a name becomes an integrator. cmdline.cpp has already refused a
+ * name of a later homework. */
+ShadingFn integratorFor(const std::string &name)
+{
+    if (name == "whitted")
+        return whittedRadiance;
+    if (name == "cook")
+        return cookRadiance;
+    return nullptr;
+}
+
 /* world ------------------------------------------------------------------ */
 
 /* rtWorldBegin starts a world: the lights and primitives drawn from here to
@@ -1581,6 +1412,26 @@ RtVoid rtWorldEnd(void)
     if (!options.noAccel)
         printBvhStats(state.scene);
 
+    /* The World the integrator reads (integrator.h), with the command line
+     * already applied: --ambient over rtAmbient, --max-depth over
+     * rtMaxDepth. */
+    World world;
+    world.scene = &state.scene;
+    world.ambient = options.ambientSet ? Vec3(options.ambient) : Vec3(state.ambient);
+    world.background = Vec3(state.background);
+    world.environment = state.environment;
+    world.environmentScale = state.environmentScale;
+    world.environmentRotateY = state.environmentRotateY;
+    world.maxDepth = options.maxDepth >= 0 ? options.maxDepth : state.maxDepth;
+
+    /* The integrator --integrator names (cook by default at RT_HOMEWORK 3). */
+    const ShadingFn radiance = integratorFor(options.integrator);
+    if (!radiance) {
+        std::fprintf(stderr, "%s: --integrator %s: this renderer has no such integrator (whitted, cook)\n",
+                     options.scene, options.integrator.c_str());
+        std::exit(1);
+    }
+
     /* TODO: render (Workflow, step 5 on): the pixel loop, one ray through
      * each pixel's center, shaded by the Whitted model. For now, a black
      * image. */
@@ -1626,7 +1477,7 @@ RtVoid rtWorldEnd(void)
             Hit hit;
             if (intersectScene(ray, state.scene, hit)) {
                 RtShadeContext ctx;
-                fillShadeContext(ray, hit, ctx);
+                fillShadeContext(state.scene, ray, hit, ctx);
 
                 const DrawCall& dc =
                     state.scene.drawCalls[(size_t)hit.drawCall];
@@ -1652,14 +1503,14 @@ RtVoid rtWorldEnd(void)
                 for (const Light &light : state.scene.lights) {
                     Vec3 E, L;
                     float d;
-                    if (lightReach(light, hit.P, Ng, E, L, d) == LightReach::Visible)
+                    if (lightReach(state.scene, light, hit.P, Ng, E, L, d) == LightReach::Visible)
                         ++unblocked;
                 }
                 aovShadowColor(unblocked, (int)state.scene.lights.size(), rgb.data() + index);
             }
         } else if (options.aov.empty()) {
-            // The beauty image: the radiance of the camera ray.
-            const Vec3 L = traceRay(ray, 0);
+            // The beauty image: the radiance of the camera ray, by the chosen integrator.
+            const Vec3 L = radiance(world, ray, 0);
             L.store(rgb.data() + index);
             RT_TRACE("pixel (%d, %d): value (%g, %g, %g)", x, y, RT_V3(L));
         }

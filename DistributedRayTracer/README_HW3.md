@@ -409,16 +409,6 @@ Do not change these files:
 Keep your `whitted` integrator rendering HW2's images as before: the
 workflow's first check is that it does.
 
-## AI tools
-
-The handout's AI policy is HW2's: an AI tool may explain concepts, help
-you debug, interpret errors, and write setup, build files, and scripts.
-Implement the renderer yourself: the samplers, the warps, the thin lens,
-the lights' sampling and next-event estimation, the environment light,
-the glossy lobe, ambient occlusion, the `cook` integrator, and the
-sampled pixel loop. The handout says what to hand in and how to
-acknowledge what a tool did.
-
 ## Final checks and submission scope
 
 Install Python dependencies with `python -m pip install numpy matplotlib pillow`.
