@@ -7,13 +7,87 @@
  * ambient occlusion, the environment light, transmission).
  */
 #include "integrator.h"
-
 #include "debug.h"
+#include "lights.h"
 
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <limits>
+
+/* Two auxiliary functions: 
+ * The first one is responsible for Light Sample Stratification, 
+ * and the second one is responsible for the visibility detection of Shadow Rays.*/
+static Sample2 stratifyLightSample(
+    Sample2 u, int k, int count)
+{
+    int m = static_cast<int>(
+        std::sqrt(static_cast<float>(count))
+    );
+
+    while (count % m != 0)
+        --m;
+
+    const int n = count / m;
+
+    const float upper =
+        std::nextafter(1.0f, 0.0f);
+
+    u.u = std::min(
+        (static_cast<float>(k % m) + u.u) / m,
+        upper
+    );
+
+    u.v = std::min(
+        (static_cast<float>(k / m) + u.v) / n,
+        upper
+    );
+
+    return u;
+}
+
+static bool lightSampleVisible(
+    const Scene &scene,
+    const Light &light,
+    const Vec3 &P,
+    const Vec3 &Ng,
+    const LightSample &ls,
+    float time)
+{
+    const Vec3 origin =
+        P + Ng * kRayEpsilon;
+
+    Vec3 direction;
+    float tMax;
+
+    if (light.type == LightType::Directional) {
+        direction = ls.wi;
+        tMax = std::numeric_limits<float>::infinity();
+    } else {
+        // Recalculate direction from offset origin.
+        const Vec3 toTarget = ls.target - origin;
+        const float distance = length(toTarget);
+
+        if (!(distance > kRayEpsilon))
+            return false;
+
+        direction = toTarget / distance;
+        tMax = distance - kRayEpsilon;        
+    }
+
+    Ray shadow(
+        origin,
+        direction,
+        0.0f,
+        tMax,
+        -1
+    );
+
+    shadow.time = time;
+
+    // No skipped draw call, including the emitter.
+    return !occluded(shadow, scene, -1);
+}
 
 /* The radiance a ray returns (Whitted Illumination handout, Eq. 1). So far
  * the first two lines and the emission:
@@ -62,112 +136,177 @@ Vec3 cookRadiance(const World &world, const Ray &ray, int depth, Worker &worker)
         dc.surface.fn(&ctx);
     }
 
-    /* This hit's block of sample dimensions (Samplers handout, Section 3),
-     * drawn in this fixed order at every hit, whether or not anything uses
-     * them yet, so that a later step giving one its meaning shifts no other:
-     * the environment map's N (when the scene has one), N per light in the
-     * light list's order (the emitters' stand-ins included, visible or not),
-     * then one for the glossy lobe and one for ambient occlusion, N being
-     * --light-samples (1 unless given). Drawn now and discarded; the direct
-     * light of steps 8 to 11 gives the environment's and the lights' their
-     * meaning. The pixel loop drew the
-     * film and the lens (dimensions 0 to 3), so the camera ray's hit starts
-     * at dimension 4; a secondary ray's hit draws its block after this one,
-     * since the secondary rays are traced below. The worker's own sampler,
-     * by reference: it is positioned on this pixel sample. */
     Sampler &sampler = *worker.sampler;
-    const int numLightSamples = world.lightSamples; /* N, --light-samples; not the shading normal N below */
+    const int numLightSamples =
+        std::max(1, world.lightSamples);
 
-    // Environment Map: N samples of its direction (step 11)
     if (world.environment >= 0) {
-        for (int i = 0; i < numLightSamples; ++i) {
-            const Sample2 envSample = sampler.next2D();
-            (void)envSample;
-        }
+        const Sample2 envSample = sampler.next2D();
+        (void)envSample;
     }
 
-    // All lights: N samples of each, delta lights included (steps 8 to 10)
+    // The material has already been processed by its
+    // surface shader above.
+    const RtMaterial &m = ctx.m;
+
+    const Vec3 kd(m.albedo);
+    const Vec3 ks(m.specular);
+    const float kt = m.transmission;
+
+    const Vec3 ka = world.ambient;
+    const Vec3 Ng(ctx.Ng);
+    const Vec3 N = normalize(Vec3(ctx.N));
+
+    const bool hasSpecular =
+        ks.x > 0.0f ||
+        ks.y > 0.0f ||
+        ks.z > 0.0f;
+
+    RT_TRACE(
+        "%*smaterial: albedo (%g, %g, %g) "
+        "specular (%g, %g, %g) roughness %g "
+        "transmission %g ior %g "
+        "emission (%g, %g, %g)",
+        sub, "",
+        RT_V3(kd),
+        RT_V3(ks),
+        (double)m.roughness,
+        (double)kt,
+        (double)m.ior,
+        (double)m.emission[0],
+        (double)m.emission[1],
+        (double)m.emission[2]
+    );
+
+    const float kInvPi =
+        1.0f / 3.14159265358979323846f;
+
+    Vec3 diffuse(0.0f);
+
+    // Every light in the scene's original light order.
     for (size_t j = 0; j < scene.lights.size(); ++j) {
-        for (int i = 0; i < numLightSamples; ++i) {
-            const Sample2 lightSample = sampler.next2D();
-            (void)lightSample;
+
+        const Light &light = scene.lights[j];
+
+        // An emitter receives N samples.
+        // Delta lights only use sample k == 0.
+        const bool isEmitter =
+            light.type == LightType::Emissive;
+
+        for (int k = 0; k < numLightSamples; ++k) {
+
+            // Always consume a 2D sample, even when
+            // the delta light will discard it.
+            Sample2 u = sampler.next2D();
+
+            if (!isEmitter && k > 0)
+                continue;
+
+            // Stratify only for non-independent samplers.
+            if (numLightSamples > 1 &&
+                !world.independentSampler) {
+
+                u = stratifyLightSample(
+                    u, k, numLightSamples
+                );
+            }
+
+            LightSample ls;
+
+            if (!sampleLight(
+                    scene,
+                    light,
+                    hit.P,
+                    u,
+                    ray.time,
+                    depth,
+                    ls)) {
+                continue;
+            }
+
+            // Geometric and shading normals must
+            // both face the sampled light direction.
+            if (dot(Ng, ls.wi) <= 0.0f)
+                continue;
+
+            const float NdotL = dot(N, ls.wi);
+
+            if (NdotL <= 0.0f)
+                continue;
+
+            // Visibility from the offset shadow origin.
+            if (!lightSampleVisible(
+                    scene,
+                    light,
+                    hit.P,
+                    Ng,
+                    ls,
+                    ray.time)) {
+                continue;
+            }
+
+            // Only non-delta samples divide by PDF.
+            if (!ls.delta && !(ls.pdf > 0.0f))
+                continue;
+
+            float weight =
+                isEmitter
+                    ? 1.0f / numLightSamples
+                    : 1.0f;
+
+            if (!ls.delta)
+                weight /= ls.pdf;
+
+            diffuse +=
+                kd * ls.Le *
+                (NdotL * kInvPi * weight);
+
+            RT_TRACE(
+                "%*slight %zu sample %d: lit "
+                "wi=(%g, %g, %g) "
+                "Le=(%g, %g, %g) pdf=%g",
+                sub, "",
+                j, k,
+                RT_V3(ls.wi),
+                RT_V3(ls.Le),
+                (double)ls.pdf
+            );
         }
     }
 
-    // Lobe: one sample, the glossy lobe's direction (step 12)
-    const Sample2 lobeSample = sampler.next2D();
+    // Preserve the sampler dimension order:
+    // light samples -> lobe -> AO -> recursion.
 
-    // Ambient Occlusion: one sample, the occlusion ray (step 14)
+    const Sample2 lobeSample = sampler.next2D();
     const Sample2 aoSample = sampler.next2D();
 
     (void)lobeSample;
     (void)aoSample;
-    RT_TRACE("%*ssamples: lobe (%g %g) ao (%g %g)", sub, "", (double)lobeSample.u, (double)lobeSample.v,
-             (double)aoSample.u, (double)aoSample.v);
 
-    const RtMaterial &m = ctx.m;
-    const Vec3 kd(m.albedo), ks(m.specular);
-    const float kt = m.transmission;
-    const Vec3 ka = world.ambient; /* rtAmbient, or --ambient (rtWorldEnd resolved it) */
-    const Vec3 Ng(ctx.Ng);
-    const Vec3 N = normalize(Vec3(ctx.N)); /* a shader may have replaced it */
-    const Vec3 V = -ray.d;
-    RT_TRACE("%*smaterial: albedo (%g, %g, %g) specular (%g, %g, %g) roughness %g transmission %g ior %g "
-             "emission (%g, %g, %g)", sub, "", RT_V3(kd), RT_V3(ks), (double)m.roughness, (double)kt, (double)m.ior,
-             (double)m.emission[0], (double)m.emission[1], (double)m.emission[2]);
+    RT_TRACE(
+        "%*ssamples: lobe (%g %g) ao (%g %g)",
+        sub, "",
+        (double)lobeSample.u,
+        (double)lobeSample.v,
+        (double)aoSample.u,
+        (double)aoSample.v
+    );
 
-    /* The Phong exponent from the roughness, not the roughness itself. */
-    const float alpha = std::min(1.0f, std::max(0.05f, m.roughness * m.roughness));
-    const float n = std::max(1.0f, 2.0f / (alpha * alpha) - 2.0f);
-    const bool hasSpecular = ks.x > 0 || ks.y > 0 || ks.z > 0;
-
-    const float kInvPi = 1.0f / 3.14159265358979323846f;
-    Vec3 diffuse(0.0f), specular(0.0f);
-    for (size_t j = 0; j < scene.lights.size(); ++j) {
-        const Light &light = scene.lights[j];
-        Vec3 E, L;
-        float d = 0;
-        const LightReach reach = lightReach(scene, light, hit.P, Ng, E, L, d);
-        if (reach == LightReach::OutOfReach) {
-            RT_TRACE("%*slight %zu: out of reach", sub, "", j);
-            continue;
-        }
-        if (reach == LightReach::Behind) {
-            RT_TRACE("%*slight %zu: behind the surface", sub, "", j);
-            continue;
-        }
-        if (reach == LightReach::Shadowed) {
-            if (tracing()) { /* the nearest blocker, for the log only */
-                Hit b;
-                intersectScene(shadowRay(light, hit.P, Ng, L, d), scene, b, shadowSkip(light));
-                const Vec3 ba = b.drawCall >= 0 ? Vec3(scene.drawCalls[(size_t)b.drawCall].material.albedo) : Vec3(0.0f);
-                RT_TRACE("%*slight %zu: shadowed, L=(%g, %g, %g) by prim %d of object %d at t=%g P=(%g, %g, %g), "
-                         "albedo (%g, %g, %g)", sub, "", j, RT_V3(L), b.prim, b.drawCall, (double)b.t, RT_V3(b.P),
-                         RT_V3(ba));
-            }
-            continue;
-        }
-        const float NdotL = dot(N, L);
-        if (NdotL <= 0) {
-            RT_TRACE("%*slight %zu: N . L <= 0", sub, "", j);
-            continue; /* the shading normal faces away: both terms zero */
-        }
-        RT_TRACE("%*slight %zu: lit, L=(%g, %g, %g) E=(%g, %g, %g) N.L=%g", sub, "", j, RT_V3(L), RT_V3(E),
-                 (double)NdotL);
-
-        diffuse += E * kd * (NdotL * kInvPi);
-        if (hasSpecular) {
-            const Vec3 R = N * (2.0f * NdotL) - L;
-            const float RdotV = std::max(0.0f, dot(R, V));
-            specular += E * ks * std::pow(RdotV, n);
-        }
-    }
-
+    // Cook's diffuse direct lighting.
+    // The Phong highlight from HW2 is removed.
+    // Glossy sampling is implemented in Step 12.
     const Vec3 ambientDiffuse = ka * kd + diffuse;
-    RT_TRACE("%*sdirect: ambient+diffuse (%g, %g, %g) x (1 - %g) + specular (%g, %g, %g)", sub, "",
-             RT_V3(ambientDiffuse), (double)kt, RT_V3(specular));
 
-    Vec3 result = ambientDiffuse * (1.0f - kt) + specular;
+    Vec3 result =
+        ambientDiffuse * (1.0f - kt);
+
+    RT_TRACE(
+        "%*sdirect: ambient+diffuse (%g, %g, %g) "
+        "x (1 - %g)",
+        sub, "",
+        RT_V3(ambientDiffuse),
+        (double)kt
+    );
 
     /* The secondary rays (Whitted Illumination handout, sections 7 to 9),
      * each traced only while the depth is below rtMaxDepth (--max-depth

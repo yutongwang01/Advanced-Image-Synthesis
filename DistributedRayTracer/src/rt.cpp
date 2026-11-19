@@ -932,7 +932,7 @@ bool intersectScene(const Ray &ray, const Scene &scene, Hit &hit, int skipDrawCa
  * primitives are ignored (the emitter a stand-in light sits inside), -1
  * for none. Transparent blockers block completely. Brute force, like
  * intersectScene, until the BVH. */
-bool occluded(const Ray &ray, const Scene &scene, int skipDrawCall = -1)
+bool occluded(const Ray &ray, const Scene &scene, int skipDrawCall)
 {
     /* --time-limit: no blocker once the time is up, as intersectScene. */
     if (RenderBudget::timeUp()) {
@@ -1072,11 +1072,15 @@ void addEmitterLights()
         Light light;
         light.type = LightType::Emissive;
         light.drawCall = (int)dci;
+        light.emission = Le; // HW3
         bool made = false;
 
-        for (const Sphere &sphere : scene.spheres) {
+        for (size_t si = 0; si < scene.spheres.size(); ++si) {
+            const Sphere &sphere = scene.spheres[si];
+
             if (sphere.drawCall != (int)dci)
                 continue;
+
             const Mat4 &M = dc.objectToWorld;
             const float meanScale = (length(M.vector(Vec3(1, 0, 0))) + length(M.vector(Vec3(0, 1, 0))) +
                                      length(M.vector(Vec3(0, 0, 1)))) / 3.0f;
@@ -1084,12 +1088,19 @@ void addEmitterLights()
             if (!(r > 0))
                 break;
             light.position = M.point(Vec3(0, 0, 0));
+
+            light.sphereEmitter = true;
+            light.emitterSphere = static_cast<int>(si);
+            light.sphereRadius = r;
+
             light.intensity = Le * (kPi * r * r);
             made = true;
             break;
         }
 
-        for (const Mesh &mesh : scene.meshes) {
+        for (size_t mi = 0; mi < scene.meshes.size(); ++mi) {
+            const Mesh &mesh = scene.meshes[mi];
+
             if (made || mesh.drawCall != (int)dci)
                 continue;
             float area = 0;
@@ -1108,10 +1119,21 @@ void addEmitterLights()
                 } else if (!(dot(ni, n0) > 0.9998f))
                     flat = false;
                 area += a;
+
+                // HW3: keep triangle order and cumulative areas.
+                light.emitterTriangles.push_back(k);
+                light.cumulativeAreas.push_back(area);
+
                 centroid += (tri.p0 + (tri.e1 + tri.e2) / 3.0f) * a;
             }
             if (!(area > 0))
                 break;
+
+            // HW3: mesh emitter information.
+            light.meshEmitter = true;
+            light.emitterMesh = (int)mi;
+            light.totalArea = area;
+
             light.position = centroid / area;
             if (flat) {
                 light.oneSided = true;
@@ -1398,6 +1420,12 @@ RtVoid rtWorldEnd(void)
     const int w = options.width > 0 ? options.width : state.xres;
     const int h = options.height > 0 ? options.height : state.yres;
     const Camera camera = makeCamera(Vec3(state.eye), Vec3(state.lookat), Vec3(state.up), state.fovy, w, h);
+    /* The thin lens (workflow step 7): --lens over rtLens's radius (options.lens
+     * is -1 unless given; cmdline.cpp refuses a negative one), always the
+     * scene's focus distance. cook only; whitted and the --aov images keep the
+     * pinhole. */
+    const float lensRadius = options.lens >= 0.0f ? options.lens : state.lensRadius;
+    const float focusDistance = state.focusDistance;
     const int threads = threadCount();
     if (!options.aov.empty() && !isAov(options.aov)) {
         std::fprintf(stderr, "%s: --aov %s: not an image this renderer writes; it has raydir, normal, ng, depth, uv, albedo, "
@@ -1447,6 +1475,7 @@ RtVoid rtWorldEnd(void)
      * the command line over the scene, --sampler over rtSampler, --spp over
      * rtPixelSamples; --seed is 0 unless given. */
     const std::string samplerName = !options.sampler.empty() ? options.sampler : state.sampler;
+    world.independentSampler = (samplerName == "independent");
     const int spp = options.spp > 0 ? options.spp : state.spp;
     const uint64_t seed = options.seed;
 
@@ -1554,7 +1583,8 @@ RtVoid rtWorldEnd(void)
                 worker.sampler->startPixelSample(x, y, s);
                 const Sample2 film = worker.sampler->next2D();
                 const Sample2 lens = worker.sampler->next2D();
-                const Ray sampleRay = generateSampledCameraRay(camera, x + film.u, y + film.v, w, h);
+                const Ray sampleRay = generateThinLensCameraRay(camera, x + film.u, y + film.v, w, h, lens,
+                                                                lensRadius, focusDistance);
                 RT_TRACE("pixel (%d, %d) sample %d: film (%g %g) lens (%g %g) time 0, ray o=(%g, %g, %g) "
                          "d=(%g, %g, %g)", x, y, s, (double)film.u, (double)film.v, (double)lens.u, (double)lens.v,
                          RT_V3(sampleRay.o), RT_V3(sampleRay.d));

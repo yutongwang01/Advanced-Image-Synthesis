@@ -36,6 +36,7 @@ struct World {
     float environmentRotateY = 0; /* rtEnvironment's rotation about +y, degrees */
     int maxDepth = 8;             /* rtMaxDepth, or --max-depth: a ray at depth d recurses only if d < maxDepth */
     int lightSamples = 1;         /* --light-samples N: cook's samples of every light (and the environment) per hit */
+    bool independentSampler = false;
 };
 
 /* What one rendering thread owns (Suggested Workflow, step 2): its own
@@ -71,6 +72,8 @@ constexpr float kRayEpsilon = 1e-4f;
 /* The nearest hit of the ray in the scene (the BVH unless --no-accel);
  * skipDrawCall names a draw call whose primitives are ignored, -1 none. */
 bool intersectScene(const Ray &ray, const Scene &scene, Hit &hit, int skipDrawCall = -1);
+
+bool occluded(const Ray &ray, const Scene &scene, int skipDrawCall = -1);
 
 /* The shade context at a hit (Intersection handout, Table 1): P, Po, the
  * normals turned toward the ray, u v, the tangents, I, time, depth and the

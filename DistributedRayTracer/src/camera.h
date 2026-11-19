@@ -4,6 +4,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "sampler.h"
 #include "scene.h"
 #include "vec.h"
 
@@ -45,6 +46,25 @@ Ray generateSampledCameraRay(
     float rasterY,
     int width,
     int height
+);
+
+/* The thin lens (HW3, workflow step 7): the ray through raster point
+ * (rasterX, rasterY) from a point on the lens. The pinhole ray's direction
+ * d meets the focus plane, focusDistance along forward, at
+ *     Pf = eye + d * focusDistance / (d . forward);
+ * the lens sample goes through the concentric disk warp to (dx, dy), the
+ * ray starts at O = eye + lensRadius (dx right + dy up) and aims at Pf,
+ * D = normalize(Pf - O): everything on the focus plane is sharp. A
+ * lensRadius of 0 is a pinhole: generateSampledCameraRay's ray itself. */
+Ray generateThinLensCameraRay(
+    const Camera& camera,
+    float rasterX,
+    float rasterY,
+    int width,
+    int height,
+    Sample2 lens,
+    float lensRadius,
+    float focusDistance
 );
 
 #endif

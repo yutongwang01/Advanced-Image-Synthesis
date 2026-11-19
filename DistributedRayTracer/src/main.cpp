@@ -10,6 +10,8 @@
 #include "cmdline.h"
 #include "options.h"
 #include "sampler.h"
+#include "lights.h"
+#include <cmath>
 #include <cstdio>
 
 using namespace std;

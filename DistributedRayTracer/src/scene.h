@@ -144,6 +144,24 @@ struct Light {
     Vec3 normal;               /* Emissive, one-sided: the flat mesh's unit normal, the side it shines toward */
     bool oneSided = false;     /* Emissive: a flat mesh, I(w) = intensity * max(normal . w, 0) toward w */
     int drawCall = -1;         /* Emissive: index into Scene::drawCalls; -1 for the others */
+
+    // HW3 Step 8: Area light sampling
+    bool meshEmitter = false;
+    int emitterMesh = -1;
+
+    // Global indices into Scene::triangles, in original draw order.
+    std::vector<int> emitterTriangles;
+
+    // Cumulative world-space triangle areas.
+    std::vector<float> cumulativeAreas;
+    float totalArea = 0.0f;
+
+    // Original emitted radiance, not the HW2 stand-in intensity.
+    Vec3 emission = Vec3(0.0f);
+
+    bool sphereEmitter = false;
+    int emitterSphere = -1;
+    float sphereRadius = 0.0f;
 };
 
 /* An axis-aligned bounding box; empty (min > max) until something is added. */

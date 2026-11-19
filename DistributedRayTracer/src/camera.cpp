@@ -1,5 +1,7 @@
 #include "camera.h"
 
+#include "warp.h"
+
 #include <cmath>
 
 Camera makeCamera(
@@ -69,4 +71,38 @@ Ray generateSampledCameraRay(
 
     // Return Ray(camera.eye, direction)
     return Ray(camera.eye, direction);
+}
+
+Ray generateThinLensCameraRay(
+    const Camera& camera,
+    float rasterX,
+    float rasterY,
+    int width,
+    int height,
+    Sample2 lens,
+    float lensRadius,
+    float focusDistance
+) {
+    const Ray pinhole = generateSampledCameraRay(camera, rasterX, rasterY, width, height);
+
+    // A pinhole: the ray as it was
+    if (lensRadius == 0.0f)
+        return pinhole;
+
+    // 1. The focus point: the focus distance is measured along forward, not along the oblique ray,
+    //    so (Pf - eye) . forward = focusDistance gives t = focusDistance / (d . forward)
+    const float t = focusDistance / dot(pinhole.d, camera.forward);
+    const Vec3 Pf = pinhole.o + pinhole.d * t;
+
+    // 2. The lens sample on the unit disk (the concentric map, Warps handout 3.1)
+    const Vec3 disk = sampleConcentricDisk(lens);
+
+    // 3. The ray starts on the lens, in the camera's right-up plane
+    const Vec3 origin = pinhole.o + (camera.right * disk.x + camera.up * disk.y) * lensRadius;
+
+    // 4. And aims at the focus point; the pinhole ray's other fields (tMin, tMax, time, depth) are kept
+    Ray ray = pinhole;
+    ray.o = origin;
+    ray.d = normalize(Pf - origin);
+    return ray;
 }
