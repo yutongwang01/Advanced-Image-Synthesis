@@ -27,7 +27,7 @@
  * The mirror ray (step 10) and, for a dielectric, the refracted ray with
  * the Fresnel split (step 11) recurse one level deeper. The surface
  * shader runs before the lights; cutouts run inside the intersection. */
-Vec3 cookRadiance(const World &world, const Ray &ray, int depth)
+Vec3 cookRadiance(const World &world, const Ray &ray, int depth, Worker &worker)
 {
     const Scene &scene = *world.scene;
     const int ind = 2 * depth;   /* this depth's lines */
@@ -61,6 +61,50 @@ Vec3 cookRadiance(const World &world, const Ray &ray, int depth)
         ctx.params = dc.surface.data();
         dc.surface.fn(&ctx);
     }
+
+    /* This hit's block of sample dimensions (Samplers handout, Section 3),
+     * drawn in this fixed order at every hit, whether or not anything uses
+     * them yet, so that a later step giving one its meaning shifts no other:
+     * the environment map's N (when the scene has one), N per light in the
+     * light list's order (the emitters' stand-ins included, visible or not),
+     * then one for the glossy lobe and one for ambient occlusion, N being
+     * --light-samples (1 unless given). Drawn now and discarded; the direct
+     * light of steps 8 to 11 gives the environment's and the lights' their
+     * meaning. The pixel loop drew the
+     * film and the lens (dimensions 0 to 3), so the camera ray's hit starts
+     * at dimension 4; a secondary ray's hit draws its block after this one,
+     * since the secondary rays are traced below. The worker's own sampler,
+     * by reference: it is positioned on this pixel sample. */
+    Sampler &sampler = *worker.sampler;
+    const int numLightSamples = world.lightSamples; /* N, --light-samples; not the shading normal N below */
+
+    // Environment Map: N samples of its direction (step 11)
+    if (world.environment >= 0) {
+        for (int i = 0; i < numLightSamples; ++i) {
+            const Sample2 envSample = sampler.next2D();
+            (void)envSample;
+        }
+    }
+
+    // All lights: N samples of each, delta lights included (steps 8 to 10)
+    for (size_t j = 0; j < scene.lights.size(); ++j) {
+        for (int i = 0; i < numLightSamples; ++i) {
+            const Sample2 lightSample = sampler.next2D();
+            (void)lightSample;
+        }
+    }
+
+    // Lobe: one sample, the glossy lobe's direction (step 12)
+    const Sample2 lobeSample = sampler.next2D();
+
+    // Ambient Occlusion: one sample, the occlusion ray (step 14)
+    const Sample2 aoSample = sampler.next2D();
+
+    (void)lobeSample;
+    (void)aoSample;
+    RT_TRACE("%*ssamples: lobe (%g %g) ao (%g %g)", sub, "", (double)lobeSample.u, (double)lobeSample.v,
+             (double)aoSample.u, (double)aoSample.v);
+
     const RtMaterial &m = ctx.m;
     const Vec3 kd(m.albedo), ks(m.specular);
     const float kt = m.transmission;
@@ -177,7 +221,7 @@ Vec3 cookRadiance(const World &world, const Ray &ray, int depth)
         Ray reflected(hit.P + Ng * kRayEpsilon, R, 0.0f, std::numeric_limits<float>::infinity(), depth + 1);
         reflected.time = ray.time;
         RT_TRACE("%*sreflect: w=%g ks=(%g, %g, %g)", sub, "", (double)wr, RT_V3(ks));
-        result += ks * cookRadiance(world, reflected, depth + 1) * wr;
+        result += ks * cookRadiance(world, reflected, depth + 1, worker) * wr;
     }
 
     if (kt > 0.0f) {
@@ -187,7 +231,7 @@ Vec3 cookRadiance(const World &world, const Ray &ray, int depth)
             Ray refracted(hit.P - Ng * kRayEpsilon, T, 0.0f, std::numeric_limits<float>::infinity(), depth + 1);
             refracted.time = ray.time;
             RT_TRACE("%*srefract: w=%g kt=%g", sub, "", (double)wt, (double)kt);
-            result += cookRadiance(world, refracted, depth + 1) * (wt * kt);
+            result += cookRadiance(world, refracted, depth + 1, worker) * (wt * kt);
         }
     }
 

@@ -19,7 +19,9 @@
 #include "rt.h"
 #include "scene.h"
 #include "vec.h"
+#include "sampler.h"
 
+#include <memory>
 #include <string>
 
 /* The world as the integrators see it: the scene data structure (scene.h)
@@ -33,15 +35,27 @@ struct World {
     float environmentScale = 1;   /* rtEnvironment's scale */
     float environmentRotateY = 0; /* rtEnvironment's rotation about +y, degrees */
     int maxDepth = 8;             /* rtMaxDepth, or --max-depth: a ray at depth d recurses only if d < maxDepth */
+    int lightSamples = 1;         /* --light-samples N: cook's samples of every light (and the environment) per hit */
+};
+
+/* What one rendering thread owns (Suggested Workflow, step 2): its own
+ * sampler, made once per thread by rtWorldEnd's pixel loop and positioned
+ * with startPixelSample before every pixel sample. A sampler's values
+ * depend only on the pixel, the sample, the dimension and the seed, so
+ * which thread renders a pixel never changes the image. */
+struct Worker {
+    std::unique_ptr<Sampler> sampler;
 };
 
 /* A shading function: the radiance the ray returns, `depth` its level of
- * recursion (0 for a camera ray). */
-using ShadingFn = Vec3 (*)(const World &world, const Ray &ray, int depth);
+ * recursion (0 for a camera ray), `worker` the calling thread's, whose
+ * sampler the integrator draws its sample dimensions from. whitted never
+ * draws from it; cook does from step 3 on. */
+using ShadingFn = Vec3 (*)(const World &world, const Ray &ray, int depth, Worker &worker);
 
 /* The integrators. */
-Vec3 whittedRadiance(const World &world, const Ray &ray, int depth); /* whitted.cpp */
-Vec3 cookRadiance(const World &world, const Ray &ray, int depth);    /* cook.cpp */
+Vec3 whittedRadiance(const World &world, const Ray &ray, int depth, Worker &worker); /* whitted.cpp */
+Vec3 cookRadiance(const World &world, const Ray &ray, int depth, Worker &worker);    /* cook.cpp */
 
 /* The shading function of an integrator's name ("whitted", "cook"), or
  * nullptr for a name this renderer has none of. rt.cpp. */

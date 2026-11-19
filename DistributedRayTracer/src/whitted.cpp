@@ -25,7 +25,7 @@
  * The mirror ray (step 10) and, for a dielectric, the refracted ray with
  * the Fresnel split (step 11) recurse one level deeper. The surface
  * shader runs before the lights; cutouts run inside the intersection. */
-Vec3 whittedRadiance(const World &world, const Ray &ray, int depth)
+Vec3 whittedRadiance(const World &world, const Ray &ray, int depth, Worker &worker)
 {
     const Scene &scene = *world.scene;
     const int ind = 2 * depth;   /* this depth's lines */
@@ -175,7 +175,7 @@ Vec3 whittedRadiance(const World &world, const Ray &ray, int depth)
         Ray reflected(hit.P + Ng * kRayEpsilon, R, 0.0f, std::numeric_limits<float>::infinity(), depth + 1);
         reflected.time = ray.time;
         RT_TRACE("%*sreflect: w=%g ks=(%g, %g, %g)", sub, "", (double)wr, RT_V3(ks));
-        result += ks * whittedRadiance(world, reflected, depth + 1) * wr;
+        result += ks * whittedRadiance(world, reflected, depth + 1, worker) * wr;
     }
 
     if (kt > 0.0f) {
@@ -185,7 +185,7 @@ Vec3 whittedRadiance(const World &world, const Ray &ray, int depth)
             Ray refracted(hit.P - Ng * kRayEpsilon, T, 0.0f, std::numeric_limits<float>::infinity(), depth + 1);
             refracted.time = ray.time;
             RT_TRACE("%*srefract: w=%g kt=%g", sub, "", (double)wt, (double)kt);
-            result += whittedRadiance(world, refracted, depth + 1) * (wt * kt);
+            result += whittedRadiance(world, refracted, depth + 1, worker) * (wt * kt);
         }
     }
 

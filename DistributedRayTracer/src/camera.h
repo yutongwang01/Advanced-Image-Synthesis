@@ -34,5 +34,18 @@ Ray generateCameraRay(
     int height
 );
 
+/* A camera ray through any point of the image plane, given in raster
+ * coordinates: (rasterX, rasterY) in [0, width) x [0, height), x to the
+ * right and y down, pixel (x, y) covering [x, x + 1) x [y, y + 1). The
+ * sampled pixel loop passes (x + u, y + v) with the film sample (u, v);
+ * generateCameraRay is the same ray at the pixel's center, (x + 0.5, y + 0.5). */
+Ray generateSampledCameraRay(
+    const Camera& camera,
+    float rasterX,
+    float rasterY,
+    int width,
+    int height
+);
+
 #endif
 

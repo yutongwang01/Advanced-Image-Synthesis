@@ -48,3 +48,25 @@ Ray generateCameraRay(
     // Return Ray(camera.eye, direction)
     return Ray(camera.eye, direction);
 }
+
+Ray generateSampledCameraRay(
+    const Camera& camera,
+    float rasterX,
+    float rasterY,
+    int width,
+    int height
+) {
+    // Map the raster point (rasterX, rasterY) to [-1,1] screen coordinates; y points down, so it is flipped
+    const float ndcX = 2.0f * rasterX / float(width) - 1.0f;
+    const float ndcY = 1.0f - 2.0f * rasterY / float(height);
+
+    // Scale by aspect and tanHalfFovy
+    const float sx = ndcX * camera.aspect * camera.tanHalfFovy;
+    const float sy = ndcY * camera.tanHalfFovy;
+
+    // direction = normalize(forward + sx*right + sy*up)
+    const Vec3 direction = normalize(camera.forward + camera.right * sx + camera.up * sy);
+
+    // Return Ray(camera.eye, direction)
+    return Ray(camera.eye, direction);
+}

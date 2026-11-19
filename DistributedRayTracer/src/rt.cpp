@@ -893,6 +893,12 @@ bool useBvh(const Scene &scene) { return !options.noAccel && !scene.bvh.empty();
  * is the nearest, and occlusion between spheres and triangles is right. */
 bool intersectScene(const Ray &ray, const Scene &scene, Hit &hit, int skipDrawCall)
 {
+    /* --time-limit: once the time is up, no ray finds anything, so the
+     * pixel in progress ends within one ray (timer.h); the worker then
+     * drops the sample it was in. */
+    if (RenderBudget::timeUp()) {
+        return false;
+    }
     if (useBvh(scene))
         return traverseBvh(ray, scene, hit, skipDrawCall, false);
 
@@ -927,6 +933,10 @@ bool intersectScene(const Ray &ray, const Scene &scene, Hit &hit, int skipDrawCa
  * intersectScene, until the BVH. */
 bool occluded(const Ray &ray, const Scene &scene, int skipDrawCall = -1)
 {
+    /* --time-limit: no blocker once the time is up, as intersectScene. */
+    if (RenderBudget::timeUp()) {
+        return false;
+    }
     if (useBvh(scene)) {
         Hit hit;
         return traverseBvh(ray, scene, hit, skipDrawCall, true);
@@ -1423,6 +1433,7 @@ RtVoid rtWorldEnd(void)
     world.environmentScale = state.environmentScale;
     world.environmentRotateY = state.environmentRotateY;
     world.maxDepth = options.maxDepth >= 0 ? options.maxDepth : state.maxDepth;
+    world.lightSamples = std::max(1, options.lightSamples);
 
     /* The integrator --integrator names (cook by default at RT_HOMEWORK 3). */
     const ShadingFn radiance = integratorFor(options.integrator);
@@ -1431,6 +1442,13 @@ RtVoid rtWorldEnd(void)
                      options.scene, options.integrator.c_str());
         std::exit(1);
     }
+
+    /* What every worker's sampler is made for (Suggested Workflow, step 2):
+     * the command line over the scene, --sampler over rtSampler, --spp over
+     * rtPixelSamples; --seed is 0 unless given. */
+    const std::string samplerName = !options.sampler.empty() ? options.sampler : state.sampler;
+    const int spp = options.spp > 0 ? options.spp : state.spp;
+    const uint64_t seed = options.seed;
 
     /* TODO: render (Workflow, step 5 on): the pixel loop, one ray through
      * each pixel's center, shaded by the Whitted model. For now, a black
@@ -1443,7 +1461,22 @@ RtVoid rtWorldEnd(void)
     /* One pixel: its camera ray through the center, and what the image
      * shows there (a debug image by --aov, or the radiance). traceBegin and
      * traceEnd around it, so --trace logs the one pixel it names. */
-    auto renderPixel = [&](int x, int y) {
+    /* Whether this run's pixels take spp samples: cook's beauty image. whitted
+     * and the --aov images take one ray through each pixel's center. */
+    const bool sampledPixels = options.aov.empty() && radiance == cookRadiance;
+
+    /* Returns whether the pixel was finished. Under --time-limit it is not
+     * when the time ran out inside it: the sample in progress is dropped
+     * (the searches stopped finding hits, so its value is wrong), the
+     * budget is told how many samples had finished (cut), and the pixel is
+     * left black, as every pixel never reached. */
+    auto renderPixel = [&](Worker &worker, int x, int y) -> bool {
+        bool finished = true;
+        /* Sample 0, for whitted and the --aov images, which take one ray
+         * through the pixel's center and draw nothing from the sampler.
+         * cook's beauty image restarts the sampler for each of its spp
+         * samples below. */
+        worker.sampler->startPixelSample(x, y, 0);
         traceBegin(x, y);
 
         const Ray ray = generateCameraRay(camera, x, y, w, h);
@@ -1508,29 +1541,82 @@ RtVoid rtWorldEnd(void)
                 }
                 aovShadowColor(unblocked, (int)state.scene.lights.size(), rgb.data() + index);
             }
+        } else if (sampledPixels) {
+            /* cook's beauty image (Suggested Workflow, step 3): spp samples,
+             * each a ray through a jittered point of the pixel, averaged in
+             * linear radiance (the box filter; the tone map comes later, in
+             * writeImage). Every sample draws its dimensions in the fixed
+             * order of the Samplers handout, Section 3: the film sample, then
+             * the lens sample, drawn even for a pinhole (dimensions 2 and 3,
+             * which the thin lens of step 7 reads), then cook's own at each hit. */
+            Vec3 sum(0.0f);
+            for (int s = 0; s < spp && finished; ++s) {
+                worker.sampler->startPixelSample(x, y, s);
+                const Sample2 film = worker.sampler->next2D();
+                const Sample2 lens = worker.sampler->next2D();
+                const Ray sampleRay = generateSampledCameraRay(camera, x + film.u, y + film.v, w, h);
+                RT_TRACE("pixel (%d, %d) sample %d: film (%g %g) lens (%g %g) time 0, ray o=(%g, %g, %g) "
+                         "d=(%g, %g, %g)", x, y, s, (double)film.u, (double)film.v, (double)lens.u, (double)lens.v,
+                         RT_V3(sampleRay.o), RT_V3(sampleRay.d));
+                const Vec3 Ls = radiance(world, sampleRay, 0, worker);
+                /* --time-limit: asked after each sample and before adding it,
+                 * since a sample the time ran out in is wrong. s samples of
+                 * this pixel had finished before it. */
+                if (budget.expired()) {
+                    budget.cut(s);
+                    finished = false;
+                    break;
+                }
+                sum += Ls;
+            }
+            if (finished) {
+                const Vec3 L = sum / (float)spp;
+                L.store(rgb.data() + index);
+                RT_TRACE("pixel (%d, %d): value (%g, %g, %g)", x, y, RT_V3(L));
+            }
         } else if (options.aov.empty()) {
-            // The beauty image: the radiance of the camera ray, by the chosen integrator.
-            const Vec3 L = radiance(world, ray, 0);
-            L.store(rgb.data() + index);
-            RT_TRACE("pixel (%d, %d): value (%g, %g, %g)", x, y, RT_V3(L));
+            // The beauty image under whitted: one ray through the pixel's center, whatever --spp says.
+            const Vec3 L = radiance(world, ray, 0, worker);
+            /* --time-limit: after whitted's one ray; none had finished before it. */
+            if (budget.expired()) {
+                budget.cut(0);
+                finished = false;
+            } else {
+                L.store(rgb.data() + index);
+                RT_TRACE("pixel (%d, %d): value (%g, %g, %g)", x, y, RT_V3(L));
+            }
+        }
+
+        /* --aov images are one ray too, written in place above: undone if the
+         * time ran out during it. */
+        if (finished && !options.aov.empty() && budget.expired()) {
+            rgb[index] = rgb[index + 1] = rgb[index + 2] = 0.0f;
+            budget.cut(0);
+            finished = false;
         }
 
         traceEnd();
+        return finished;
     };
 
-    /* The pixel loop (Workflow, step 15): the image is cut into 16 x 16 tiles,
-     * handed out from an atomic counter, in the order the budget gives
-     * (shuffled under --time-limit), to a pool of std::thread workers, one per
-     * thread. A worker writes only the pixels of its own tiles, so the image
-     * is the same at any thread count. Under a time limit a worker stops
-     * before a new tile or a new row once the budget has expired; each row
-     * done is reported to the budget (progress and the LIMIT line). */
-    const int kTile = 16;
+    /* The pixel loop (Workflow, step 15): the image is cut into 16 x 16 tiles
+     * (single pixels under --time-limit, budget.tileSize), handed out from an
+     * atomic counter, in the order the budget gives (shuffled under
+     * --time-limit), to a pool of std::thread workers, one per thread. A
+     * worker writes only the pixels of its own tiles, so the image is the
+     * same at any thread count. Under a time limit a worker stops before a
+     * new tile or row once the budget has expired, and inside a pixel when
+     * renderPixel reports it cut short; each finished pixel is reported to
+     * the budget (progress and the LIMIT line). */
+    const int kTile = budget.tileSize(16);
     const int tilesX = (w + kTile - 1) / kTile, tilesY = (h + kTile - 1) / kTile;
     const int nTiles = tilesX * tilesY;
     const std::vector<int> order = budget.tileOrder(nTiles);
     std::atomic<int> nextTile(0);
     auto worker = [&]() {
+        /* This thread's own Worker and sampler, made once. */
+        Worker self;
+        self.sampler = makeSampler(samplerName, spp, seed);
         for (;;) {
             if (budget.expired())
                 return;
@@ -1543,9 +1629,11 @@ RtVoid rtWorldEnd(void)
             for (int y = y0; y < y1; ++y) {
                 if (budget.expired())
                     return;
-                for (int x = x0; x < x1; ++x)
-                    renderPixel(x, y);
-                budget.done(x1 - x0);
+                for (int x = x0; x < x1; ++x) {
+                    if (!renderPixel(self, x, y))
+                        return; /* the time ran out inside this pixel: stop the worker */
+                    budget.done(1);
+                }
             }
         }
     };
@@ -1569,7 +1657,7 @@ RtVoid rtWorldEnd(void)
     const char *sceneName = options.scene[0] ? options.scene : state.display.c_str(); /* the simple main sets none */
     std::printf("TIME %s build=%.3f render=%.3f total=%.3f threads=%d\n", sceneName, build, renderTime,
                 total.seconds(), threads);
-    budget.report(sceneName, renderTime, (long long)w * h, 1);
+    budget.report(sceneName, renderTime, (long long)w * h, sampledPixels ? spp : 1);
     std::fflush(stdout);
 
     clearWorld();
