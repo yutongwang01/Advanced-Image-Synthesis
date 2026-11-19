@@ -41,6 +41,7 @@
 #include "texture.h"
 #include "timer.h"
 #include "transform.h"
+#include "warp.h"
 
 #include <algorithm>
 #include <atomic>
@@ -1329,8 +1330,7 @@ RtVoid rtEnvironmentPortal(const RtPoint corners[4])
  * rendering. Until those homeworks they only say so. */
 int warpTest(const Options &o)
 {
-    std::fprintf(stderr, "--warptest %s: the warps are HW3's; this renderer has none yet\n", o.warp.c_str());
-    return 1;
+    return runWarpTest(o); /* warptest.cpp, given: N samples of the warp, for tools/warptest.py */
 }
 
 int bsdfTest(const Options &o)
