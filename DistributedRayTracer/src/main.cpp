@@ -9,7 +9,7 @@
  */
 #include "cmdline.h"
 #include "options.h"
-
+#include "sampler.h"
 #include <cstdio>
 
 using namespace std;
