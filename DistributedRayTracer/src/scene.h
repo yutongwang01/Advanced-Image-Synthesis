@@ -162,6 +162,12 @@ struct Light {
     bool sphereEmitter = false;
     int emitterSphere = -1;
     float sphereRadius = 0.0f;
+
+    // HW3 Step 12: the radius of the sphere about `position` that holds the
+    // whole emitter (Area Lights, Section 2): r for a sphere, the farthest
+    // vertex from the centroid for a mesh. Its angular radius from a point is
+    // compared with a glossy lobe's width (lightCosAngularRadius).
+    float extent = 0.0f;
 };
 
 /* An axis-aligned bounding box; empty (min > max) until something is added. */

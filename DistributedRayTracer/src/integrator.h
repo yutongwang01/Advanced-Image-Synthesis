@@ -23,6 +23,25 @@
 
 #include <memory>
 #include <string>
+#include <vector>
+
+/* step 11 */
+struct EnvironmentDistribution {
+    int width = 0;
+    int height = 0;
+
+    // Final sampling weights, row-major.
+    std::vector<double> weights;
+
+    // Marginal distribution over rows.
+    std::vector<double> rowCDF;
+
+    // Conditional distribution over columns.
+    std::vector<double> columnCDF;
+
+    double totalWeight = 0.0;
+};
+
 
 /* The world as the integrators see it: the scene data structure (scene.h)
  * and the settings of the shading that rtWorldEnd has already resolved
@@ -34,8 +53,10 @@ struct World {
     int environment = -1;         /* rtEnvironment's texture handle; -1: none, the background shows */
     float environmentScale = 1;   /* rtEnvironment's scale */
     float environmentRotateY = 0; /* rtEnvironment's rotation about +y, degrees */
+    EnvironmentDistribution environmentDist;
     int maxDepth = 8;             /* rtMaxDepth, or --max-depth: a ray at depth d recurses only if d < maxDepth */
     int lightSamples = 1;         /* --light-samples N: cook's samples of every light (and the environment) per hit */
+    float aoDistance = 0.0f;      /* rtAmbientOcclusion's distance: cook scales the ambient by one occlusion ray; 0: off */
     bool independentSampler = false;
 };
 

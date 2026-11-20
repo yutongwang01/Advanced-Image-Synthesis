@@ -1055,6 +1055,92 @@ LightReach lightReach(const Scene &scene, const Light &light, const Vec3 &P, con
     return LightReach::Visible;
 }
 
+static bool buildEnvironmentDistribution(int handle, EnvironmentDistribution &dist)
+{
+    dist = EnvironmentDistribution();
+
+    int w = 0;
+    int h = 0;
+
+    if (!textureSize(handle, w, h) || w <= 0 || h <= 0)
+        return false;
+
+    dist.width = w;
+    dist.height = h;
+
+    const size_t count = size_t(w) * size_t(h);
+
+    std::vector<double> luminance(count, 0.0);
+
+    dist.weights.resize(count);
+    dist.rowCDF.resize(size_t(h) + 1);
+    dist.columnCDF.resize(size_t(h) * (size_t(w) + 1));
+
+    // Step 2: each texel's luminance, 0.2126 R + 0.7152 G + 0.0722 B.
+    for (int y = 0; y < h; ++y)
+        for (int x = 0; x < w; ++x) {
+            float rgba[4];
+            textureTexel(handle, x, y, rgba);
+            luminance[size_t(y) * w + x] = 0.2126f * rgba[0] + 0.7152f * rgba[1] + 0.0722f * rgba[2];
+        }
+
+    // Step 3: the weight, the largest luminance of the 3 x 3 neighborhood
+    // (wrapping in s, clamped in t) times sin(theta) at the row's center.
+    // Kept as floats (handout 11.2); every sum in double.
+    const double pi = 3.14159265358979323846;
+    double sum = 0.0;
+    for (int y = 0; y < h; ++y) {
+        const double theta = pi * (double(y) + 0.5) / double(h);
+        for (int x = 0; x < w; ++x) {
+            double maximum = 0.0;
+            for (int dy = -1; dy <= 1; ++dy) {
+                const int yy = std::clamp(y + dy, 0, h - 1);
+                for (int dx = -1; dx <= 1; ++dx) {
+                    const int xx = (x + dx + w) % w;
+                    maximum = std::max(maximum, luminance[size_t(yy) * w + xx]);
+                }
+            }
+            const size_t index = size_t(y) * w + x;
+            dist.weights[index] = (float)(maximum * std::sin(theta));
+            sum += dist.weights[index];
+        }
+    }
+
+    // The floor: a millionth of the mean before it is added, and 1e-20, so
+    // that no weight is zero (an all-black map then samples uniformly).
+    const double floorWeight = 1e-6 * sum / double(count);
+    double total = 0.0;
+    for (double &weight : dist.weights) {
+        weight = (float)(weight + floorWeight + 1e-20);
+        total += weight;
+    }
+    if (!(total > 0.0))
+        return false;
+    dist.totalWeight = total;
+
+    // Step 4: the marginal over rows and a conditional per row, in double,
+    // each starting at 0 and ending at exactly 1.
+    dist.rowCDF[0] = 0.0;
+    double runningRows = 0.0;
+    for (int y = 0; y < h; ++y) {
+        const size_t base = size_t(y) * (size_t(w) + 1);
+        dist.columnCDF[base] = 0.0;
+        double runningColumns = 0.0;
+        for (int x = 0; x < w; ++x) {
+            runningColumns += dist.weights[size_t(y) * w + x];
+            dist.columnCDF[base + x + 1] = runningColumns;
+        }
+        for (int x = 1; x <= w; ++x)
+            dist.columnCDF[base + x] /= runningColumns; /* > 0: every weight is */
+        dist.columnCDF[base + w] = 1.0;
+        runningRows += runningColumns;
+        dist.rowCDF[size_t(y) + 1] = runningRows / total;
+    }
+    dist.rowCDF[size_t(h)] = 1.0;
+    return true;
+}
+
+
 /* The emitters' stand-in point lights, added after the scene's own lights at rtWorldEnd: one per
  * draw call whose bound material emits, with Le that emission.
  * Zero-area triangles count neither for the area, the centroid nor the
@@ -1092,6 +1178,7 @@ void addEmitterLights()
             light.sphereEmitter = true;
             light.emitterSphere = static_cast<int>(si);
             light.sphereRadius = r;
+            light.extent = r; // HW3 Step 12
 
             light.intensity = Le * (kPi * r * r);
             made = true;
@@ -1135,6 +1222,14 @@ void addEmitterLights()
             light.totalArea = area;
 
             light.position = centroid / area;
+
+            // HW3 Step 12: the farthest vertex of the emitter's triangles from the centroid.
+            for (int k : light.emitterTriangles) {
+                const Triangle &tri = scene.triangles[(size_t)k];
+                const Vec3 v[3] = {tri.p0, tri.p0 + tri.e1, tri.p0 + tri.e2};
+                for (const Vec3 &p : v)
+                    light.extent = std::max(light.extent, length(p - light.position));
+            }
             if (flat) {
                 light.oneSided = true;
                 light.normal = n0;
@@ -1173,7 +1268,7 @@ Vec3 environmentRadiance(const World &world, const Vec3 &dir)
     const float v = std::acos(std::min(1.0f, std::max(-1.0f, d.y))) / kPi;
 
     float rgba[4];
-    rtTexture(world.environment, u, v, rgba);
+    textureLookupLatLong(world.environment, u, v, rgba);
     return Vec3(rgba[0], rgba[1], rgba[2]) * world.environmentScale;
 }
 
@@ -1462,6 +1557,7 @@ RtVoid rtWorldEnd(void)
     world.environmentRotateY = state.environmentRotateY;
     world.maxDepth = options.maxDepth >= 0 ? options.maxDepth : state.maxDepth;
     world.lightSamples = std::max(1, options.lightSamples);
+    world.aoDistance = state.aoDistance;
 
     /* The integrator --integrator names (cook by default at RT_HOMEWORK 3). */
     const ShadingFn radiance = integratorFor(options.integrator);
@@ -1470,6 +1566,11 @@ RtVoid rtWorldEnd(void)
                      options.scene, options.integrator.c_str());
         std::exit(1);
     }
+
+    /* The environment light's distribution (step 11): once per image, only
+     * for cook and only when the scene has a map. */
+    if (radiance == cookRadiance && world.environment >= 0)
+        buildEnvironmentDistribution(world.environment, world.environmentDist);
 
     /* What every worker's sampler is made for (Suggested Workflow, step 2):
      * the command line over the scene, --sampler over rtSampler, --spp over

@@ -77,14 +77,6 @@ bool sampleDeltaLight(
 
 const float kPi = 3.14159265358979323846f;
 
-// The frame about n (Warps handout, Section 2), exactly as the reference.
-void orthonormalBasis(const Vec3 &n, Vec3 &t, Vec3 &b)
-{
-    const Vec3 a = std::fabs(n.x) < 0.9f ? Vec3(1, 0, 0) : Vec3(0, 1, 0);
-    t = normalize(cross(a, n));
-    b = cross(n, t);
-}
-
 // Area Lights 6.1: from outside, a direction uniform in the cone the
 // sphere subtends; 1 - cos(thetaMax) and the near side in double.
 bool sampleSphereOutside(
@@ -388,4 +380,14 @@ bool sampleLight(
 
     return true;
 
+}
+
+float lightCosAngularRadius(const Light &light, const Vec3 &P)
+{
+    if (light.type != LightType::Emissive)
+        return 1.0f; // a point, spot or directional light: no size
+    const float d = length(light.position - P);
+    if (!(d > light.extent))
+        return -1.0f; // inside the sphere that holds it: it fills the view
+    return std::sqrt(1.0f - light.extent * light.extent / (d * d));
 }
