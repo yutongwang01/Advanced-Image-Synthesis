@@ -32,7 +32,7 @@ We validated the area-light estimator with `python tools/area_light_test.py --rt
 | 64 | 0.00503 | 1.99 | PASS |
 | 256 | 0.00252 | 1.99 | PASS |
 
-Every tested sample count passed the statistical mean-difference check; **0 of 480 blocks** exceeded four standard errors in each run. Quadrupling the number of samples reduced RMSE by almost exactly a factor of two, consistent with the Monte Carlo behavior \(\mathrm{RMSE}\propto N^{-1/2}\).
+Every tested sample count passed the statistical mean-difference check; **0 of 480 blocks** exceeded four standard errors in each run. Quadrupling the number of samples reduced RMSE by almost exactly a factor of two, consistent with the Monte Carlo behavior $\mathrm{RMSE}\propto N^{-1/2}$.
 
 ![Light-sampling comparison grid](renders/2_Cook/2_StudyScenes/LightSamples.png)
 
@@ -40,19 +40,19 @@ Every tested sample count passed the statistical mean-difference check; **0 of 4
 
 ### Why next-event estimation is unbiased
 
-At a surface point \(P\), direct illumination can be written as an integral over incident light directions:
+At a surface point $P$, direct illumination can be written as an integral over incident light directions:
 
-\[
+$$
 L_{\mathrm{direct}}(P)=\int_{\Omega} f_r(P,\omega_i,\omega_o)\,L_i(P,\omega_i)\,V(P,\omega_i)\,|N\cdot\omega_i|\,d\omega_i.
-\]
+$$
 
-When a direction is sampled from a nonzero probability density \(p(\omega_i)\), next-event estimation contributes
+When a direction is sampled from a nonzero probability density $p(\omega_i)$, next-event estimation contributes
 
-\[
+$$
 \widehat L_{\mathrm{direct}}=\frac{1}{M}\sum_{k=1}^{M}\frac{f_r(P,\omega_k,\omega_o)\,L_i(P,\omega_k)\,V(P,\omega_k)\,|N\cdot\omega_k|}{p(\omega_k)}.
-\]
+$$
 
-Taking the expectation cancels the sampling density: \(\mathbb E[g(\omega)/p(\omega)]=\int g(\omega)\,d\omega\). Consequently, the estimator is unbiased when the PDF correctly describes the generated samples, the visibility term is evaluated consistently, and the sampling distribution gives nonzero probability wherever the integrand contributes. Importance sampling changes the variance, not the expected illumination. Visibility failures and cutout samples contribute zero rather than being silently resampled.
+Taking the expectation cancels the sampling density: $\mathbb E[g(\omega)/p(\omega)]=\int g(\omega)\,d\omega$. Consequently, the estimator is unbiased when the PDF correctly describes the generated samples, the visibility term is evaluated consistently, and the sampling distribution gives nonzero probability wherever the integrand contributes. Importance sampling changes the variance, not the expected illumination. Visibility failures and cutout samples contribute zero rather than being silently resampled.
 
 ## 4. Sampler Convergence Study
 
@@ -78,7 +78,7 @@ We ran `python tools/convergence.py --rt ./build/gauchoRT` for independent, stra
 
 *Figure 3. Four-samples-per-pixel comparison of independent, stratified, and Halton sampling.*
 
-Independent sampling follows the expected \(N^{-1/2}\) error reduction, reflected in its slope of approximately -0.5. Stratification reduces clustering and improves performance, especially at low sample counts. The low-discrepancy Halton sampler achieves the steepest overall fitted slope (-0.67); at 1024 spp its RMSE (0.00133) is about 35% of independent sampling's RMSE (0.00381). The exact slopes depend on the scene and sample-count range, but these measurements show a clear benefit from more evenly distributed samples.
+Independent sampling follows the expected $N^{-1/2}$ error reduction, reflected in its slope of approximately -0.5. Stratification reduces clustering and improves performance, especially at low sample counts. The low-discrepancy Halton sampler achieves the steepest overall fitted slope (-0.67); at 1024 spp its RMSE (0.00133) is about 35% of independent sampling's RMSE (0.00381). The exact slopes depend on the scene and sample-count range, but these measurements show a clear benefit from more evenly distributed samples.
 
 The script also generated `renders/2_Cook/2_StudyScenes/convergence.csv` with the measurements used for the plot.
 
@@ -86,11 +86,11 @@ The script also generated `renders/2_Cook/2_StudyScenes/convergence.csv` with th
 
 The Cook integrator samples a reflected direction from a normalized Phong lobe centered on the ideal mirror direction. For the handout's glossy-lobe model, the angular distribution appearing in the scattering contribution is the same normalized distribution used as the sampling PDF. In the Monte Carlo throughput,
 
-\[
+$$
 \text{weight}=\frac{f_r(\omega_i,\omega_o)\,|N\cdot\omega_i|}{p(\omega_i)},
-\]
+$$
 
-the lobe distribution cancels its sampling PDF, and the geometric cosine is already accounted for by the model's directional weighting. The remaining multiplier is **the Fresnel factor \(F\)**. Multiplying by another cosine or dividing by the lobe PDF a second time would incorrectly darken or brighten glossy reflections. Reflection directions that are geometrically invalid are rejected rather than incorrectly used.
+the lobe distribution cancels its sampling PDF, and the geometric cosine is already accounted for by the model's directional weighting. The remaining multiplier is **the Fresnel factor $F$**. Multiplying by another cosine or dividing by the lobe PDF a second time would incorrectly darken or brighten glossy reflections. Reflection directions that are geometrically invalid are rejected rather than incorrectly used.
 
 This behavior was checked against the provided tests: `GlossyFurnace` (RMSE 0.00000), `GlossySweep` (0.00003), `MirrorLamp` (0.00002), and `Paperclip` (0.00004) all passed.
 
