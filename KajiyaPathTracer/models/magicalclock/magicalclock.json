@@ -1,0 +1,528 @@
+{
+ "file": "D:\\Dropbox\\Research\\Projects\\GenerativePathTracing\\dataset\\Blender\\Random\\MagicalClock\\MagicalClock.blend",
+ "scene": "Scene",
+ "frame": 1,
+ "resolution": [
+  1920,
+  1150,
+  100
+ ],
+ "cameras": [
+  {
+   "name": "camera_main_01",
+   "active": true,
+   "eye": [
+    20.22079,
+    8.79828,
+    -14.92041
+   ],
+   "lookat": [
+    19.48721,
+    8.96284,
+    -14.26102
+   ],
+   "up": [
+    0.16834,
+    0.984,
+    -0.05829
+   ],
+   "fovy_deg": 24.336,
+   "lens_mm": 50.0,
+   "resolution": [
+    1920,
+    1150
+   ],
+   "type": "PERSP"
+  }
+ ],
+ "lights": [
+  {
+   "name": "light_area_02",
+   "type": "AREA",
+   "color": [
+    0.962,
+    0.9882,
+    1.0
+   ],
+   "blender_energy": 140479.46875,
+   "pos": [
+    1.73506,
+    43.07574,
+    40.73028
+   ],
+   "dir": [
+    -0.11591,
+    -0.38682,
+    -0.91484
+   ],
+   "hide_render": false,
+   "shape": "SQUARE",
+   "size": [
+    31.2361,
+    31.1902
+   ],
+   "I_guess": [
+    10753.7646,
+    11047.3227,
+    11179.0009
+   ]
+  },
+  {
+   "name": "light_area_01",
+   "type": "AREA",
+   "color": [
+    0.0355,
+    0.1255,
+    0.2165
+   ],
+   "blender_energy": 26914.0234375,
+   "pos": [
+    -11.18147,
+    19.26322,
+    -5.35472
+   ],
+   "dir": [
+    0.82157,
+    -0.28584,
+    0.49326
+   ],
+   "hide_render": false,
+   "shape": "SQUARE",
+   "size": [
+    12.0372,
+    12.0372
+   ],
+   "I_guess": [
+    76.0749,
+    268.7058,
+    463.7303
+   ]
+  },
+  {
+   "name": "light_spot_02",
+   "type": "SPOT",
+   "color": [
+    0.0362,
+    1.0,
+    0.8342
+   ],
+   "blender_energy": 592748.0,
+   "pos": [
+    5.53982,
+    33.15389,
+    -4.18442
+   ],
+   "dir": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "hide_render": false,
+   "I_guess": [
+    1709.7924,
+    47169.3871,
+    39350.8828
+   ],
+   "radius": 0.10000000149011612,
+   "spot_deg": 12.0
+  },
+  {
+   "name": "light_spot_01",
+   "type": "SPOT",
+   "color": [
+    0.1452,
+    1.0,
+    0.9884
+   ],
+   "blender_energy": 26796.001953125,
+   "pos": [
+    13.13037,
+    24.94337,
+    -4.04125
+   ],
+   "dir": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "hide_render": false,
+   "I_guess": [
+    309.5343,
+    2132.3581,
+    2107.6701
+   ],
+   "radius": 0.10000000149011612,
+   "spot_deg": 36.77
+  },
+  {
+   "name": "light_point_01",
+   "type": "POINT",
+   "color": [
+    0.0312,
+    0.7524,
+    1.0
+   ],
+   "blender_energy": 1200.0,
+   "pos": [
+    0.17691,
+    8.99789,
+    -0.37854
+   ],
+   "dir": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "hide_render": false,
+   "I_guess": [
+    2.9791,
+    71.852,
+    95.493
+   ],
+   "radius": 0.10000000149011612
+  }
+ ],
+ "world": {
+  "name": "World",
+  "nodes": [
+   {
+    "type": "OUTPUT_WORLD"
+   },
+   {
+    "type": "TEX_ENVIRONMENT",
+    "image": "//textures\\cabin_2k.hdr"
+   },
+   {
+    "type": "TEX_COORD"
+   },
+   {
+    "type": "MAPPING"
+   },
+   {
+    "type": "HUE_SAT"
+   },
+   {
+    "type": "CURVE_RGB"
+   },
+   {
+    "type": "BACKGROUND",
+    "strength": 2.0
+   },
+   {
+    "type": "CURVE_RGB"
+   }
+  ],
+  "view_transform": "Standard",
+  "exposure": 0.0
+ },
+ "static_obj": "magicalclock.obj",
+ "static_triangles": 1606966,
+ "prototypes": {},
+ "instanced_triangles": 0,
+ "sprinkles": 0,
+ "materials": {
+  "background_01": {
+   "Kd": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ks": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.5,
+   "Ke": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "map_Ke": "textures/background_01_1_background_01.jpg"
+  },
+  "black_mat_01": {
+   "Kd": [
+    0.014,
+    0.014,
+    0.014
+   ],
+   "Ks": [
+    0.12,
+    0.12,
+    0.12
+   ],
+   "Ns": 48.09563697815495,
+   "Ni": 1.5
+  },
+  "black_mat_02": {
+   "Kd": [
+    0.014,
+    0.014,
+    0.014
+   ],
+   "Ks": [
+    0.12,
+    0.12,
+    0.12
+   ],
+   "Ns": 48.09563697815495,
+   "Ni": 1.5
+  },
+  "concrete_01": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/concrete_01_concrete_01.jpg",
+   "Ks": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.5
+  },
+  "concrete_02": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/concrete_01_concrete_02.jpg",
+   "Ks": [
+    0.04,
+    0.04,
+    0.04
+   ],
+   "Ns": 48.09563697815495,
+   "Ni": 1.5
+  },
+  "concrete_03": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/concrete_01_concrete_03.jpg",
+   "Ks": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.5
+  },
+  "glass_01": {
+   "Kd": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ks": [
+    0.83,
+    0.83,
+    0.83
+   ],
+   "Ns": 6.0,
+   "Ni": 1.5,
+   "Tr": 1.0
+  },
+  "leaves_01": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/papers_01_1_leaves_01.jpg",
+   "Ks": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.5,
+   "map_d": "textures/papers_01_1_alpha_mask.png"
+  },
+  "metal_01": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/metal_01_1_metal_01.jpg",
+   "Ks": [
+    0.25,
+    0.25,
+    0.25
+   ],
+   "Ns": 46.77305288827922,
+   "Ni": 1.5
+  },
+  "metal_02": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/metal_01_1_metal_02.jpg",
+   "Ks": [
+    0.25,
+    0.25,
+    0.25
+   ],
+   "Ns": 46.77305288827922,
+   "Ni": 1.5
+  },
+  "metal_03_UV": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/metal_01_1_metal_03_UV.jpg",
+   "Ks": [
+    0.25,
+    0.25,
+    0.25
+   ],
+   "Ns": 46.77305288827922,
+   "Ni": 1.5
+  },
+  "metal_bright_01": {
+   "Kd": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ks": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "Ns": 403.55195557786647,
+   "Ni": 1.5,
+   "Pm": 1.0
+  },
+  "paper_01": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/papers_01_1_paper_01.jpg",
+   "Ks": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.5,
+   "map_d": "textures/papers_01_1_alpha_mask.png"
+  },
+  "price_tag_01": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/price_tag_01_1.png",
+   "Ks": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.5
+  },
+  "price_tag_02": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/price_tag_01_1_price_tag_02.jpg",
+   "Ks": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.5
+  },
+  "smoke_01_1": {
+   "Kd": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ks": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.5,
+   "Ke": [
+    5.0,
+    5.0,
+    5.0
+   ],
+   "map_Ke": "textures/smoke_01___smoke_01_1.jpg",
+   "map_d": "textures/smoke_01_2_alpha_mask.png"
+  },
+  "sparks_01_1": {
+   "Kd": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ks": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.5,
+   "Ke": [
+    3.0,
+    3.0,
+    3.0
+   ],
+   "map_Ke": "textures/sparks_01_1.png",
+   "map_d": "textures/sparks_01_1_mask.png"
+  },
+  "white_mat_01": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/metal_01_1_white_mat_01.jpg",
+   "Ks": [
+    0.3,
+    0.3,
+    0.3
+   ],
+   "Ns": 48.09563697815495,
+   "Ni": 1.5
+  },
+  "wood_01": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/wood_v1_01_wood_01.jpg",
+   "Ks": [
+    0.05,
+    0.05,
+    0.05
+   ],
+   "Ns": 19.856430571682257,
+   "Ni": 1.5
+  }
+ },
+ "seconds": 92.1
+}

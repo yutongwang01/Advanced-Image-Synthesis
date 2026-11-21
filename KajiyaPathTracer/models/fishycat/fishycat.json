@@ -1,0 +1,420 @@
+{
+ "file": "D:\\Dropbox\\Research\\Projects\\GenerativePathTracing\\dataset\\Blender\\Random\\FishyCat\\FishyCat.blend",
+ "scene": "Scene_cat",
+ "frame": 1,
+ "resolution": [
+  501,
+  230,
+  200
+ ],
+ "cameras": [
+  {
+   "name": "CAM_camera1",
+   "active": true,
+   "eye": [
+    19.40359,
+    -2.55386,
+    48.31116
+   ],
+   "lookat": [
+    18.99646,
+    -2.3667,
+    47.41717
+   ],
+   "up": [
+    -0.01913,
+    0.97682,
+    0.21322
+   ],
+   "fovy_deg": 11.187,
+   "lens_mm": 75.0,
+   "resolution": [
+    1002,
+    460
+   ],
+   "type": "PERSP"
+  }
+ ],
+ "lights": [
+  {
+   "name": "LGT_sun1",
+   "type": "SUN",
+   "color": [
+    0.1702,
+    0.2809,
+    0.3258
+   ],
+   "blender_energy": 3.0,
+   "pos": [
+    -25.94957,
+    31.1379,
+    15.18149
+   ],
+   "dir": [
+    0.59039,
+    -0.72745,
+    -0.34966
+   ],
+   "hide_render": false,
+   "E_guess": [
+    0.5106,
+    0.8427,
+    0.9774
+   ],
+   "angle_deg": 90.0
+  },
+  {
+   "name": "LGT_sun2",
+   "type": "SUN",
+   "color": [
+    0.9403,
+    0.7636,
+    0.5007
+   ],
+   "blender_energy": 0.75,
+   "pos": [
+    40.97756,
+    8.2191,
+    -11.25667
+   ],
+   "dir": [
+    -0.9432,
+    -0.20057,
+    0.26486
+   ],
+   "hide_render": false,
+   "E_guess": [
+    0.7052,
+    0.5727,
+    0.3755
+   ],
+   "angle_deg": 11.421
+  }
+ ],
+ "world": {
+  "name": "World",
+  "nodes": [
+   {
+    "type": "LIGHT_PATH"
+   },
+   {
+    "type": "TEX_COORD"
+   },
+   {
+    "type": "VALTORGB"
+   },
+   {
+    "type": "TEX_GRADIENT"
+   },
+   {
+    "type": "REROUTE"
+   },
+   {
+    "type": "MAPPING"
+   },
+   {
+    "type": "TEX_NOISE"
+   },
+   {
+    "type": "VALTORGB"
+   },
+   {
+    "type": "MIX"
+   },
+   {
+    "type": "BRIGHTCONTRAST"
+   },
+   {
+    "type": "OUTPUT_WORLD"
+   },
+   {
+    "type": "MIX"
+   },
+   {
+    "type": "HUE_SAT"
+   },
+   {
+    "type": "TEX_GRADIENT"
+   },
+   {
+    "type": "TEX_GRADIENT"
+   },
+   {
+    "type": "BACKGROUND",
+    "strength": 1.0
+   },
+   {
+    "type": "VALTORGB"
+   },
+   {
+    "type": "BACKGROUND",
+    "strength": 1.0
+   },
+   {
+    "type": "MAPPING"
+   },
+   {
+    "type": "MAPPING"
+   },
+   {
+    "type": "VALTORGB"
+   },
+   {
+    "type": "MIX"
+   }
+  ],
+  "view_transform": "Filmic",
+  "exposure": 1.3510310649871826
+ },
+ "static_obj": "fishycat.obj",
+ "static_triangles": 3506866,
+ "prototypes": {
+  "sparkle_particle.obj": {
+   "triangles": 48,
+   "instances": 3033
+  },
+  "grass_blade1.obj": {
+   "triangles": 896,
+   "instances": 3278
+  },
+  "grass_blade3.obj": {
+   "triangles": 896,
+   "instances": 3278
+  },
+  "grass_blade2.obj": {
+   "triangles": 1088,
+   "instances": 3278
+  },
+  "grass_blade4.obj": {
+   "triangles": 704,
+   "instances": 3277
+  }
+ },
+ "instanced_triangles": 11893232,
+ "sprinkles": 0,
+ "materials": {
+  "cat_eye_cornea": {
+   "Kd": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 319997.99999999994,
+   "Ni": 1.45,
+   "Tr": 1.0
+  },
+  "cat_eye_iris": {
+   "Kd": [
+    0.78,
+    0.45,
+    0.1
+   ],
+   "Ks": [
+    0.3,
+    0.3,
+    0.3
+   ],
+   "Ns": 244.9135802469136,
+   "Ni": 1.5
+  },
+  "cat_eye_pupil": {
+   "Kd": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ks": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ns": 30.0,
+   "Ni": 1.5
+  },
+  "cat_eye_white": {
+   "Kd": [
+    0.85,
+    0.62,
+    0.35
+   ],
+   "Ks": [
+    0.2,
+    0.2,
+    0.2
+   ],
+   "Ns": 16.02016794133259,
+   "Ni": 1.5
+  },
+  "cat_hair_long": {
+   "Kd": [
+    0.191,
+    0.163,
+    0.114
+   ],
+   "Ks": [
+    0.41,
+    0.41,
+    0.41
+   ],
+   "Ns": 198.57724655309445,
+   "Ni": 1.5
+  },
+  "cat_hair_short": {
+   "Kd": [
+    0.3,
+    0.25,
+    0.22
+   ],
+   "Ks": [
+    0.151,
+    0.151,
+    0.151
+   ],
+   "Ns": 69.4721363478022,
+   "Ni": 1.5
+  },
+  "cat_skin": {
+   "Kd": [
+    0.55,
+    0.45,
+    0.38
+   ],
+   "Ks": [
+    0.04,
+    0.04,
+    0.04
+   ],
+   "Ns": 28.41778047866443,
+   "Ni": 1.5
+  },
+  "cat_tear_line": {
+   "Kd": [
+    0.3,
+    0.2,
+    0.15
+   ],
+   "Ks": [
+    0.6,
+    0.6,
+    0.6
+   ],
+   "Ns": 244.9135802469136,
+   "Ni": 1.0
+  },
+  "cat_tongue": {
+   "Kd": [
+    0.7643441345649138,
+    0.11940936312154071,
+    0.11940936312154071
+   ],
+   "Ks": [
+    0.234206902934085,
+    0.22447317417486168,
+    0.2082643843578431
+   ],
+   "Ns": 48.45279727508827,
+   "Ni": 1.5
+  },
+  "env_grass": {
+   "Kd": [
+    0.12,
+    0.19,
+    0.055
+   ],
+   "Ks": [
+    0.05,
+    0.05,
+    0.04
+   ],
+   "Ns": 23.929105502319103,
+   "Ni": 1.5
+  },
+  "env_reflector": {
+   "Kd": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ks": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ns": 30.0,
+   "Ni": 1.5,
+   "Ke": [
+    0.666,
+    0.629,
+    0.578
+   ]
+  },
+  "env_sparkle": {
+   "Kd": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ks": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ns": 30.0,
+   "Ni": 1.5,
+   "Ke": [
+    0.9625705480575562,
+    0.7790681719779968,
+    0.3198431432247162
+   ]
+  },
+  "fish_eye": {
+   "Kd": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ks": [
+    0.4687573313713074,
+    0.43905672430992126,
+    0.3566610813140869
+   ],
+   "Ns": 2220.2223817620647,
+   "Ni": 1.5
+  },
+  "fish_skin": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/fish.png",
+   "Ks": [
+    0.0412630766140448,
+    0.04282232048137624,
+    0.04337370143665794
+   ],
+   "Ns": 33.4988652959988,
+   "Ni": 1.5
+  },
+  "fish_string": {
+   "Kd": [
+    0.2026898390363736,
+    0.14849033782299825,
+    0.0634583945008953
+   ],
+   "Ks": [
+    0.1078182115476567,
+    0.10098681687726208,
+    0.08203511143696218
+   ],
+   "Ns": 25.638221025605144,
+   "Ni": 1.5
+  }
+ },
+ "seconds": 1789.7
+}

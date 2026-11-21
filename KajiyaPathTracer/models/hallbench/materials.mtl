@@ -1,0 +1,229 @@
+# written by tools/lux2obj.py
+
+newmtl cactus__epine
+Kd 1.0000 1.0000 0.6599
+Ks 1.0000 1.0000 1.0000
+Ns 798.0000
+Ni 1.5760
+
+newmtl gome
+Kd 0.0222 0.0222 0.0222
+Ks 1.0000 1.0000 1.0000
+Ns 20.2224
+Ni 2.0833
+
+newmtl Chrome
+Kd 0.0000 0.0000 0.0000
+Ks 0.6607 0.6607 0.6607
+Ns 7.5489
+Ni 1.5000
+Pm 1.0000
+
+newmtl chair__shader
+Kd 0.4147 0.2152 0.1756
+Ks 0.0000 0.0000 0.0000
+Ns 0.0000
+Ni 1.5000
+map_Kd textures/imagemap-00001_chair__shader.jpg
+
+newmtl chair__shader__002
+Kd 0.2862 0.3106 0.2696
+Ks 0.0000 0.0000 0.0000
+Ns 0.0000
+Ni 1.5000
+map_Kd textures/imagemap-00001_chair__shader__002.jpg
+
+newmtl Material__002
+Kd 0.6412 0.6243 0.6081
+Ks 1.0000 1.0000 1.0000
+Ns 4998.0000
+Ni 1.5760
+
+newmtl Cuivre__b
+Kd 0.0000 0.0000 0.0000
+Ks 0.7684 0.5585 0.3243
+Ns 2220.2244
+Ni 1.5000
+Pm 1.0000
+
+newmtl GROUND
+Kd 0.0153 0.0029 0.0006
+Ks 1.0000 1.0000 1.0000
+Ns 48.0000
+Ni 1.5760
+map_Kd textures/imagemap-00002.jpg
+
+newmtl Pot
+Kd 0.3024 0.2034 0.1587
+Ks 1.0000 1.0000 1.0000
+Ns 34.6591
+Ni 1.5760
+map_Kd textures/imagemap-00004_Pot.jpg
+
+newmtl cactus__001
+Kd 0.6584 0.7616 0.1715
+Ks 1.0000 1.0000 1.0000
+Ns 6.7709
+Ni 1.5760
+map_Kd textures/imagemap-00005_cactus__001.jpg
+
+newmtl cactus
+Kd 0.2671 0.3137 0.0617
+Ks 1.0000 1.0000 1.0000
+Ns 5.9557
+Ni 1.5760
+map_Kd textures/imagemap-00006_cactus.jpg
+
+newmtl Pot__001
+Kd 0.3175 0.2410 0.1803
+Ks 1.0000 1.0000 1.0000
+Ns 3.6220
+Ni 1.5760
+map_Kd textures/imagemap-00007_Pot__001.jpg
+
+newmtl STEM
+Kd 0.2339 0.2471 0.0220
+Ks 1.0000 1.0000 1.0000
+Ns 798.0000
+Ni 1.5760
+
+newmtl MINT_LEAF
+Kd 0.6724 0.7825 0.5362
+Ks 1.0000 1.0000 1.0000
+Ns 798.0000
+Ni 1.5760
+map_Kd textures/imagemap-00008_MINT_LEAF.jpg
+map_d textures/imagemap-00009_mask.png
+
+newmtl Grey
+Kd 0.1189 0.1320 0.1333
+Ks 1.0000 1.0000 1.0000
+Ns 798.0000
+Ni 1.5760
+
+newmtl Inox
+Kd 0.0000 0.0000 0.0000
+Ks 0.7176 0.7176 0.7176
+Ns 131.3328
+Ni 1.5000
+Pm 1.0000
+
+newmtl Inox2
+Kd 0.0000 0.0000 0.0000
+Ks 0.7176 0.7176 0.7176
+Ns 798.0000
+Ni 1.5000
+Pm 1.0000
+
+newmtl Inox__marmiton
+Kd 0.0000 0.0000 0.0000
+Ks 0.4842 0.4842 0.4842
+Ns 318.8222
+Ni 1.5000
+Pm 1.0000
+
+newmtl gome__2
+Kd 0.0106 0.0106 0.0106
+Ks 1.0000 1.0000 1.0000
+Ns 20.2224
+Ni 1.4079
+
+newmtl Plate
+Kd 0.7000 0.7000 0.7000
+Ks 1.0000 1.0000 1.0000
+Ns 4998.0000
+Ni 2.1844
+
+newmtl Pince
+Kd 0.2546 0.2836 0.2991
+Ks 1.0000 1.0000 1.0000
+Ns 798.0000
+Ni 1.5760
+
+newmtl Neon
+Kd 0.8003 0.8003 0.8003
+Ks 1.0000 1.0000 1.0000
+Ns 19998.0000
+Ni 1.9830
+
+newmtl Neon__glass
+Kd 0.0000 0.0000 0.0000
+Ks 1.0000 1.0000 1.0000
+Ns 1000000000.0000
+Ni 2.0000
+Tr 1.0000
+
+newmtl white__grey__lamp__box
+Kd 0.4292 0.4292 0.4292
+Ks 1.0000 1.0000 1.0000
+Ns 198.0000
+Ni 1.8503
+
+newmtl fils
+Kd 0.2225 0.2632 0.2323
+Ks 1.0000 1.0000 1.0000
+Ns 86.8884
+Ni 2.0096
+
+newmtl Door
+Kd 0.5620 0.5620 0.5620
+Ks 1.0000 1.0000 1.0000
+Ns 798.0000
+Ni 1.5760
+
+newmtl wood_near_floor
+Kd 0.3437 0.3437 0.3437
+Ks 1.0000 1.0000 1.0000
+Ns 798.0000
+Ni 1.5760
+
+newmtl Wood
+Kd 0.1895 0.0762 0.0266
+Ks 1.0000 1.0000 1.0000
+Ns 24.2972
+Ni 1.3762
+map_Kd textures/imagemap-00012_Wood.jpg
+
+newmtl cube
+Kd 0.0404 0.0404 0.0404
+Ks 0.0000 0.0000 0.0000
+Ns 0.0000
+Ni 1.5000
+
+newmtl Yellow_Walls
+Kd 0.5900 0.3185 0.0139
+Ks 1.0000 1.0000 1.0000
+Ns 39.3222
+Ni 2.7432
+
+newmtl Floor
+Kd 0.2358 0.2884 0.2823
+Ks 1.0000 1.0000 1.0000
+Ns 244.3290
+Ni 1.7698
+map_Kd textures/imagemap-00015.jpg
+
+newmtl White_Walls
+Kd 0.4696 0.4696 0.4696
+Ks 0.0000 0.0000 0.0000
+Ns 0.0000
+Ni 1.5000
+
+newmtl lac__blanche
+Kd 0.7388 0.7137 0.6748
+Ks 1.0000 1.0000 1.0000
+Ns 8886.8844
+Ni 2.0649
+
+newmtl tableau__003
+Kd 0.5008 0.3757 0.3363
+Ks 1.0000 1.0000 1.0000
+Ns 20.2224
+Ni 1.5760
+map_Kd textures/imagemap-00018_tableau__003.jpg
+
+newmtl dark
+Kd 0.0092 0.0092 0.0092
+Ks 1.0000 1.0000 1.0000
+Ns 798.0000
+Ni 1.5760

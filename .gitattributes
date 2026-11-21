@@ -9,3 +9,13 @@ DistributedRayTracer/models/crown/crown.mesh filter=lfs diff=lfs merge=lfs -text
 DistributedRayTracer/models/fishycat/fishycat.mesh filter=lfs diff=lfs merge=lfs -text
 DistributedRayTracer/models/sanmiguel/sanmiguel.mesh filter=lfs diff=lfs merge=lfs -text
 DistributedRayTracer/models/candy/candy.mesh filter=lfs diff=lfs merge=lfs -text
+KajiyaPathTracer/models/hallbench/hallbench.mesh filter=lfs diff=lfs merge=lfs -text
+KajiyaPathTracer/models/candy/candy.mesh filter=lfs diff=lfs merge=lfs -text
+KajiyaPathTracer/models/junkshop/junkshop.mesh filter=lfs diff=lfs merge=lfs -text
+KajiyaPathTracer/models/fishycat/fishycat.mesh filter=lfs diff=lfs merge=lfs -text
+KajiyaPathTracer/models/lonemonk/lonemonk.mesh filter=lfs diff=lfs merge=lfs -text
+KajiyaPathTracer/models/barbershop/barbershop.mesh filter=lfs diff=lfs merge=lfs -text
+KajiyaPathTracer/models/crown/crown.mesh filter=lfs diff=lfs merge=lfs -text
+KajiyaPathTracer/models/sanmiguel/sanmiguel.mesh filter=lfs diff=lfs merge=lfs -text
+KajiyaPathTracer/models/magicalclock/magicalclock.mesh filter=lfs diff=lfs merge=lfs -text
+KajiyaPathTracer/models/choppertitan/choppertitan.mesh filter=lfs diff=lfs merge=lfs -text

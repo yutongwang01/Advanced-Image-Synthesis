@@ -1,0 +1,950 @@
+{
+ "camera": {
+  "eye": [
+   22.8676,
+   1.94784,
+   12.9289
+  ],
+  "lookat": [
+   22.2116,
+   2.04755,
+   12.1807
+  ],
+  "up": [
+   0.065738,
+   0.995016,
+   0.0749807
+  ],
+  "type": "perspective",
+  "fov": 83.9744,
+  "lensradius": 0.0,
+  "focaldistance": 1000000.0,
+  "mirrored_by_scale": true,
+  "aspect": 1.1359023028279231,
+  "fovy_deg": 83.9744
+ },
+ "film": {
+  "xresolution": 1600,
+  "yresolution": 1100,
+  "cropwindow": [
+   0.1,
+   0.8,
+   0.0109091,
+   0.907273
+  ]
+ },
+ "lights": [
+  {
+   "type": "infinite",
+   "scale": 15.0,
+   "filename": "textures/sky.exr",
+   "rotation_rows": [
+    [
+     -0.573576,
+     0.0,
+     0.819152
+    ],
+    [
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     -0.819152,
+     0.0,
+     -0.573576
+    ]
+   ]
+  }
+ ],
+ "static_obj": "sanmiguel.obj",
+ "static_triangles": 3624223,
+ "prototypes": {
+  "Barandal_Detalle_A578.obj": {
+   "triangles": 108,
+   "instances": 532
+  },
+  "Barandal_Detalle_B291.obj": {
+   "triangles": 144,
+   "instances": 266
+  },
+  "Barandal_Poste289.obj": {
+   "triangles": 12,
+   "instances": 266
+  },
+  "Base_Lampara_Vela.obj": {
+   "triangles": 2496,
+   "instances": 22
+  },
+  "Bola_Detalle_Hueco_Escalera11.obj": {
+   "triangles": 180,
+   "instances": 12
+  },
+  "Cadena_Eslabon64.obj": {
+   "triangles": 256,
+   "instances": 135
+  },
+  "Candil_2_Cadena.obj": {
+   "triangles": 216,
+   "instances": 360
+  },
+  "Candil_2_Detalle_2_sporte47.obj": {
+   "triangles": 24,
+   "instances": 42
+  },
+  "Candil_2_Detalle_74.obj": {
+   "triangles": 980,
+   "instances": 28
+  },
+  "Candil_2_Detalle_79.obj": {
+   "triangles": 324,
+   "instances": 42
+  },
+  "Candil_Brazo_Chioco05.obj": {
+   "triangles": 396,
+   "instances": 20
+  },
+  "Candil_Brazo_Grande05.obj": {
+   "triangles": 492,
+   "instances": 20
+  },
+  "Candil_Fake_Foco09.obj": {
+   "triangles": 112,
+   "instances": 20
+  },
+  "Candil_Foco19.obj": {
+   "triangles": 460,
+   "instances": 20
+  },
+  "Candil_Soporte_Focos19.obj": {
+   "triangles": 754,
+   "instances": 20
+  },
+  "Cenisero.obj": {
+   "triangles": 1510,
+   "instances": 22
+  },
+  "Circle90.obj": {
+   "triangles": 704,
+   "instances": 40
+  },
+  "Copa_Chica.obj": {
+   "triangles": 1988,
+   "instances": 88
+  },
+  "Copa_Grande.obj": {
+   "triangles": 1770,
+   "instances": 88
+  },
+  "Cuchara_Metal.obj": {
+   "triangles": 682,
+   "instances": 88
+  },
+  "Cuchara_Plastico.obj": {
+   "triangles": 258,
+   "instances": 88
+  },
+  "Cuchillo_Metal.obj": {
+   "triangles": 2122,
+   "instances": 88
+  },
+  "Cuchillo_Plastico01.obj": {
+   "triangles": 258,
+   "instances": 88
+  },
+  "Escuridera07.obj": {
+   "triangles": 1844,
+   "instances": 8
+  },
+  "Hoja_Seca_1Ax375.obj": {
+   "triangles": 8,
+   "instances": 357
+  },
+  "Hoja_Seca_2Ax397.obj": {
+   "triangles": 8,
+   "instances": 379
+  },
+  "Hoja_Seca_2Bx382.obj": {
+   "triangles": 8,
+   "instances": 358
+  },
+  "Hoja_C01.obj": {
+   "triangles": 2,
+   "instances": 16385
+  },
+  "Hoja_C01-b3.obj": {
+   "triangles": 2,
+   "instances": 13531
+  },
+  "Hoja_Roja01.obj": {
+   "triangles": 2,
+   "instances": 5001
+  },
+  "Hoja_Verde_A01.obj": {
+   "triangles": 2,
+   "instances": 21383
+  },
+  "Hoja_Verde_A21384.obj": {
+   "triangles": 2,
+   "instances": 3619
+  },
+  "Individual.obj": {
+   "triangles": 1600,
+   "instances": 64
+  },
+  "Maceta_A.obj": {
+   "triangles": 3744,
+   "instances": 17
+  },
+  "Maceta_B.obj": {
+   "triangles": 8632,
+   "instances": 18
+  },
+  "Maceta_D2.obj": {
+   "triangles": 4320,
+   "instances": 18
+  },
+  "Mesa_D_Poste23.obj": {
+   "triangles": 1484,
+   "instances": 24
+  },
+  "Mesa_Madera23.obj": {
+   "triangles": 128,
+   "instances": 20
+  },
+  "Mesa_Patas.obj": {
+   "triangles": 268,
+   "instances": 8
+  },
+  "Mesa_Soporte.obj": {
+   "triangles": 64,
+   "instances": 8
+  },
+  "Mona_Lisa_3_Branch3.obj": {
+   "triangles": 1024,
+   "instances": 8
+  },
+  "Mona_Lisa_3_Branch31.obj": {
+   "triangles": 2025,
+   "instances": 8
+  },
+  "Mona_Lisa_3_Branch33.obj": {
+   "triangles": 1068,
+   "instances": 9
+  },
+  "Mona_Lisa_3_Branch34.obj": {
+   "triangles": 2032,
+   "instances": 9
+  },
+  "Mona_Lisa_3_Flowerba02.obj": {
+   "triangles": 680,
+   "instances": 9
+  },
+  "Mona_Lisa_3_Flowerba15.obj": {
+   "triangles": 327,
+   "instances": 8
+  },
+  "Mona_Lisa_3_Flowerbase07.obj": {
+   "triangles": 239,
+   "instances": 8
+  },
+  "Mona_Lisa_3_Flowerst17.obj": {
+   "triangles": 588,
+   "instances": 9
+  },
+  "Mona_Lisa_3_Flowerst18.obj": {
+   "triangles": 1173,
+   "instances": 9
+  },
+  "Mona_Lisa_3_Flowerstem07.obj": {
+   "triangles": 595,
+   "instances": 8
+  },
+  "Mona_Lisa_3_Horn30.obj": {
+   "triangles": 4003,
+   "instances": 8
+  },
+  "Mona_Lisa_3_Horn31.obj": {
+   "triangles": 2411,
+   "instances": 8
+  },
+  "Mona_Lisa_3_Horn33.obj": {
+   "triangles": 2886,
+   "instances": 9
+  },
+  "Mona_Lisa_3_Horn34.obj": {
+   "triangles": 3553,
+   "instances": 9
+  },
+  "Mona_Lisa_3_Leaf29.obj": {
+   "triangles": 728,
+   "instances": 8
+  },
+  "Mona_Lisa_3_Leaf31.obj": {
+   "triangles": 578,
+   "instances": 8
+  },
+  "Mona_Lisa_3_Leaf33.obj": {
+   "triangles": 850,
+   "instances": 9
+  },
+  "Mona_Lisa_3_Leaf34.obj": {
+   "triangles": 2449,
+   "instances": 9
+  },
+  "Mona_Lisa_3_flowercent08.obj": {
+   "triangles": 2050,
+   "instances": 9
+  },
+  "Mona_Lisa_3_petal42a08.obj": {
+   "triangles": 2440,
+   "instances": 9
+  },
+  "Mona_Lisa_3_petal42b08.obj": {
+   "triangles": 1664,
+   "instances": 9
+  },
+  "Mona_Lisa_3_petal74.obj": {
+   "triangles": 993,
+   "instances": 8
+  },
+  "Mona_Lisa_3_petal75.obj": {
+   "triangles": 1307,
+   "instances": 8
+  },
+  "Mona_Lisa_3_petal77.obj": {
+   "triangles": 1366,
+   "instances": 9
+  },
+  "Mona_Lisa_3_petal78.obj": {
+   "triangles": 1366,
+   "instances": 9
+  },
+  "Mona_Lisa_3_petal79.obj": {
+   "triangles": 2640,
+   "instances": 9
+  },
+  "Pimienta.obj": {
+   "triangles": 960,
+   "instances": 22
+  },
+  "Pimientero_Vidrio.obj": {
+   "triangles": 2184,
+   "instances": 22
+  },
+  "Plato_A.obj": {
+   "triangles": 6600,
+   "instances": 88
+  },
+  "Porta_Macetas_Aro_Chico67.obj": {
+   "triangles": 182,
+   "instances": 64
+  },
+  "Porta_Macetas_Aro_Grande67.obj": {
+   "triangles": 256,
+   "instances": 64
+  },
+  "Porta_Macetas_Base16.obj": {
+   "triangles": 448,
+   "instances": 16
+  },
+  "Porta_Macetas_Gancho45.obj": {
+   "triangles": 252,
+   "instances": 42
+  },
+  "Porta_Macetas_Pata67.obj": {
+   "triangles": 220,
+   "instances": 64
+  },
+  "Porta_Macetas_Soporte16.obj": {
+   "triangles": 448,
+   "instances": 16
+  },
+  "Porta_Macetas44.obj": {
+   "triangles": 768,
+   "instances": 21
+  },
+  "Rose_1_Blatt1_.obj": {
+   "triangles": 1256,
+   "instances": 12
+  },
+  "Rose_1_Blatt2.obj": {
+   "triangles": 1507,
+   "instances": 12
+  },
+  "Rose_1_Blutenbl01.obj": {
+   "triangles": 250,
+   "instances": 12
+  },
+  "Rose_1_Blutenbl02.obj": {
+   "triangles": 405,
+   "instances": 12
+  },
+  "Rose_1_Blutenblat.obj": {
+   "triangles": 427,
+   "instances": 12
+  },
+  "Rose_1_Dorne.obj": {
+   "triangles": 2242,
+   "instances": 12
+  },
+  "Rose_1_Kelchcopy.obj": {
+   "triangles": 367,
+   "instances": 12
+  },
+  "Rose_1_Stil.obj": {
+   "triangles": 1413,
+   "instances": 12
+  },
+  "Rose_1_Stil2.obj": {
+   "triangles": 4191,
+   "instances": 12
+  },
+  "Rose_1_elchblatt.obj": {
+   "triangles": 238,
+   "instances": 12
+  },
+  "Rose_2_Blatt1_.obj": {
+   "triangles": 3235,
+   "instances": 12
+  },
+  "Rose_2_Blutenbl01.obj": {
+   "triangles": 664,
+   "instances": 12
+  },
+  "Rose_2_Blutenbl02.obj": {
+   "triangles": 1065,
+   "instances": 12
+  },
+  "Rose_2_Blutenblat.obj": {
+   "triangles": 1485,
+   "instances": 12
+  },
+  "Rose_2_Dorne.obj": {
+   "triangles": 2638,
+   "instances": 12
+  },
+  "Rose_2_Kelch_copy.obj": {
+   "triangles": 796,
+   "instances": 12
+  },
+  "Rose_2_Kelchblatt.obj": {
+   "triangles": 829,
+   "instances": 12
+  },
+  "Rose_2_Stil.obj": {
+   "triangles": 2467,
+   "instances": 12
+  },
+  "Rose_2_Stil2.obj": {
+   "triangles": 5916,
+   "instances": 12
+  },
+  "Rose_3_Blatt1_.obj": {
+   "triangles": 3237,
+   "instances": 8
+  },
+  "Rose_3_Blatt2.obj": {
+   "triangles": 3402,
+   "instances": 8
+  },
+  "Rose_3_Blutenbl01.obj": {
+   "triangles": 530,
+   "instances": 8
+  },
+  "Rose_3_Blutenbl02.obj": {
+   "triangles": 850,
+   "instances": 8
+  },
+  "Rose_3_Blutenblat.obj": {
+   "triangles": 1202,
+   "instances": 8
+  },
+  "Rose_3_Dorne.obj": {
+   "triangles": 2629,
+   "instances": 8
+  },
+  "Rose_3_Kelchblatt.obj": {
+   "triangles": 676,
+   "instances": 8
+  },
+  "Rose_3_Kelchcopy.obj": {
+   "triangles": 804,
+   "instances": 8
+  },
+  "Rose_3_Stil.obj": {
+   "triangles": 2468,
+   "instances": 8
+  },
+  "Rose_3_Stil2.obj": {
+   "triangles": 6080,
+   "instances": 8
+  },
+  "Sal.obj": {
+   "triangles": 960,
+   "instances": 22
+  },
+  "Salero_Cromo.obj": {
+   "triangles": 2012,
+   "instances": 22
+  },
+  "Salero_Cromo01.obj": {
+   "triangles": 2012,
+   "instances": 22
+  },
+  "Salero_Vidrio.obj": {
+   "triangles": 2184,
+   "instances": 22
+  },
+  "Sila_Forja_A_Metal_Base_106.obj": {
+   "triangles": 360,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_Base_107.obj": {
+   "triangles": 360,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_Base_111.obj": {
+   "triangles": 360,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_Base_112.obj": {
+   "triangles": 360,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_Bola179.obj": {
+   "triangles": 120,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_Bola180.obj": {
+   "triangles": 120,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_Bola191.obj": {
+   "triangles": 120,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_Bola192.obj": {
+   "triangles": 120,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_Bola193.obj": {
+   "triangles": 120,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_Bola194.obj": {
+   "triangles": 120,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_Bola195.obj": {
+   "triangles": 120,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_Pata_55.obj": {
+   "triangles": 796,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_Pata_56.obj": {
+   "triangles": 796,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_R_Figura_136.obj": {
+   "triangles": 1164,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_R_Figura_137.obj": {
+   "triangles": 576,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_R_Figura_138.obj": {
+   "triangles": 1164,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_R_Figura_139.obj": {
+   "triangles": 1164,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_R_Figura_140.obj": {
+   "triangles": 1164,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_Respaldo27.obj": {
+   "triangles": 1164,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_Soporte_109.obj": {
+   "triangles": 972,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_Soporte_110.obj": {
+   "triangles": 972,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_Soporte_111.obj": {
+   "triangles": 972,
+   "instances": 40
+  },
+  "Sila_Forja_A_Metal_Soporte_112.obj": {
+   "triangles": 972,
+   "instances": 40
+  },
+  "Silla_Asiento.obj": {
+   "triangles": 1416,
+   "instances": 8
+  },
+  "Silla_Asiento_Orilla_1.obj": {
+   "triangles": 2694,
+   "instances": 8
+  },
+  "Silla_Asiento_Orilla_2.obj": {
+   "triangles": 2982,
+   "instances": 8
+  },
+  "Silla_Asiento_Orilla_3.obj": {
+   "triangles": 2578,
+   "instances": 8
+  },
+  "Silla_Asiento-2.obj": {
+   "triangles": 3756,
+   "instances": 8
+  },
+  "Silla_B_Base_Asiento_Fierro20.obj": {
+   "triangles": 80,
+   "instances": 40
+  },
+  "Silla_C_Asiento_Orilla_41.obj": {
+   "triangles": 2416,
+   "instances": 40
+  },
+  "Silla_C_Asiento_Orilla_42.obj": {
+   "triangles": 2576,
+   "instances": 40
+  },
+  "Silla_C_Asiento20.obj": {
+   "triangles": 2348,
+   "instances": 40
+  },
+  "Silla_C_Base_Madera20.obj": {
+   "triangles": 20,
+   "instances": 40
+  },
+  "Silla_C_Base_Pata84.obj": {
+   "triangles": 224,
+   "instances": 40
+  },
+  "Silla_C_Base_Pata88.obj": {
+   "triangles": 224,
+   "instances": 40
+  },
+  "Silla_C_Base_Pata89.obj": {
+   "triangles": 224,
+   "instances": 40
+  },
+  "Silla_C_Base_Pata90.obj": {
+   "triangles": 224,
+   "instances": 40
+  },
+  "Silla_C_Bola42.obj": {
+   "triangles": 168,
+   "instances": 40
+  },
+  "Silla_C_Bola43.obj": {
+   "triangles": 168,
+   "instances": 40
+  },
+  "Silla_C_Cross_Soporte42.obj": {
+   "triangles": 12,
+   "instances": 40
+  },
+  "Silla_C_Cross_Soporte43.obj": {
+   "triangles": 12,
+   "instances": 40
+  },
+  "Silla_C_Detalle_Respaldo_A42.obj": {
+   "triangles": 1016,
+   "instances": 40
+  },
+  "Silla_C_Detalle_Respaldo_A43.obj": {
+   "triangles": 1016,
+   "instances": 40
+  },
+  "Silla_C_Detalle_Respaldo_B41.obj": {
+   "triangles": 976,
+   "instances": 40
+  },
+  "Silla_C_Detalle_Respaldo_B42.obj": {
+   "triangles": 976,
+   "instances": 40
+  },
+  "Silla_C_Detalle_Respaldo_C42.obj": {
+   "triangles": 916,
+   "instances": 40
+  },
+  "Silla_C_Detalle_Respaldo_C43.obj": {
+   "triangles": 916,
+   "instances": 40
+  },
+  "Silla_C_Detalle_Respaldo_D42.obj": {
+   "triangles": 916,
+   "instances": 40
+  },
+  "Silla_C_Detalle_Respaldo_D43.obj": {
+   "triangles": 916,
+   "instances": 40
+  },
+  "Silla_C_Detalle_Respaldo_E41.obj": {
+   "triangles": 1016,
+   "instances": 40
+  },
+  "Silla_C_Detalle_Respaldo_E42.obj": {
+   "triangles": 1016,
+   "instances": 40
+  },
+  "Silla_C_Detalle_Respaldo_F43.obj": {
+   "triangles": 816,
+   "instances": 40
+  },
+  "Silla_C_Detalle_Respaldo_F47.obj": {
+   "triangles": 816,
+   "instances": 40
+  },
+  "Silla_C_Pata_Adelante40.obj": {
+   "triangles": 56,
+   "instances": 40
+  },
+  "Silla_C_Pata_Adelante44.obj": {
+   "triangles": 56,
+   "instances": 40
+  },
+  "Silla_C_Pata_Atras42.obj": {
+   "triangles": 176,
+   "instances": 40
+  },
+  "Silla_C_Pata_Atras43.obj": {
+   "triangles": 176,
+   "instances": 40
+  },
+  "Silla_D_Cuero23.obj": {
+   "triangles": 1932,
+   "instances": 24
+  },
+  "Silla_D_Poste83.obj": {
+   "triangles": 812,
+   "instances": 48
+  },
+  "Silla_D_Poste95.obj": {
+   "triangles": 4640,
+   "instances": 48
+  },
+  "Silla_D_Respaldo_Madera_03.obj": {
+   "triangles": 300,
+   "instances": 48
+  },
+  "Silla_D_Respaldo_Madera_1.obj": {
+   "triangles": 460,
+   "instances": 24
+  },
+  "Silla_D_Spoprte_Asiento02.obj": {
+   "triangles": 72,
+   "instances": 24
+  },
+  "Silla_D_Spoprte_Asiento03.obj": {
+   "triangles": 72,
+   "instances": 24
+  },
+  "Silla_D_Spoprte_Asiento202.obj": {
+   "triangles": 468,
+   "instances": 24
+  },
+  "Silla_D_Spoprte_Asiento203.obj": {
+   "triangles": 312,
+   "instances": 24
+  },
+  "Silla_D_Spoprte_Asiento209.obj": {
+   "triangles": 72,
+   "instances": 48
+  },
+  "Silla_D_Spoprte_Asiento210.obj": {
+   "triangles": 352,
+   "instances": 96
+  },
+  "Silla_D_Tachuela335.obj": {
+   "triangles": 50,
+   "instances": 384
+  },
+  "Silla_Descansa_Brazos01.obj": {
+   "triangles": 508,
+   "instances": 16
+  },
+  "Silla_Forja_Asiento_orilla_51.obj": {
+   "triangles": 5112,
+   "instances": 40
+  },
+  "Silla_Forja_Asiento_orilla_52.obj": {
+   "triangles": 2832,
+   "instances": 40
+  },
+  "Silla_Forja_Asiento26.obj": {
+   "triangles": 5578,
+   "instances": 40
+  },
+  "Silla_Forja_Base_Madera26.obj": {
+   "triangles": 204,
+   "instances": 40
+  },
+  "Silla_Pata_B01.obj": {
+   "triangles": 300,
+   "instances": 16
+  },
+  "Silla_Pata_C01.obj": {
+   "triangles": 300,
+   "instances": 16
+  },
+  "Silla_Pata01.obj": {
+   "triangles": 388,
+   "instances": 16
+  },
+  "Silla_Respaldo.obj": {
+   "triangles": 4070,
+   "instances": 8
+  },
+  "Silla_Respaldo_Sujetador01.obj": {
+   "triangles": 1140,
+   "instances": 16
+  },
+  "Silla_Soporte_A01.obj": {
+   "triangles": 844,
+   "instances": 16
+  },
+  "Silla_Soporte_B.obj": {
+   "triangles": 28,
+   "instances": 8
+  },
+  "Silla_Soporte_C.obj": {
+   "triangles": 1184,
+   "instances": 8
+  },
+  "Silla_Soporte_D01.obj": {
+   "triangles": 360,
+   "instances": 16
+  },
+  "Sporte_Barandal_Escalera24.obj": {
+   "triangles": 134,
+   "instances": 25
+  },
+  "Teja126.obj": {
+   "triangles": 1016,
+   "instances": 8
+  },
+  "Teja127.obj": {
+   "triangles": 1016,
+   "instances": 8
+  },
+  "Teja129.obj": {
+   "triangles": 118,
+   "instances": 8
+  },
+  "Teja131.obj": {
+   "triangles": 1016,
+   "instances": 8
+  },
+  "Teja132.obj": {
+   "triangles": 1016,
+   "instances": 8
+  },
+  "Teja133.obj": {
+   "triangles": 1016,
+   "instances": 8
+  },
+  "Teja134.obj": {
+   "triangles": 1016,
+   "instances": 8
+  },
+  "Teja135.obj": {
+   "triangles": 1016,
+   "instances": 8
+  },
+  "Teja138.obj": {
+   "triangles": 1016,
+   "instances": 8
+  },
+  "Teja139.obj": {
+   "triangles": 1016,
+   "instances": 8
+  },
+  "Teja140.obj": {
+   "triangles": 1016,
+   "instances": 8
+  },
+  "Teja141.obj": {
+   "triangles": 1016,
+   "instances": 8
+  },
+  "Teja142.obj": {
+   "triangles": 1016,
+   "instances": 16
+  },
+  "Teja147.obj": {
+   "triangles": 1016,
+   "instances": 12
+  },
+  "Teja19.obj": {
+   "triangles": 1016,
+   "instances": 8
+  },
+  "Teja26.obj": {
+   "triangles": 1016,
+   "instances": 8
+  },
+  "Teja32.obj": {
+   "triangles": 1016,
+   "instances": 8
+  },
+  "Tenedor_G_Metal01.obj": {
+   "triangles": 738,
+   "instances": 88
+  },
+  "Tenedor_G_Plastico01.obj": {
+   "triangles": 258,
+   "instances": 88
+  },
+  "Tenedor_Metal.obj": {
+   "triangles": 2952,
+   "instances": 88
+  },
+  "Tenedor_Plastico.obj": {
+   "triangles": 258,
+   "instances": 88
+  },
+  "Vela.obj": {
+   "triangles": 1702,
+   "instances": 22
+  },
+  "Vela_Mecha.obj": {
+   "triangles": 132,
+   "instances": 22
+  },
+  "Vidrio_Lampara_Vela.obj": {
+   "triangles": 2976,
+   "instances": 22
+  },
+  "hybrids_Leaf07.obj": {
+   "triangles": 6396,
+   "instances": 8
+  },
+  "hybrids_blossom07.obj": {
+   "triangles": 3124,
+   "instances": 8
+  },
+  "hybrids_level08.obj": {
+   "triangles": 1089,
+   "instances": 8
+  },
+  "hybrids_stem07.obj": {
+   "triangles": 1237,
+   "instances": 8
+  }
+ },
+ "instanced_triangles": 6694549,
+ "materials": 295
+}

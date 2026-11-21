@@ -1,0 +1,605 @@
+{
+ "file": "D:\\Dropbox\\Research\\Projects\\GenerativePathTracing\\dataset\\Blender\\Scenes\\LoneMonk\\LoneMonk.blend",
+ "scene": "daylight",
+ "frame": 4,
+ "resolution": [
+  1440,
+  1080,
+  100
+ ],
+ "cameras": [
+  {
+   "name": "cam.001",
+   "active": true,
+   "eye": [
+    20.0,
+    0.9,
+    -7.51293
+   ],
+   "lookat": [
+    20.0,
+    0.9,
+    -8.51293
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "fovy_deg": 55.795,
+   "lens_mm": 25.5,
+   "resolution": [
+    1440,
+    1080
+   ],
+   "type": "PERSP"
+  }
+ ],
+ "lights": [],
+ "world": {
+  "name": "World - nishita",
+  "nodes": [
+   {
+    "type": "OUTPUT_WORLD"
+   },
+   {
+    "type": "TEX_SKY",
+    "sky_type": "SINGLE_SCATTERING",
+    "sun_elevation_deg": 53.0,
+    "sun_rotation_deg": 150.0,
+    "sun_intensity": 1.0
+   },
+   {
+    "type": "BACKGROUND",
+    "strength": 1.0
+   }
+  ],
+  "view_transform": "Filmic",
+  "exposure": -2.0
+ },
+ "static_obj": "lonemonk.obj",
+ "static_triangles": 1698214,
+ "prototypes": {
+  "chair_main.001.obj": {
+   "triangles": 16516,
+   "instances": 10
+  },
+  "nail.001.obj": {
+   "triangles": 316,
+   "instances": 10
+  },
+  "nail.002.obj": {
+   "triangles": 316,
+   "instances": 10
+  },
+  "nail.003.obj": {
+   "triangles": 316,
+   "instances": 10
+  },
+  "Plane.001.obj": {
+   "triangles": 26116,
+   "instances": 24
+  },
+  "Plane.002.obj": {
+   "triangles": 9420,
+   "instances": 24
+  },
+  "capitel.001.obj": {
+   "triangles": 10638,
+   "instances": 24
+  },
+  "col_small.001.obj": {
+   "triangles": 26116,
+   "instances": 56
+  },
+  "Plane.012.obj": {
+   "triangles": 9420,
+   "instances": 56
+  },
+  "capitel_small.001.obj": {
+   "triangles": 10638,
+   "instances": 56
+  },
+  "grass_blade.006.obj": {
+   "triangles": 6,
+   "instances": 14983
+  },
+  "grass_blade.001.obj": {
+   "triangles": 4,
+   "instances": 14823
+  },
+  "grass_blade.002.obj": {
+   "triangles": 6,
+   "instances": 17566
+  },
+  "grass_blade.003.obj": {
+   "triangles": 6,
+   "instances": 14860
+  },
+  "grass_blade.005.obj": {
+   "triangles": 6,
+   "instances": 14752
+  },
+  "grass_blade.004.obj": {
+   "triangles": 22,
+   "instances": 3016
+  },
+  "leaf.003.obj": {
+   "triangles": 10,
+   "instances": 2001
+  },
+  "leaf.001.obj": {
+   "triangles": 16,
+   "instances": 2063
+  },
+  "leaf.002.obj": {
+   "triangles": 2,
+   "instances": 1936
+  }
+ },
+ "instanced_triangles": 4424060,
+ "sprinkles": 0,
+ "materials": {
+  "brick clay": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/medieval_wall_01_diff_1k.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  },
+  "brick marble": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/medieval_wall_01_diff_1k.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  },
+  "brick marble smooth": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/medieval_wall_01_diff_1k.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  },
+  "brick pavement": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/brick_floor_diff_1k.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  },
+  "bush": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/LeafSet019_1K_Color.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158,
+   "map_d": "textures/LeafSet019_1K_Opacity_mask.png"
+  },
+  "church brick": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/castle_brick_02_red_diff_1k.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  },
+  "column marble": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/medieval_wall_01_diff_1k.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  },
+  "copper pipe": {
+   "Kd": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ks": [
+    0.248,
+    0.182,
+    0.173
+   ],
+   "Ns": 3.6,
+   "Ni": 1.4500000476837158,
+   "Pm": 1.0
+  },
+  "dark": {
+   "Kd": [
+    0.15000000596046448,
+    0.15000000596046448,
+    0.15000000596046448
+   ],
+   "Ks": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.5
+  },
+  "glass far": {
+   "Kd": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ks": [
+    0.179,
+    0.179,
+    0.179
+   ],
+   "Ns": 5000,
+   "Ni": 1.0,
+   "Pm": 1.0
+  },
+  "grass - ground": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/brown_mud_leaves_01_diff_1k.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  },
+  "grass blade": {
+   "Kd": [
+    0.04,
+    0.09,
+    0.02
+   ],
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 5.856505288803303,
+   "Ni": 1.4500000476837158
+  },
+  "ink bottle": {
+   "Kd": [
+    0.002173989312723279,
+    0.008461168967187405,
+    0.013371556997299194
+   ],
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 800,
+   "Ni": 1.4500000476837158
+  },
+  "iron_nail": {
+   "Kd": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ks": [
+    0.06498599052429199,
+    0.06769683212041855,
+    0.06838485598564148
+   ],
+   "Ns": 3.6,
+   "Ni": 1.4500000476837158,
+   "Pm": 1.0
+  },
+  "leather - book - cover 1": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/fabric_leather_01_diff_1k.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  },
+  "leather - book - cover 2": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/fabric_leather_01_diff_1k.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6,
+   "Ni": 1.4500000476837158
+  },
+  "leather - book - cover 3": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/2021-02-05_22_38_29-Window.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  },
+  "outdoor pavement": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/cobblestone_floor_04_diff_1k.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  },
+  "paper - book": {
+   "Kd": [
+    0.2,
+    0.19,
+    0.15
+   ],
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 0.0,
+   "Ni": 1.4500000476837158
+  },
+  "paper - page": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/2021-02-05_22_39_37-Window.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 0.0,
+   "Ni": 1.4500000476837158
+  },
+  "pen": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/LeafSet019_1K_Color.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158,
+   "map_d": "textures/LeafSet019_1K_Opacity_mask.png"
+  },
+  "plaster - white": {
+   "Kd": [
+    0.8900054693222046,
+    0.8380335569381714,
+    0.7923682928085327
+   ],
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  },
+  "plaster med old": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/PaintedPlaster014_1K_Color.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  },
+  "plaster no brick": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/Plaster003_1K_Color.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  },
+  "plaster old": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/PaintedPlaster016_1K_Color.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  },
+  "roof": {
+   "Kd": [
+    0.022,
+    0.012,
+    0.007
+   ],
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  },
+  "stone pavement": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/brick_floor_diff_1k.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  },
+  "terracotta": {
+   "Kd": [
+    0.36,
+    0.22,
+    0.135
+   ],
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  },
+  "wood - chair": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/wood_planks_dirt_diff_1k.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  },
+  "wood - charcoal": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/wood_planks_dirt_diff_1k.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  },
+  "wood - table": {
+   "Kd": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "map_Kd": "textures/WoodenTable_01_8-bit_Diffuse.jpg",
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.4500000476837158
+  }
+ },
+ "seconds": 41.1
+}

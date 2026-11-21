@@ -1,0 +1,213 @@
+# written by tools/blender2obj.py
+
+newmtl brick_clay
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/medieval_wall_01_diff_1k.jpg
+
+newmtl brick_marble
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/medieval_wall_01_diff_1k.jpg
+
+newmtl brick_marble_smooth
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/medieval_wall_01_diff_1k.jpg
+
+newmtl brick_pavement
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/brick_floor_diff_1k.jpg
+
+newmtl bush
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/LeafSet019_1K_Color.jpg
+map_d textures/LeafSet019_1K_Opacity_mask.png
+
+newmtl church_brick
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/castle_brick_02_red_diff_1k.jpg
+
+newmtl column_marble
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/medieval_wall_01_diff_1k.jpg
+
+newmtl copper_pipe
+Kd 0.0000 0.0000 0.0000
+Ks 0.2480 0.1820 0.1730
+Ns 13.6800
+Ni 1.4500
+Pm 1.0000
+
+newmtl dark
+Kd 0.1500 0.1500 0.1500
+Ks 0.0000 0.0000 0.0000
+Ns 30.0000
+Ni 1.5000
+
+newmtl glass_far
+Kd 0.0000 0.0000 0.0000
+Ks 0.1790 0.1790 0.1790
+Ns 12510000.0000
+Ni 1.0000
+Pm 1.0000
+
+newmtl grass_-_ground
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/brown_mud_leaves_01_diff_1k.jpg
+
+newmtl grass_blade
+Kd 0.0400 0.0900 0.0200
+Ks 1.0000 1.0000 1.0000
+Ns 28.8623
+Ni 1.4500
+
+newmtl ink_bottle
+Kd 0.0022 0.0085 0.0134
+Ks 1.0000 1.0000 1.0000
+Ns 321600.0000
+Ni 1.4500
+
+newmtl iron_nail
+Kd 0.0000 0.0000 0.0000
+Ks 0.0650 0.0677 0.0684
+Ns 13.6800
+Ni 1.4500
+Pm 1.0000
+
+newmtl leather_-_book_-_cover_1
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/fabric_leather_01_diff_1k.jpg
+
+newmtl leather_-_book_-_cover_2
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/fabric_leather_01_diff_1k.jpg
+
+newmtl leather_-_book_-_cover_3
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/2021-02-05_22_38_29-Window.jpg
+
+newmtl outdoor_pavement
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/cobblestone_floor_04_diff_1k.jpg
+
+newmtl paper_-_book
+Kd 0.2000 0.1900 0.1500
+Ks 1.0000 1.0000 1.0000
+Ns 0.0000
+Ni 1.4500
+
+newmtl paper_-_page
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 0.0000
+Ni 1.4500
+map_Kd textures/2021-02-05_22_39_37-Window.jpg
+
+newmtl pen
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/LeafSet019_1K_Color.jpg
+map_d textures/LeafSet019_1K_Opacity_mask.png
+
+newmtl plaster_-_white
+Kd 0.8900 0.8380 0.7924
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+
+newmtl plaster_med_old
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/PaintedPlaster014_1K_Color.jpg
+
+newmtl plaster_no_brick
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/Plaster003_1K_Color.jpg
+
+newmtl plaster_old
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/PaintedPlaster016_1K_Color.jpg
+
+newmtl roof
+Kd 0.0220 0.0120 0.0070
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+
+newmtl stone_pavement
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/brick_floor_diff_1k.jpg
+
+newmtl terracotta
+Kd 0.3600 0.2200 0.1350
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+
+newmtl wood_-_chair
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/wood_planks_dirt_diff_1k.jpg
+
+newmtl wood_-_charcoal
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/wood_planks_dirt_diff_1k.jpg
+
+newmtl wood_-_table
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+map_Kd textures/WoodenTable_01_8-bit_Diffuse.jpg

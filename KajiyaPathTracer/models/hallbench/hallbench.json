@@ -1,0 +1,1436 @@
+{
+ "source": "D:\\Dropbox\\Research\\Projects\\GenerativePathTracing\\dataset\\LuxRender\\Scenes\\HallBench\\LuxCoreScene\\scene.scn",
+ "camera": {
+  "type": "perspective",
+  "eye": [
+   0.44902,
+   1.48373,
+   9.07351
+  ],
+  "lookat": [
+   0.44902,
+   1.48373,
+   8.07351
+  ],
+  "up": [
+   0.0,
+   1.0,
+   0.0
+  ],
+  "fovy_deg": 49.1343,
+  "fovx_deg": 36.4372,
+  "resolution": [
+   1080,
+   1500
+  ],
+  "luxcore": {
+   "fieldofview": 49.1343422,
+   "screenwindow": [
+    -0.720000029,
+    0.720000029,
+    -1.0,
+    1.0
+   ]
+  },
+  "lens_radius": 0.0,
+  "focal_distance": 10.0
+ },
+ "lights": [
+  {
+   "name": "__WORLD_BACKGROUND_LIGHT__",
+   "type": "sky2",
+   "luxcore": {
+    "gain": "9.99999975e-05 9.99999975e-05 9.99999975e-05",
+    "transformation": "1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1",
+    "type": "sky2",
+    "dir": "0 0 1",
+    "turbidity": "4",
+    "groundalbedo": "0.5 0.5 0.5",
+    "ground.enable": "0",
+    "ground.color": "0.5 0.5 0.5",
+    "ground.autoscale": "1"
+   },
+   "dir": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "note": "procedural: the renderer has none; estimate an rtBackground radiance by hand"
+  },
+  {
+   "name": "Lamp_Point_140038444253192",
+   "type": "sphere",
+   "luxcore": {
+    "gain": "1 0.963550091 0.926534653",
+    "transformation": "1 0 0 0 0 1 0 0 0 0 1 0 -8.76628017 -0.310221285 10.474122 1",
+    "type": "sphere",
+    "color": "1 1 1",
+    "power": "2000",
+    "efficency": "17",
+    "position": "0 0 0",
+    "radius": "4"
+   },
+   "pos": [
+    -8.76628,
+    10.47412,
+    0.31022
+   ],
+   "power_Phi": [
+    33999.9997,
+    32760.7028,
+    31502.178
+   ],
+   "intensity_I": [
+    2705.634,
+    2607.0139,
+    2506.8637
+   ],
+   "radius": 4.0,
+   "radiance_Le": [
+    53.8269,
+    51.8649,
+    49.8725
+   ]
+  }
+ ],
+ "image_pipeline": {
+  "steps": [
+   {
+    "type": "NOP"
+   },
+   {
+    "type": "TONEMAP_LINEAR",
+    "scale": "2"
+   },
+   {
+    "type": "VIGNETTING",
+    "scale": "0.20000000000000001"
+   },
+   {
+    "type": "GAMMA_CORRECTION",
+    "value": "2.2000000000000002"
+   }
+  ],
+  "linear_scale": 2.0
+ },
+ "render_cfg": {
+  "renderengine.type": "PATHOCL",
+  "path.pathdepth.total": "7",
+  "path.pathdepth.diffuse": "5",
+  "path.pathdepth.glossy": "5",
+  "path.pathdepth.specular": "6",
+  "film.width": "1080",
+  "film.height": "1500",
+  "path.clamping.variance.maxvalue": "5",
+  "batch.haltspp": "500"
+ },
+ "obj": "hallbench.obj",
+ "triangles": 4996092,
+ "bounds": [
+  [
+   -2.3031,
+   -0.893,
+   -7.731
+  ],
+  [
+   3.2011,
+   4.6112,
+   11.8256
+  ]
+ ],
+ "objects": [
+  {
+   "object": "Mesh_Circle__005_140038442906120_140038750733832",
+   "ply": "mesh-00025.ply",
+   "material": "cactus__epine",
+   "triangles": 11732,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_My_Chair__005_140038444195848002",
+   "ply": "mesh-00000.ply",
+   "material": "gome",
+   "triangles": 6656,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_My_Chair__005_140038444195848001",
+   "ply": "mesh-00001.ply",
+   "material": "Chrome",
+   "triangles": 63488,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_My_Chair__005_140038444195848000",
+   "ply": "mesh-00002.ply",
+   "material": "chair__shader",
+   "triangles": 114176,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_My_Chair__004_140038444194312002",
+   "ply": "mesh-00003.ply",
+   "material": "gome",
+   "triangles": 6656,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_My_Chair__004_140038444194312001",
+   "ply": "mesh-00004.ply",
+   "material": "Chrome",
+   "triangles": 63488,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_My_Chair__004_140038444194312000",
+   "ply": "mesh-00005.ply",
+   "material": "chair__shader",
+   "triangles": 114176,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_My_Chair__003_140038444192776002",
+   "ply": "mesh-00006.ply",
+   "material": "gome",
+   "triangles": 6656,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_My_Chair__003_140038444192776001",
+   "ply": "mesh-00007.ply",
+   "material": "Chrome",
+   "triangles": 63488,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_My_Chair__003_140038444192776000",
+   "ply": "mesh-00008.ply",
+   "material": "chair__shader",
+   "triangles": 114176,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_My_Chair__002_140038444191240002",
+   "ply": "mesh-00009.ply",
+   "material": "gome",
+   "triangles": 6656,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_My_Chair__002_140038444191240001",
+   "ply": "mesh-00010.ply",
+   "material": "Chrome",
+   "triangles": 63488,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_My_Chair__002_140038444191240000",
+   "ply": "mesh-00011.ply",
+   "material": "chair__shader__002",
+   "triangles": 114176,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_My_Chair__001_140038444189704002",
+   "ply": "mesh-00012.ply",
+   "material": "gome",
+   "triangles": 6656,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_My_Chair__001_140038444189704001",
+   "ply": "mesh-00013.ply",
+   "material": "Chrome",
+   "triangles": 63488,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_My_Chair__001_140038444189704000",
+   "ply": "mesh-00014.ply",
+   "material": "chair__shader__002",
+   "triangles": 114176,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_My_Chair_140038444188168002",
+   "ply": "mesh-00015.ply",
+   "material": "gome",
+   "triangles": 6656,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_My_Chair_140038444188168001",
+   "ply": "mesh-00016.ply",
+   "material": "Chrome",
+   "triangles": 63488,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_My_Chair_140038444188168000",
+   "ply": "mesh-00017.ply",
+   "material": "chair__shader",
+   "triangles": 114176,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Group26029_140038444186632000",
+   "ply": "mesh-00018.ply",
+   "material": "Material__002",
+   "triangles": 990002,
+   "camera_invisible": false
+  },
+  {
+   "object": "Font_Text__001_140038444257800000",
+   "ply": "mesh-00019.ply",
+   "material": "Cuivre__b",
+   "triangles": 15972,
+   "camera_invisible": false
+  },
+  {
+   "object": "Font_Text_140038444256264000",
+   "ply": "mesh-00020.ply",
+   "material": "Cuivre__b",
+   "triangles": 22140,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__021_140038444250120002",
+   "ply": "mesh-00021.ply",
+   "material": "GROUND",
+   "triangles": 15642,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__021_140038444250120000",
+   "ply": "mesh-00022.ply",
+   "material": "Pot",
+   "triangles": 313588,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Circle__005_140038442906120002",
+   "ply": "mesh-00023.ply",
+   "material": "cactus__001",
+   "triangles": 15808,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Circle__005_140038442906120000",
+   "ply": "mesh-00024.ply",
+   "material": "cactus",
+   "triangles": 44480,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__020_140038444248584000",
+   "ply": "mesh-00026.ply",
+   "material": "Pot__001",
+   "triangles": 313588,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_VP_Free_mint__001_140038444259336000",
+   "ply": "mesh-00027.ply",
+   "material": "STEM",
+   "triangles": 30012,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_VP_Free_mint__001_140038444259336003",
+   "ply": "mesh-00028.ply",
+   "material": "MINT_LEAF",
+   "triangles": 761676,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_VP_Free_mint__001_140038444259336001",
+   "ply": "mesh-00029.ply",
+   "material": "GROUND",
+   "triangles": 15642,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__015_140038444240904001",
+   "ply": "mesh-00030.ply",
+   "material": "gome",
+   "triangles": 9216,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__015_140038444240904002",
+   "ply": "mesh-00031.ply",
+   "material": "Grey",
+   "triangles": 38016,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__015_140038444240904000",
+   "ply": "mesh-00032.ply",
+   "material": "Inox",
+   "triangles": 63784,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Circle__004_140038442904584001",
+   "ply": "mesh-00033.ply",
+   "material": "Inox2",
+   "triangles": 288,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Circle__004_140038442904584000",
+   "ply": "mesh-00034.ply",
+   "material": "Inox__marmiton",
+   "triangles": 16224,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Circle__003_140038442903048001",
+   "ply": "mesh-00035.ply",
+   "material": "Inox2",
+   "triangles": 288,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Circle__003_140038442903048000",
+   "ply": "mesh-00036.ply",
+   "material": "Inox__marmiton",
+   "triangles": 9776,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Circle__002_140038442901512002",
+   "ply": "mesh-00037.ply",
+   "material": "gome__2",
+   "triangles": 1856,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Circle__002_140038442901512001",
+   "ply": "mesh-00038.ply",
+   "material": "Inox2",
+   "triangles": 288,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Circle__002_140038442901512000",
+   "ply": "mesh-00039.ply",
+   "material": "Inox__marmiton",
+   "triangles": 12096,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Circle__001_140038725696008001",
+   "ply": "mesh-00040.ply",
+   "material": "Inox2",
+   "triangles": 288,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Circle__001_140038725696008000",
+   "ply": "mesh-00041.ply",
+   "material": "Inox__marmiton",
+   "triangles": 16512,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Circle_140038725694472001",
+   "ply": "mesh-00042.ply",
+   "material": "Inox2",
+   "triangles": 288,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Circle_140038725694472000",
+   "ply": "mesh-00043.ply",
+   "material": "Inox__marmiton",
+   "triangles": 15936,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__019_140038444247048000",
+   "ply": "mesh-00044.ply",
+   "material": "Plate",
+   "triangles": 30912,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__018_140038444245512000",
+   "ply": "mesh-00045.ply",
+   "material": "Plate",
+   "triangles": 23040,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__017_140038444243976000",
+   "ply": "mesh-00046.ply",
+   "material": "Plate",
+   "triangles": 48576,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__016_140038444242440000",
+   "ply": "mesh-00047.ply",
+   "material": "Plate",
+   "triangles": 38016,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__014_140038444218888001",
+   "ply": "mesh-00048.ply",
+   "material": "gome",
+   "triangles": 9216,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__014_140038444218888002",
+   "ply": "mesh-00049.ply",
+   "material": "Grey",
+   "triangles": 38016,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__014_140038444218888000",
+   "ply": "mesh-00050.ply",
+   "material": "Inox",
+   "triangles": 63784,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__013_140038444217352001",
+   "ply": "mesh-00051.ply",
+   "material": "Chrome",
+   "triangles": 62400,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__013_140038444217352000",
+   "ply": "mesh-00052.ply",
+   "material": "Pince",
+   "triangles": 189696,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Cylinder__002_140038444183560002",
+   "ply": "mesh-00053.ply",
+   "material": "Neon",
+   "triangles": 376,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Cylinder__002_140038444183560001",
+   "ply": "mesh-00054.ply",
+   "material": "Neon__glass",
+   "triangles": 105840,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Cylinder__002_140038444183560000",
+   "ply": "mesh-00055.ply",
+   "material": "white__grey__lamp__box",
+   "triangles": 58400,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Cylinder__001_140038442912264002",
+   "ply": "mesh-00056.ply",
+   "material": "Neon",
+   "triangles": 376,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Cylinder__001_140038442912264001",
+   "ply": "mesh-00057.ply",
+   "material": "Neon__glass",
+   "triangles": 105840,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Cylinder__001_140038442912264000",
+   "ply": "mesh-00058.ply",
+   "material": "white__grey__lamp__box",
+   "triangles": 58400,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Cylinder_140038442910728002",
+   "ply": "mesh-00059.ply",
+   "material": "Neon",
+   "triangles": 376,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Cylinder_140038442910728001",
+   "ply": "mesh-00060.ply",
+   "material": "Neon__glass",
+   "triangles": 105840,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Cylinder_140038442910728000",
+   "ply": "mesh-00061.ply",
+   "material": "white__grey__lamp__box",
+   "triangles": 58400,
+   "camera_invisible": false
+  },
+  {
+   "object": "Curve_NurbsPath_140038444197384000",
+   "ply": "mesh-00062.ply",
+   "material": "fils",
+   "triangles": 69360,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__002_140038444201992001",
+   "ply": "mesh-00063.ply",
+   "material": "Chrome",
+   "triangles": 12976,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__002_140038444201992000",
+   "ply": "mesh-00064.ply",
+   "material": "Door",
+   "triangles": 5700,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__012_140038444215816000",
+   "ply": "mesh-00065.ply",
+   "material": "wood_near_floor",
+   "triangles": 620,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__010_140038444214280000",
+   "ply": "mesh-00066.ply",
+   "material": "Door",
+   "triangles": 1828,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__009_140038444212744000",
+   "ply": "mesh-00067.ply",
+   "material": "Door",
+   "triangles": 1828,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__008_140038444211208000",
+   "ply": "mesh-00068.ply",
+   "material": "Door",
+   "triangles": 1828,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__007_140038444209672000",
+   "ply": "mesh-00069.ply",
+   "material": "Door",
+   "triangles": 1828,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__006_140038444208136000",
+   "ply": "mesh-00070.ply",
+   "material": "Wood",
+   "triangles": 1604,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__005_140038444206600000",
+   "ply": "mesh-00071.ply",
+   "material": "Wood",
+   "triangles": 1604,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__004_140038444205064000",
+   "ply": "mesh-00072.ply",
+   "material": "Wood",
+   "triangles": 3572,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Cube_140038442909192000",
+   "ply": "mesh-00073.ply",
+   "material": "cube",
+   "triangles": 44,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__003_140038444203528001",
+   "ply": "mesh-00074.ply",
+   "material": "Chrome",
+   "triangles": 14464,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__003_140038444203528000",
+   "ply": "mesh-00075.ply",
+   "material": "Door",
+   "triangles": 5700,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__001_140038444200456001",
+   "ply": "mesh-00076.ply",
+   "material": "Chrome",
+   "triangles": 12976,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__001_140038444200456000",
+   "ply": "mesh-00077.ply",
+   "material": "Door",
+   "triangles": 5700,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane_140038444198920002",
+   "ply": "mesh-00078.ply",
+   "material": "Yellow_Walls",
+   "triangles": 236,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane_140038444198920001",
+   "ply": "mesh-00079.ply",
+   "material": "Floor",
+   "triangles": 26,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane_140038444198920000",
+   "ply": "mesh-00080.ply",
+   "material": "White_Walls",
+   "triangles": 3202,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Sphere__001_140038444254728000",
+   "ply": "mesh-00081.ply",
+   "material": "lac__blanche",
+   "triangles": 11712,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__031_140038444251656002",
+   "ply": "mesh-00082.ply",
+   "material": "tableau__003",
+   "triangles": 2,
+   "camera_invisible": false
+  },
+  {
+   "object": "Mesh_Plane__031_140038444251656000",
+   "ply": "mesh-00084.ply",
+   "material": "dark",
+   "triangles": 720,
+   "camera_invisible": false
+  }
+ ],
+ "skipped": [
+  {
+   "object": "Mesh_Plane__031_140038444251656001",
+   "material": "vitrage__tableau",
+   "why": "null material vitrage__tableau: LuxCore renders nothing there"
+  }
+ ],
+ "materials": {
+  "cactus__epine": {
+   "luxcore_type": "glossytranslucent",
+   "notes": [
+    "Kd = kd + kt (no diffuse transmission); back coat dropped"
+   ],
+   "mtl": {
+    "Kd": [
+     1.0,
+     1.0,
+     0.6598814725875854
+    ],
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 37.99999940395355,
+    "Ni": 1.5760143165802516
+   }
+  },
+  "gome": {
+   "luxcore_type": "glossy2",
+   "notes": [],
+   "mtl": {
+    "Kd": [
+     0.022247422486543655,
+     0.022247422486543655,
+     0.022247422486543655
+    ],
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 4.666666401757145,
+    "Ni": 2.0833097715347866
+   }
+  },
+  "Chrome": {
+   "luxcore_type": "metal2",
+   "notes": [
+    "roughness from the mean of a texture (u 0.458, v 0.458)"
+   ],
+   "mtl": {
+    "Kd": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "Ks": [
+     0.6607433667062521,
+     0.6607433667062521,
+     0.6607433667062521
+    ],
+    "Ns": 2.3700556193576103,
+    "Ni": 1.5,
+    "Pm": 1.0
+   }
+  },
+  "chair__shader": {
+   "luxcore_type": "matte",
+   "notes": [],
+   "mtl": {
+    "Kd": [
+     0.41473522782325745,
+     0.21519805490970612,
+     0.175614595413208
+    ],
+    "map_Kd": "textures/imagemap-00001_chair__shader.jpg",
+    "Ks": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "Ns": 0.0,
+    "Ni": 1.5
+   }
+  },
+  "chair__shader__002": {
+   "luxcore_type": "matte",
+   "notes": [],
+   "mtl": {
+    "Kd": [
+     0.2861748933792114,
+     0.31060120463371277,
+     0.2696378827095032
+    ],
+    "map_Kd": "textures/imagemap-00001_chair__shader__002.jpg",
+    "Ks": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "Ns": 0.0,
+    "Ni": 1.5
+   }
+  },
+  "Material__002": {
+   "luxcore_type": "glossy2",
+   "notes": [],
+   "mtl": {
+    "Kd": [
+     0.6411612033843994,
+     0.6243456602096558,
+     0.6080673933029175
+    ],
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 98.00000223517425,
+    "Ni": 1.5760143165802516
+   }
+  },
+  "Cuivre__b": {
+   "luxcore_type": "metal2",
+   "notes": [],
+   "mtl": {
+    "Kd": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "Ks": [
+     0.7684456396935259,
+     0.5585064484373122,
+     0.32432064655934695
+    ],
+    "Ns": 64.66666815678283,
+    "Ni": 1.5,
+    "Pm": 1.0
+   }
+  },
+  "GROUND": {
+   "luxcore_type": "glossy2",
+   "notes": [
+    "bump/normal map dropped"
+   ],
+   "mtl": {
+    "Kd": [
+     0.015306794084608555,
+     0.0028804470784962177,
+     0.0006431544316001236
+    ],
+    "map_Kd": "textures/imagemap-00002.jpg",
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 7.999999850988388,
+    "Ni": 1.5760143165802516
+   }
+  },
+  "Pot": {
+   "luxcore_type": "glossy2",
+   "notes": [
+    "roughness from the mean of a texture (u 0.234, v 0.234)",
+    "bump/normal map dropped"
+   ],
+   "mtl": {
+    "Kd": [
+     0.3024379014968872,
+     0.20335456728935242,
+     0.15871404111385345
+    ],
+    "map_Kd": "textures/imagemap-00004_Pot.jpg",
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 6.562580913516916,
+    "Ni": 1.5760143165802516
+   }
+  },
+  "cactus__001": {
+   "luxcore_type": "glossytranslucent",
+   "notes": [
+    "Kd = kd + kt (no diffuse transmission); back coat dropped",
+    "roughness from the mean of a texture (u 0.478, v 0.478)",
+    "bump/normal map dropped"
+   ],
+   "mtl": {
+    "Kd": [
+     0.6584211587905884,
+     0.7615769505500793,
+     0.17152200639247894
+    ],
+    "map_Kd": "textures/imagemap-00005_cactus__001.jpg",
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 2.1883123574032126,
+    "Ni": 1.5760143165802516
+   }
+  },
+  "cactus": {
+   "luxcore_type": "glossytranslucent",
+   "notes": [
+    "Kd = kd + kt (no diffuse transmission); back coat dropped",
+    "roughness from the mean of a texture (u 0.501, v 0.501)",
+    "bump/normal map dropped"
+   ],
+   "mtl": {
+    "Kd": [
+     0.2671021521091461,
+     0.3137248158454895,
+     0.061663273721933365
+    ],
+    "map_Kd": "textures/imagemap-00006_cactus.jpg",
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 1.988917149067722,
+    "Ni": 1.5760143165802516
+   }
+  },
+  "Pot__001": {
+   "luxcore_type": "glossy2",
+   "notes": [
+    "roughness from the mean of a texture (u 0.596, v 0.596)",
+    "bump/normal map dropped"
+   ],
+   "mtl": {
+    "Kd": [
+     0.31745681166648865,
+     0.24101528525352478,
+     0.1803167462348938
+    ],
+    "map_Kd": "textures/imagemap-00007_Pot__001.jpg",
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 1.3532287277481956,
+    "Ni": 1.5760143165802516
+   }
+  },
+  "STEM": {
+   "luxcore_type": "glossytranslucent",
+   "notes": [
+    "Kd = kd + kt (no diffuse transmission); back coat dropped"
+   ],
+   "mtl": {
+    "Kd": [
+     0.23393355309963226,
+     0.2470630556344986,
+     0.02202790603041649
+    ],
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 37.99999940395355,
+    "Ni": 1.5760143165802516
+   }
+  },
+  "MINT_LEAF": {
+   "luxcore_type": "glossytranslucent",
+   "notes": [
+    "Kd = kd + kt (no diffuse transmission); back coat dropped",
+    "bump/normal map dropped"
+   ],
+   "mtl": {
+    "Kd": [
+     0.6723836064338684,
+     0.7824782133102417,
+     0.536228358745575
+    ],
+    "map_Kd": "textures/imagemap-00008_MINT_LEAF.jpg",
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 37.99999940395355,
+    "Ni": 1.5760143165802516,
+    "map_d": "textures/imagemap-00009_mask.png"
+   }
+  },
+  "Grey": {
+   "luxcore_type": "glossy2",
+   "notes": [],
+   "mtl": {
+    "Kd": [
+     0.11892783641815186,
+     0.13203243911266327,
+     0.1333155632019043
+    ],
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 37.99999940395355,
+    "Ni": 1.5760143165802516
+   }
+  },
+  "Inox": {
+   "luxcore_type": "metal2",
+   "notes": [
+    "anisotropic (u 0.050, v 0.300): alpha = sqrt(u v) = 0.122"
+   ],
+   "mtl": {
+    "Kd": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "Ks": [
+     0.717581456738256,
+     0.717581456738256,
+     0.717581456738256
+    ],
+    "Ns": 14.329931172440475,
+    "Ni": 1.5,
+    "Pm": 1.0
+   }
+  },
+  "Inox2": {
+   "luxcore_type": "metal2",
+   "notes": [],
+   "mtl": {
+    "Kd": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "Ks": [
+     0.717581456738256,
+     0.717581456738256,
+     0.717581456738256
+    ],
+    "Ns": 37.99999940395355,
+    "Ni": 1.5,
+    "Pm": 1.0
+   }
+  },
+  "Inox__marmiton": {
+   "luxcore_type": "metal2",
+   "notes": [
+    "anisotropic (u 0.010, v 0.623): alpha = sqrt(u v) = 0.079"
+   ],
+   "mtl": {
+    "Kd": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "Ks": [
+     0.4841950726886257,
+     0.4841950726886257,
+     0.4841950726886257
+    ],
+    "Ns": 23.330666143781745,
+    "Ni": 1.5,
+    "Pm": 1.0
+   }
+  },
+  "gome__2": {
+   "luxcore_type": "glossy2",
+   "notes": [],
+   "mtl": {
+    "Kd": [
+     0.010621508583426476,
+     0.010621508583426476,
+     0.010621508583426476
+    ],
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 4.666666401757145,
+    "Ni": 1.4078537563602578
+   }
+  },
+  "Plate": {
+   "luxcore_type": "glossy2",
+   "notes": [],
+   "mtl": {
+    "Kd": [
+     0.699999988079071,
+     0.699999988079071,
+     0.699999988079071
+    ],
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 98.00000223517425,
+    "Ni": 2.1844412744969257
+   }
+  },
+  "Pince": {
+   "luxcore_type": "glossy2",
+   "notes": [],
+   "mtl": {
+    "Kd": [
+     0.25457051396369934,
+     0.283602774143219,
+     0.29907065629959106
+    ],
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 37.99999940395355,
+    "Ni": 1.5760143165802516
+   }
+  },
+  "Neon": {
+   "luxcore_type": "glossy2",
+   "notes": [],
+   "mtl": {
+    "Kd": [
+     0.8002672791481018,
+     0.8002672791481018,
+     0.8002672791481018
+    ],
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 198.0000044703485,
+    "Ni": 1.9830033178485686
+   }
+  },
+  "Neon__glass": {
+   "luxcore_type": "archglass",
+   "notes": [
+    "archglass (thin, passes shadow rays) kept as real glass"
+   ],
+   "mtl": {
+    "Kd": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 797.9999999999999,
+    "Ni": 2.0,
+    "Tr": 1.0
+   }
+  },
+  "white__grey__lamp__box": {
+   "luxcore_type": "glossy2",
+   "notes": [],
+   "mtl": {
+    "Kd": [
+     0.429238498210907,
+     0.429238498210907,
+     0.429238498210907
+    ],
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 17.99999970197678,
+    "Ni": 1.8503095447828917
+   }
+  },
+  "fils": {
+   "luxcore_type": "glossy2",
+   "notes": [],
+   "mtl": {
+    "Kd": [
+     0.22246748208999634,
+     0.2632048428058624,
+     0.23227833211421967
+    ],
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 11.33333280351429,
+    "Ni": 2.0095534095209
+   }
+  },
+  "Door": {
+   "luxcore_type": "glossy2",
+   "notes": [
+    "bump/normal map dropped"
+   ],
+   "mtl": {
+    "Kd": [
+     0.5620336532592773,
+     0.5620336532592773,
+     0.5620336532592773
+    ],
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 37.99999940395355,
+    "Ni": 1.5760143165802516
+   }
+  },
+  "wood_near_floor": {
+   "luxcore_type": "glossy2",
+   "notes": [
+    "bump/normal map dropped"
+   ],
+   "mtl": {
+    "Kd": [
+     0.3437114953994751,
+     0.3437114953994751,
+     0.3437114953994751
+    ],
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 37.99999940395355,
+    "Ni": 1.5760143165802516
+   }
+  },
+  "Wood": {
+   "luxcore_type": "glossy2",
+   "notes": [
+    "roughness from the mean of a texture (u 0.276, v 0.276)",
+    "bump/normal map dropped"
+   ],
+   "mtl": {
+    "Kd": [
+     0.18947504460811615,
+     0.07616129517555237,
+     0.026632579043507576
+    ],
+    "map_Kd": "textures/imagemap-00012_Wood.jpg",
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 5.252163204207127,
+    "Ni": 1.3761671340657187
+   }
+  },
+  "cube": {
+   "luxcore_type": "matte",
+   "notes": [],
+   "mtl": {
+    "Kd": [
+     0.04037870094180107,
+     0.04037870094180107,
+     0.04037870094180107
+    ],
+    "Ks": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "Ns": 0.0,
+    "Ni": 1.5
+   }
+  },
+  "Yellow_Walls": {
+   "luxcore_type": "glossy2",
+   "notes": [
+    "ks from the mean of a texture (0.217)",
+    "bump/normal map dropped"
+   ],
+   "mtl": {
+    "Kd": [
+     0.5900267958641052,
+     0.3185163736343384,
+     0.01385846734046936
+    ],
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 7.090909140169128,
+    "Ni": 2.7432159967909606
+   }
+  },
+  "Floor": {
+   "luxcore_type": "glossy2",
+   "notes": [
+    "roughness from the mean of a texture (u 0.090, v 0.090)",
+    "bump/normal map dropped"
+   ],
+   "mtl": {
+    "Kd": [
+     0.23584328591823578,
+     0.28843775391578674,
+     0.2822698652744293
+    ],
+    "map_Kd": "textures/imagemap-00015.jpg",
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 20.195881223400402,
+    "Ni": 1.7698017175312257
+   }
+  },
+  "White_Walls": {
+   "luxcore_type": "matte",
+   "notes": [],
+   "mtl": {
+    "Kd": [
+     0.4695655405521393,
+     0.4695655405521393,
+     0.4695655405521393
+    ],
+    "Ks": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "Ns": 0.0,
+    "Ni": 1.5
+   }
+  },
+  "lac__blanche": {
+   "luxcore_type": "glossy2",
+   "notes": [],
+   "mtl": {
+    "Kd": [
+     0.7387546896934509,
+     0.7136896252632141,
+     0.6747739911079407
+    ],
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 131.33333631356567,
+    "Ni": 2.0649168272177163
+   }
+  },
+  "tableau__003": {
+   "luxcore_type": "glossy2",
+   "notes": [
+    "bump/normal map dropped"
+   ],
+   "mtl": {
+    "Kd": [
+     0.5008352994918823,
+     0.3756783604621887,
+     0.3362727165222168
+    ],
+    "map_Kd": "textures/imagemap-00018_tableau__003.jpg",
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 4.666666401757145,
+    "Ni": 1.5760143165802516
+   }
+  },
+  "dark": {
+   "luxcore_type": "glossy2",
+   "notes": [],
+   "mtl": {
+    "Kd": [
+     0.00916147232055664,
+     0.00916147232055664,
+     0.00916147232055664
+    ],
+    "Ks": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "Ns": 37.99999940395355,
+    "Ni": 1.5760143165802516
+   }
+  }
+ },
+ "unhandled_texture_types": [],
+ "seconds": 314.7
+}

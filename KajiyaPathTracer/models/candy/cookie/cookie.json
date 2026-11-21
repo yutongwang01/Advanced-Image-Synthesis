@@ -1,0 +1,80 @@
+{
+ "file": "D:\\Dropbox\\Research\\Projects\\GenerativePathTracing\\dataset\\Blender\\Random\\CandyRacingCar\\CandyRacingCar.blend",
+ "scene": "Scene",
+ "frame": 7,
+ "resolution": [
+  4508,
+  2480,
+  25
+ ],
+ "cameras": [],
+ "lights": [],
+ "world": {
+  "name": "World",
+  "nodes": [
+   {
+    "type": "OUTPUT_WORLD"
+   },
+   {
+    "type": "BACKGROUND",
+    "strength": 0.29999998211860657
+   },
+   {
+    "type": "RGB"
+   },
+   {
+    "type": "VALTORGB"
+   },
+   {
+    "type": "TEX_COORD"
+   },
+   {
+    "type": "MAPPING"
+   },
+   {
+    "type": "TEX_GRADIENT"
+   },
+   {
+    "type": "SEPXYZ"
+   }
+  ],
+  "view_transform": "Standard",
+  "exposure": 0.0
+ },
+ "static_obj": "cookie.obj",
+ "static_triangles": 131072,
+ "prototypes": {},
+ "instanced_triangles": 0,
+ "sprinkles": 0,
+ "materials": {
+  "biscuit": {
+   "Kd": [
+    0.11,
+    0.055,
+    0.03
+   ],
+   "Ks": [
+    0.03,
+    0.03,
+    0.03
+   ],
+   "Ns": 15,
+   "Ni": 1.5
+  },
+  "cream": {
+   "Kd": [
+    0.97,
+    0.95,
+    0.9
+   ],
+   "Ks": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ns": 10,
+   "Ni": 1.5
+  }
+ },
+ "seconds": 2.0
+}

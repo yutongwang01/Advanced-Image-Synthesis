@@ -1,0 +1,408 @@
+# written by tools/blender2obj.py
+
+newmtl Ads
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly_AnunciosColgantes_BaseColor.png
+map_Pm textures/BaseLowPoly_AnunciosColgantes_Metalness.png
+map_Pr textures/BaseLowPoly_AnunciosColgantes_Roughness.png
+norm textures/BaseLowPoly_AnunciosColgantes_Normal.png
+map_d textures/BaseLowPoly_AnunciosColgantes_Opacity_mask.png
+
+newmtl Background_Cube
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly3_CuboFondo_BaseColor.png
+map_Pm textures/BaseLowPoly3_CuboFondo_Metallic.png
+map_Pr textures/BaseLowPoly3_CuboFondo_Roughness.png
+norm textures/BaseLowPoly3_CuboFondo_Normal.png
+
+newmtl Background_Cylinders
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly3_CilindrosFondo_BaseColor.png
+map_Pm textures/BaseLowPoly3_CilindrosFondo_Metallic.png
+map_Pr textures/BaseLowPoly3_CilindrosFondo_Roughness.png
+norm textures/BaseLowPoly3_CilindrosFondo_Normal.png
+
+newmtl Background_Pipes
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly3_Tubos01Fondo_BaseColor.png
+map_Pm textures/BaseLowPoly3_Tubos01Fondo_Metallic.png
+map_Pr textures/BaseLowPoly3_Tubos01Fondo_Roughness.png
+norm textures/BaseLowPoly3_Tubos01Fondo_Normal.png
+
+newmtl Background_Pipes_Closer
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly3_FondoTubos02_BaseColor.png
+map_Pm textures/BaseLowPoly3_FondoTubos02_Metallic.png
+map_Pr textures/BaseLowPoly3_FondoTubos02_Roughness.png
+norm textures/BaseLowPoly3_FondoTubos02_Normal.png
+
+newmtl Background_Wall
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly3_ParedLejos_BaseColor.png
+map_Pm textures/BaseLowPoly3_ParedLejos_Metallic.png
+map_Pr textures/BaseLowPoly3_ParedLejos_Roughness.png
+norm textures/BaseLowPoly3_ParedLejos_Normal.png
+
+newmtl Body
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/Mona_Camisa_BaseColor.png
+map_Pm textures/Mona_Camisa_Metallic.png
+map_Pr textures/Mona_Camisa_Roughness.png
+norm textures/Mona_Camisa_Normal.png
+
+newmtl Bubble
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly_ConversationArticles_BaseColor.png
+map_Pm textures/BaseLowPoly_ConversationArticles_Metalness.png
+map_Pr textures/BaseLowPoly_ConversationArticles_Roughness.png
+norm textures/BaseLowPoly_ConversationArticles_Normal.png
+map_d textures/BaseLowPoly_ConversationArticles_Opacity_mask.png
+
+newmtl Cat_Helmet
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/TodoLowPoly_CatHead_BaseColor.png
+map_Pm textures/TodoLowPoly_CatHead_Metalness.png
+map_Pr textures/TodoLowPoly_CatHead_Roughness.png
+norm textures/TodoLowPoly_CatHead_Normal.png
+
+newmtl Ceiling
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly_Techo_BaseColor.png
+map_Pm textures/BaseLowPoly_Techo_Metalness.png
+map_Pr textures/BaseLowPoly_Techo_Roughness.png
+norm textures/BaseLowPoly_Techo_Normal.png
+
+newmtl Cloth_Pipes
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly_CablesyTela_BaseColor.png
+map_Pm textures/BaseLowPoly_CablesyTela_Metalness.png
+map_Pr textures/BaseLowPoly_CablesyTela_Roughness.png
+norm textures/BaseLowPoly_CablesyTela_Normal.png
+
+newmtl Cristal
+Kd 0.0000 0.0000 0.0000
+Ks 1.0000 1.0000 1.0000
+Ns 1000000000.0000
+Ni 1.4500
+Tr 1.0000
+norm textures/CristalesLP_Cristales_Normal.png
+
+newmtl Eyes
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/Mona_OjosDientes_BaseColor.jpg
+map_Pm textures/Mona_OjosDientes_Metalness.jpg
+map_Pr textures/Mona_OjosDientes_Roughness.jpg
+norm textures/Mona_OjosDientes_Normal.jpg
+
+newmtl Face
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/Mona_Cara_BaseColor.png
+map_Pm textures/Mona_Cara_Metalness.png
+map_Pr textures/Mona_Cara_Roughness.png
+norm textures/Mona_Cara_Normal.png
+
+newmtl Floor_Background
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/PISOGENERAL_PisoLejos_BaseColor.png
+map_Pm textures/PISOGENERAL_PisoLejos_Metalness.png
+map_Pr textures/PISOGENERAL_PisoLejos_Roughness.png
+norm textures/PISOGENERAL_PisoLejos_Normal.png
+
+newmtl Floor_Front
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/PISOGENERAL_PisoCerca_BaseColor.png
+map_Pm textures/PISOGENERAL_PisoCerca_Metalness.png
+map_Pr textures/PISOGENERAL_PisoCerca_Roughness.png
+norm textures/PISOGENERAL_PisoCerca_Normal.png
+
+newmtl Front_Pipes.001
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly_Tubos_BaseColor.png
+map_Pm textures/BaseLowPoly_Tubos_Metalness.png
+map_Pr textures/BaseLowPoly_Tubos_Roughness.png
+norm textures/BaseLowPoly_Tubos_Normal.png
+
+newmtl Furniture
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly_ConversationArticles_BaseColor.png
+map_Pm textures/BaseLowPoly_ConversationArticles_Metalness.png
+map_Pr textures/BaseLowPoly_ConversationArticles_Roughness.png
+norm textures/BaseLowPoly_ConversationArticles_Normal.png
+map_d textures/BaseLowPoly_ConversationArticles_Opacity_mask.png
+
+newmtl Gears
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly3_Gears_BaseColor.png
+map_Pm textures/BaseLowPoly3_Gears_Metallic.png
+map_Pr textures/BaseLowPoly3_Gears_Roughness.png
+norm textures/BaseLowPoly3_Gears_Normal.png
+
+newmtl Gloves
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/Mona_Guantes_BaseColor.jpg
+map_Pm textures/Mona_Guantes_Metalness.jpg
+map_Pr textures/Mona_Guantes_Roughness.jpg
+norm textures/Mona_Guantes_Normal.jpg
+
+newmtl Hair
+Kd 0.7200 0.1300 0.2000
+Ks 1.0000 1.0000 1.0000
+Ns 131.2778
+Ni 1.4500
+
+newmtl Hat
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/Mona_Sombrero_BaseColor.jpg
+map_Pm textures/Mona_Sombrero_Metalness.jpg
+map_Pr textures/Mona_Sombrero_Roughness.jpg
+norm textures/Mona_Sombrero_Normal.jpg
+
+newmtl Light_Block
+Kd 0.0000 0.0000 0.0000
+Ks 0.0000 0.0000 0.0000
+Ns 30.0000
+Ni 1.5000
+
+newmtl MrCatPC
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ke 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/TodoLowPoly_GatoPC_BaseColor.png
+map_Ke textures/TodoLowPoly_GatoPC_Emissive.png
+map_Pm textures/TodoLowPoly_GatoPC_Metalness.png
+map_Pr textures/TodoLowPoly_GatoPC_Roughness.png
+norm textures/TodoLowPoly_GatoPC_Normal.png
+
+newmtl Old_Robots
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ke 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly_Robot50s_BaseColor.png
+map_Ke textures/BaseLowPoly_Robot50s_Emissive.png
+map_Pm textures/BaseLowPoly_Robot50s_Metalness.png
+map_Pr textures/BaseLowPoly_Robot50s_Roughness.png
+norm textures/BaseLowPoly_Robot50s_Normal.png
+
+newmtl POBox
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly_PO_Box_BaseColor.png
+map_Pm textures/BaseLowPoly_PO_Box_Metalness.png
+map_Pr textures/BaseLowPoly_PO_Box_Roughness.png
+norm textures/BaseLowPoly_PO_Box_Normal.png
+
+newmtl Props
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly_HornoResorte_BaseColor.png
+map_Pm textures/BaseLowPoly_HornoResorte_Metalness.png
+map_Pr textures/BaseLowPoly_HornoResorte_Roughness.png
+norm textures/BaseLowPoly_HornoResorte_Normal.png
+
+newmtl RadioNes
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ke 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly_RadioNes_BaseColor.png
+map_Ke textures/BaseLowPoly_RadioNes_Emissive.png
+map_Pm textures/BaseLowPoly_RadioNes_Metalness.png
+map_Pr textures/BaseLowPoly_RadioNes_Roughness.png
+norm textures/BaseLowPoly_RadioNes_Normal.png
+
+newmtl Stoplight
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ke 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly_Semaforo_BaseColor.png
+map_Ke textures/BaseLowPoly_Semaforo_Emissive.png
+map_Pm textures/BaseLowPoly_Semaforo_Metalness.png
+map_Pr textures/BaseLowPoly_Semaforo_Roughness.png
+norm textures/BaseLowPoly_Semaforo_Normal.png
+
+newmtl Store_Wall
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly_MuroTienda_BaseColor.png
+map_Pm textures/BaseLowPoly_MuroTienda_Metalness.png
+map_Pr textures/BaseLowPoly_MuroTienda_Roughness.png
+norm textures/BaseLowPoly_MuroTienda_Normal.png
+
+newmtl Table
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly_MesaPrincipal_BaseColor.png
+map_Pm textures/BaseLowPoly_MesaPrincipal_Metalness.png
+map_Pr textures/BaseLowPoly_MesaPrincipal_Roughness.png
+norm textures/BaseLowPoly_MesaPrincipal_Normal.png
+
+newmtl Table_cloth
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly_JarronesMantel_BaseColor.png
+map_Pm textures/BaseLowPoly_JarronesMantel_Metalness.png
+norm textures/BaseLowPoly_JarronesMantel_Normal.png
+map_d textures/BaseLowPoly_JarronesMantel_Opacity_mask.png
+
+newmtl Tickets
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly_Tickets_BaseColor.png
+map_Pm textures/BaseLowPoly_Tickets_Metalness.png
+map_Pr textures/BaseLowPoly_Tickets_Roughness.png
+norm textures/BaseLowPoly_Tickets_Normal.png
+
+newmtl Tools
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly_Accesorios_BaseColor.png
+map_Pm textures/BaseLowPoly_Accesorios_Metalness.png
+map_Pr textures/BaseLowPoly_Accesorios_Roughness.png
+norm textures/BaseLowPoly_Accesorios_Normal.png
+
+newmtl Vest
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/Mona_Chaleco_BaseColor.png
+map_Pm textures/Mona_Chaleco_Metalness.png
+map_Pr textures/Mona_Chaleco_Roughness.png
+norm textures/Mona_Chaleco_Normal.png
+
+newmtl Weigth
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly_Pesa_BaseColor.png
+map_Pm textures/BaseLowPoly_Pesa_Metalness.png
+map_Pr textures/BaseLowPoly_Pesa_Roughness.png
+norm textures/BaseLowPoly_Pesa_Normal.png
+
+newmtl Wheel_Robot
+Kd 0.8000 0.8000 0.8000
+Ks 0.5000 0.5000 0.5000
+Ke 0.3000 0.3000 0.3000
+Ns 30.0000
+Ni 1.4500
+Pm 0.5000
+map_Kd textures/BaseLowPoly2_RobotAsk_BaseColor.png
+map_Ke textures/BaseLowPoly2_RobotAsk_Emissive.png
+map_Pm textures/BaseLowPoly2_RobotAsk_Metallic.png
+map_Pr textures/BaseLowPoly2_RobotAsk_Roughness.png
+norm textures/BaseLowPoly2_RobotAsk_Normal.png

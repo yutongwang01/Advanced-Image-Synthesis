@@ -1,0 +1,25 @@
+# written by tools/blender2obj.py
+
+newmtl intonaco
+Kd 0.5489 0.5385 0.5301
+Ks 0.0000 0.0000 0.0000
+Ns 30.0000
+Ni 1.5000
+
+newmtl marmo_bianco
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 30.0000
+Ni 1.5000
+
+newmtl pavimento_bianco
+Kd 0.8000 0.8000 0.8000
+Ks 1.0000 1.0000 1.0000
+Ns 1248.0000
+Ni 1.5000
+
+newmtl pavimento_nero
+Kd 0.0100 0.0100 0.0100
+Ks 1.0000 1.0000 1.0000
+Ns 1248.0000
+Ni 1.5000

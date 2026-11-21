@@ -1,0 +1,95 @@
+# written by tools/blender2obj.py
+
+newmtl cat_eye_cornea
+Kd 0.0000 0.0000 0.0000
+Ks 1.0000 1.0000 1.0000
+Ns 319998.0000
+Ni 1.4500
+Tr 1.0000
+
+newmtl cat_eye_iris
+Kd 0.7800 0.4500 0.1000
+Ks 0.3000 0.3000 0.3000
+Ns 244.9136
+Ni 1.5000
+
+newmtl cat_eye_pupil
+Kd 0.0000 0.0000 0.0000
+Ks 0.0000 0.0000 0.0000
+Ns 30.0000
+Ni 1.5000
+
+newmtl cat_eye_white
+Kd 0.8500 0.6200 0.3500
+Ks 0.2000 0.2000 0.2000
+Ns 16.0202
+Ni 1.5000
+
+newmtl cat_hair_long
+Kd 0.1910 0.1630 0.1140
+Ks 0.4100 0.4100 0.4100
+Ns 198.5772
+Ni 1.5000
+
+newmtl cat_hair_short
+Kd 0.3000 0.2500 0.2200
+Ks 0.1510 0.1510 0.1510
+Ns 69.4721
+Ni 1.5000
+
+newmtl cat_skin
+Kd 0.5500 0.4500 0.3800
+Ks 0.0400 0.0400 0.0400
+Ns 28.4178
+Ni 1.5000
+
+newmtl cat_tear_line
+Kd 0.3000 0.2000 0.1500
+Ks 0.6000 0.6000 0.6000
+Ns 244.9136
+Ni 1.0000
+
+newmtl cat_tongue
+Kd 0.7643 0.1194 0.1194
+Ks 0.2342 0.2245 0.2083
+Ns 48.4528
+Ni 1.5000
+
+newmtl env_grass
+Kd 0.2250 0.2550 0.1000
+Ks 0.0600 0.0600 0.0500
+Ns 23.9291
+Ni 1.5000
+
+newmtl env_reflector
+Kd 0.0000 0.0000 0.0000
+Ks 0.0000 0.0000 0.0000
+Ke 0.6660 0.6290 0.5780
+Ns 30.0000
+Ni 1.5000
+
+newmtl env_sparkle
+Kd 0.0000 0.0000 0.0000
+Ks 0.0000 0.0000 0.0000
+Ke 0.9626 0.7791 0.3198
+Ns 30.0000
+Ni 1.5000
+
+newmtl fish_eye
+Kd 0.0000 0.0000 0.0000
+Ks 0.4688 0.4391 0.3567
+Ns 2220.2224
+Ni 1.5000
+
+newmtl fish_skin
+Kd 0.8000 0.8000 0.8000
+Ks 0.0413 0.0428 0.0434
+Ns 33.4989
+Ni 1.5000
+map_Kd textures/fish.png
+
+newmtl fish_string
+Kd 0.2027 0.1485 0.0635
+Ks 0.1078 0.1010 0.0820
+Ns 25.6382
+Ni 1.5000

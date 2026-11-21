@@ -1,0 +1,442 @@
+{
+ "file": "D:\\Dropbox\\Research\\Projects\\GenerativePathTracing\\dataset\\Blender\\Scenes\\Colonnato\\colonnato.blend",
+ "scene": "Scene",
+ "frame": 1,
+ "resolution": [
+  1280,
+  1024,
+  100
+ ],
+ "cameras": [
+  {
+   "name": "Camera.002",
+   "active": true,
+   "eye": [
+    6.52767,
+    -0.94873,
+    15.58954
+   ],
+   "lookat": [
+    6.12149,
+    -0.79929,
+    14.68804
+   ],
+   "up": [
+    0.05278,
+    0.98873,
+    0.14011
+   ],
+   "fovy_deg": 70.834,
+   "lens_mm": 18.0,
+   "resolution": [
+    1280,
+    1024
+   ],
+   "type": "PERSP"
+  },
+  {
+   "name": "Camera.001",
+   "active": false,
+   "eye": [
+    -7.65346,
+    0.0,
+    15.24822
+   ],
+   "lookat": [
+    -7.28705,
+    0.08059,
+    14.32126
+   ],
+   "up": [
+    -0.02962,
+    0.99675,
+    0.07494
+   ],
+   "fovy_deg": 65.238,
+   "lens_mm": 20.0,
+   "resolution": [
+    1280,
+    1024
+   ],
+   "type": "PERSP"
+  },
+  {
+   "name": "Camera",
+   "active": false,
+   "eye": [
+    -2.09129,
+    -1.6209,
+    3.50723
+   ],
+   "lookat": [
+    -1.86741,
+    -1.19593,
+    2.63014
+   ],
+   "up": [
+    -0.06659,
+    0.90449,
+    0.42126
+   ],
+   "fovy_deg": 65.238,
+   "lens_mm": 20.0,
+   "resolution": [
+    1280,
+    1024
+   ],
+   "type": "PERSP"
+  }
+ ],
+ "lights": [
+  {
+   "name": "Sun",
+   "type": "SUN",
+   "color": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "blender_energy": 2.0,
+   "pos": [
+    20.16875,
+    49.69949,
+    -72.75124
+   ],
+   "dir": [
+    -0.23735,
+    -0.53608,
+    0.81011
+   ],
+   "hide_render": false,
+   "E_guess": [
+    2.0,
+    2.0,
+    2.0
+   ],
+   "angle_deg": 143.13
+  },
+  {
+   "name": "Sun.011",
+   "type": "SPOT",
+   "color": [
+    1.0,
+    0.731,
+    0.323
+   ],
+   "blender_energy": 200.0,
+   "pos": [
+    26.27172,
+    51.81458,
+    -88.88416
+   ],
+   "dir": [
+    -0.23735,
+    -0.53608,
+    0.81011
+   ],
+   "hide_render": false,
+   "I_guess": [
+    15.9155,
+    11.6342,
+    5.1407
+   ],
+   "radius": 5.0,
+   "spot_deg": 1.5
+  },
+  {
+   "name": "Sun.010",
+   "type": "SPOT",
+   "color": [
+    1.0,
+    0.731,
+    0.323
+   ],
+   "blender_energy": 200.0,
+   "pos": [
+    20.60973,
+    51.81458,
+    -72.75124
+   ],
+   "dir": [
+    -0.23735,
+    -0.53608,
+    0.81011
+   ],
+   "hide_render": false,
+   "I_guess": [
+    15.9155,
+    11.6342,
+    5.1407
+   ],
+   "radius": 5.0,
+   "spot_deg": 1.5
+  },
+  {
+   "name": "Sun.009",
+   "type": "SPOT",
+   "color": [
+    1.0,
+    0.731,
+    0.323
+   ],
+   "blender_energy": 200.0,
+   "pos": [
+    26.59651,
+    51.81458,
+    -72.75124
+   ],
+   "dir": [
+    -0.23735,
+    -0.53608,
+    0.81011
+   ],
+   "hide_render": false,
+   "I_guess": [
+    15.9155,
+    11.6342,
+    5.1407
+   ],
+   "radius": 5.0,
+   "spot_deg": 1.5
+  },
+  {
+   "name": "Sun.008",
+   "type": "SPOT",
+   "color": [
+    1.0,
+    0.7312,
+    0.3226
+   ],
+   "blender_energy": 200.0,
+   "pos": [
+    14.60973,
+    51.81458,
+    -72.75124
+   ],
+   "dir": [
+    -0.23735,
+    -0.53608,
+    0.81011
+   ],
+   "hide_render": false,
+   "I_guess": [
+    15.9155,
+    11.6379,
+    5.1346
+   ],
+   "radius": 5.0,
+   "spot_deg": 1.5
+  },
+  {
+   "name": "Sun.007",
+   "type": "SPOT",
+   "color": [
+    1.0,
+    0.731,
+    0.323
+   ],
+   "blender_energy": 200.0,
+   "pos": [
+    13.57731,
+    51.81458,
+    -72.75124
+   ],
+   "dir": [
+    -0.23735,
+    -0.53608,
+    0.81011
+   ],
+   "hide_render": false,
+   "I_guess": [
+    15.9155,
+    11.6342,
+    5.1407
+   ],
+   "radius": 5.0,
+   "spot_deg": 1.5
+  },
+  {
+   "name": "Sun.006",
+   "type": "SPOT",
+   "color": [
+    1.0,
+    0.731,
+    0.323
+   ],
+   "blender_energy": 200.0,
+   "pos": [
+    25.56409,
+    51.81458,
+    -72.75124
+   ],
+   "dir": [
+    -0.23735,
+    -0.53608,
+    0.81011
+   ],
+   "hide_render": false,
+   "I_guess": [
+    15.9155,
+    11.6342,
+    5.1407
+   ],
+   "radius": 5.0,
+   "spot_deg": 1.5
+  },
+  {
+   "name": "Sun.005",
+   "type": "SPOT",
+   "color": [
+    1.0,
+    0.731,
+    0.323
+   ],
+   "blender_energy": 200.0,
+   "pos": [
+    19.57731,
+    51.81458,
+    -72.75124
+   ],
+   "dir": [
+    -0.23735,
+    -0.53608,
+    0.81011
+   ],
+   "hide_render": false,
+   "I_guess": [
+    15.9155,
+    11.6342,
+    5.1407
+   ],
+   "radius": 5.0,
+   "spot_deg": 1.5
+  }
+ ],
+ "world": {
+  "name": "World",
+  "nodes": [
+   {
+    "type": "OUTPUT_WORLD"
+   },
+   {
+    "type": "BACKGROUND",
+    "strength": 1.0,
+    "color": [
+     0.7,
+     0.79,
+     0.87
+    ]
+   },
+   {
+    "type": "FRAME"
+   }
+  ],
+  "view_transform": "Standard",
+  "exposure": 0.0
+ },
+ "static_obj": "colonnato.obj",
+ "static_triangles": 742395,
+ "prototypes": {
+  "proto_Circle.005.obj": {
+   "triangles": 2752,
+   "instances": 134
+  },
+  "proto_Cube.011.obj": {
+   "triangles": 106,
+   "instances": 134
+  },
+  "proto_Circle.012.obj": {
+   "triangles": 9662,
+   "instances": 134
+  },
+  "proto_Cube.004.obj": {
+   "triangles": 52784,
+   "instances": 24
+  },
+  "proto_Cylinder.002.obj": {
+   "triangles": 192,
+   "instances": 13
+  },
+  "proto_Cylinder.006.obj": {
+   "triangles": 132,
+   "instances": 32
+  },
+  "proto_Cylinder.007.obj": {
+   "triangles": 196,
+   "instances": 13
+  },
+  "proto_Cube.obj": {
+   "triangles": 156,
+   "instances": 28
+  },
+  "proto_Cube.002.obj": {
+   "triangles": 156,
+   "instances": 48
+  },
+  "proto_Cylinder.005.obj": {
+   "triangles": 448,
+   "instances": 9
+  }
+ },
+ "instanced_triangles": 2969652,
+ "sprinkles": 0,
+ "materials": {
+  "intonaco": {
+   "Kd": [
+    0.5488514304161072,
+    0.5385022163391113,
+    0.5300769805908203
+   ],
+   "Ks": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.5
+  },
+  "marmo bianco": {
+   "Kd": [
+    0.800000011920929,
+    0.800000011920929,
+    0.800000011920929
+   ],
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 6.0,
+   "Ni": 1.5
+  },
+  "pavimento bianco": {
+   "Kd": [
+    0.800000011920929,
+    0.800000011920929,
+    0.800000011920929
+   ],
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 48.0,
+   "Ni": 1.5
+  },
+  "pavimento nero": {
+   "Kd": [
+    0.010021759197115898,
+    0.010021759197115898,
+    0.010021759197115898
+   ],
+   "Ks": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Ns": 48.0,
+   "Ni": 1.5
+  }
+ },
+ "seconds": 88.1
+}
