@@ -103,11 +103,15 @@ python tools/light_samples.py --rt ./build/gauchoRT
 # Sampler convergence study
 python tools/convergence.py --rt ./build/gauchoRT
 
-# Reference comparisons
-python tools/compare.py renders/2_Cook reference_renders/2_Cook
+# Final reference comparison and completeness check
+python tools/compare.py \
+  renders/2_Cook reference_renders/2_Cook \
+  --require-all \
+  --exclude "4_ExtraCreditScenes/*" \
+  --exclude "1_TestScenes/Convergence_ref.png"
 ```
 
-**Recorded HW3 reference comparison:** **49 passed, 0 failed, 0 required files missing** in the final --require-all comparison. 
+**Recorded HW3 reference comparison:** **49 passed, 0 failed, 0 required files missing** in the final comparison. All seven Cook Hero Scenes passed their reference-image comparisons.
 
 **Warp tests:** 6 of 6 PASS (`disk`, `cosine_hemisphere`, `uniform_sphere`, `uniform_cone`, `triangle`, `phong`).
 
@@ -132,7 +136,7 @@ For the required `FrostedEarthMovie`, generate the MP4 from its rendered numbere
 
 ## Hero scenes
 
-The Cook hero tier includes `Candy`, `ChopperTitan`, `MagicalClock`, `BarcelonaPavilion`, `Crown`, `Chess` and `FishyCat` (depending on installed HW2 hero assets). These scenes are expensive at their supplied sample counts. Test a partial render in a separate path before committing to a full run:
+The Cook hero tier includes `Candy`, `ChopperTitan`, `MagicalClock`, `BarcelonaPavilion`, `Crown`, `Chess` and `FishyCat`. These scenes are expensive at their supplied sample counts. Test a partial render in a separate path before committing to a full run:
 
 ```bash
 ./build/gauchoRT Candy --time-limit 60 --out renders/try/Candy
@@ -143,7 +147,7 @@ python tools/compare.py --partial \
 ./build/gauchoRT hero --progress
 ```
 
-**Recorded partial Candy check:** PASS, RMSE 0.00116 against a 0.010 threshold, over approximately 2% of pixels reached in 60 seconds. 7/7 hero scenes completed and passed reference comparison.
+**Partial Candy validation:** An earlier partial render passed the reference comparison with an RMSE of 0.00116 (threshold 0.010). The subsequent full Candy render also passed, with an RMSE of 0.00113..
 
 ## Project layout
 

@@ -138,7 +138,7 @@ The completed renderer was validated using the following tests:
 - `python tools/compare.py renders/2_Cook reference_renders/2_Cook`: 49 passed, 0 failed.
 - `Candy --time-limit 60` followed by `compare.py --partial`: PASS, RMSE 0.00116 over approximately 2% of pixels rendered.
 
-All seven required Cook hero scenes were rendered successfully at their scene-defined settings and passed the reference-image comparison.
+All seven required Cook Hero Scenes were rendered successfully and passed their reference-image comparisons. The resulting images met the specified RMSE threshold of 0.010, as summarized below.
 
 | Hero Scene | RMSE | Threshold | Result |
 |---|---:|---:|---|
@@ -173,5 +173,6 @@ The project README documents the actual build and run commands. This write-up re
 - Required test, study, and Hero PNG files, plus `FrostedEarthMovie.mp4`
 - `reports/warptest.log`
 - `reports/area_light_test.log`
+- `reports/final_compare.log`
 
 The source archive should omit `build/`, `models/`, `textures/`, and `reference_renders/`, as specified by the assignment. Diagnostic PFMs, AOVs, diff images, and individual movie frames are not required deliverables.
