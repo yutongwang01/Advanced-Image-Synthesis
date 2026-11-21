@@ -147,7 +147,7 @@ python tools/compare.py --partial \
 ./build/gauchoRT hero --progress
 ```
 
-**Partial Candy validation:** An earlier partial render passed the reference comparison with an RMSE of 0.00116 (threshold 0.010). The subsequent full Candy render also passed, with an RMSE of 0.00113..
+**Partial Candy validation:** An earlier partial render passed the reference comparison with an RMSE of 0.00116 (threshold 0.010). The subsequent full Candy render also passed, with an RMSE of 0.00113.
 
 ## Project layout
 
