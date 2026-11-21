@@ -1,0 +1,13 @@
+exact image: /var/folders/5d/nn4lwm5s2wd1d7g61sbhnwv80000gn/T/area_light_test_tjtreqw1/QuadLight_exact.pfm
+QuadLight_4.pfm  RMSE 0.02006  mean difference 7.77e-05 (1.4 standard errors)  0 of 480 blocks beyond 4  PASS
+QuadLight_16.pfm  RMSE 0.00999  mean difference -1.54e-05 (-0.6 standard errors)  0 of 480 blocks beyond 4  PASS
+QuadLight_64.pfm  RMSE 0.00503  mean difference 1.04e-05 (0.7 standard errors)  0 of 480 blocks beyond 4  PASS
+QuadLight_256.pfm  RMSE 0.00252  mean difference -1.83e-07 (-0.0 standard errors)  0 of 480 blocks beyond 4  PASS
+
+  spp    RMSE      ratio to the previous (about 2 when unbiased)
+     4   0.02006   
+    16   0.00999   2.01
+    64   0.00503   1.99
+   256   0.00252   1.99
+
+PASS: no significant mean difference detected at the tested spp

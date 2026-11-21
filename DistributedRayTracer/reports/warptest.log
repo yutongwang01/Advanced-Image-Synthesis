@@ -1,0 +1,13 @@
+disk                     N = 1000000  chi2 = 2069.7  dof = 2039  p = 0.313  pdf error 4.0e-08  PASS
+    histograms: warptest/disk.png
+cosine_hemisphere        N = 1000000  chi2 = 3349.7  dof = 3200  p = 0.0321  pdf error 8.7e-08  PASS
+    histograms: warptest/cosine_hemisphere.png
+uniform_sphere           N = 1000000  chi2 = 3201.5  dof = 3199  p = 0.484  pdf error 4.0e-08  PASS
+    histograms: warptest/uniform_sphere.png
+uniform_cone 0.8         N = 1000000  chi2 = 3201.1  dof = 3199  p = 0.486  pdf error 6.3e-09  PASS
+    histograms: warptest/uniform_cone_0.8.png
+triangle                 N = 1000000  chi2 = 1290.4  dof = 1274  p = 0.369  pdf error 0.0e+00  PASS
+    histograms: warptest/triangle.png
+phong 20                 N = 1000000  chi2 = 3174.5  dof = 3080  p = 0.115  pdf error 1.4e-07  PASS
+    histograms: warptest/phong_20.png
+6 of 6 warps pass
