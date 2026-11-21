@@ -42,6 +42,7 @@
 #include "timer.h"
 #include "transform.h"
 #include "warp.h"
+#include "bsdf.h"
 
 #include <algorithm>
 #include <atomic>
@@ -1452,9 +1453,7 @@ int warpTest(const Options &o)
 
 int bsdfTest(const Options &o)
 {
-    (void)o;
-    std::fprintf(stderr, "--bsdftest: the BSDFs are HW4's; this renderer has none yet\n");
-    return 1;
+   return runBsdfTest(o);
 }
 
 /* The shading function of an integrator's name (integrator.h): the one
